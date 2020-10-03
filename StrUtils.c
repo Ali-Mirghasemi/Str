@@ -1,5 +1,8 @@
 #include "StrUtils.h"
 
+#ifdef STR_USE_STRING_LIBRARY
+    #include <string.h>
+#endif
 
 /**
  * variables
@@ -32,6 +35,14 @@
 #endif // STR_USE_STRING_LIBRARY
 
 
+/**
+ * @brief thie function can use for copy array into another array with reverse order
+ *
+ * @param src address of source array that we want copy from
+ * @param dest address of destination array that we want copy into
+ * @param len number of bytes
+ * @return void* address of destination array
+ */
 void*       Mem_CopyReverse(const void* src, void* dest, Mem_LenType len) {
     unsigned char* pD = (unsigned char*) dest;
     unsigned char* pS = (unsigned char*) src;
@@ -41,7 +52,13 @@ void*       Mem_CopyReverse(const void* src, void* dest, Mem_LenType len) {
 	}
 	return dest;
 }
-
+/**
+ * @brief reverse order of bytes in array
+ *
+ * @param arr address of array that we want reverse order
+ * @param len number of byte
+ * @return void* address of array
+ */
 void*       Mem_Reverse(void* arr, Mem_LenType len) {
     unsigned char* pStart = (unsigned char*) arr;
 	unsigned char* pEnd = &((unsigned char*)arr)[len - 1];
@@ -54,26 +71,54 @@ void*       Mem_Reverse(void* arr, Mem_LenType len) {
 	}
 	return arr;
 }
-
+/**
+ * @brief this function return end of string (Null charachter)
+ *
+ * @param str address of string must include 'null' in end of it
+ * @return char* address of null charachter
+ */
 char*       Str_IndexOfEnd(const char* str) {
     return (char*) &str[Str_Length(str) - 1];
 }
-
+/**
+ * @brief compare two string and result is opposite of Str_Compare
+ *
+ * @param str1 address of string 1
+ * @param str2 address of string 2
+ * @return char result of compare,
+ *      str1 > str2 -> result < 0
+ *      str1 == str2 -> result == 0
+ *      str1 < str2 -> result > 0
+ */
 char        Str_CompareInverse(const char* str1, const char* str2) {
     return Str_Compare(str2, str1);
 }
-
-char        Str_CompareWord(const char* str1, const char* str2) {
+/**
+ * @brief compare word in str, with priority of word and continue until word reach null
+ *
+ * @param str address of base string
+ * @param word address of word that we want compare with str
+ * @return char result of compare,
+ *      str > word -> result > 0
+ *      str == word -> result == 0
+ *      str < word -> result < 0
+ */
+char        Str_CompareWord(const char* str, const char* word) {
     char res;
-	while (*str2 != '\0'){
-		res = *str1++ - *str2++;
+	while (*word != '\0'){
+		res = *str++ - *word++;
 		if (res != 0){
 			break;
 		}
 	}
 	return res;
 }
-
+/**
+ * @brief find first digit in string and return address of digit
+ *
+ * @param str address of string
+ * @return char* address of digit in str, return null if nothing found
+ */
 char*       Str_FindDigit(const char* str) {
     while ((*str < __Str_0 || *str > __Str_9) &&
             *str != '\0'){
@@ -81,16 +126,28 @@ char*       Str_FindDigit(const char* str) {
 	}
 	return *str == '\0' ? NULL : (char*) str;
 }
-
-char*       Str_FindDigitUntil(const char* str, char c) {
+/**
+ * @brief find first digit in string and return address of digit, keep search until reach null or reach end charachter
+ *
+ * @param str address of string
+ * @param endChar ending charachter
+ * @return char* address of digit in str, return null if nothing found
+ */
+char*       Str_FindDigitUntil(const char* str, char endChar) {
     while ((*str < __Str_0 || *str > __Str_9) &&
             *str != '\0' &&
-            *str != c){
+            *str != endChar){
 		str++;
 	}
-	return *str == '\0' || *str == c ? NULL : (char*) str;
+	return *str == '\0' || *str == endChar ? NULL : (char*) str;
 }
-
+/**
+ * @brief find first digit in string and return address of digit, keep search until reach null or pass the length limit
+ *
+ * @param str address of string
+ * @param len length of string
+ * @return char* address of digit in str, return null if nothing found
+ */
 char*       Str_FindDigitFix(const char* str, Str_LenType len) {
     while ((*str < __Str_0 || *str > __Str_9) &&
             *str != '\0' &&
@@ -99,35 +156,72 @@ char*       Str_FindDigitFix(const char* str, Str_LenType len) {
 	}
 	return *str == '\0' || len == 0 ? NULL : (char*) str;
 }
-
+/**
+ * @brief find a number and return last digit of it
+ *
+ * @param str address of string
+ * @return char* address of digit in str, return null if nothing found
+ */
 char*       Str_FindLastDigit(const char* str) {
     str = Str_FindDigit(str);
-	while (*str >= __Str_0 && *str <= __Str_9){
-		str++;
-	}
+    if (str != NULL) {
+        while (*str >= __Str_0 && *str <= __Str_9){
+            str++;
+        }
+        str--;
+    }
 	return (char*) str;
 }
-
-char*       Str_FindLastDigitUntil(const char* str, char c) {
-    str = Str_FindDigitUntil(str, c);
-	while (*str >= __Str_0 && *str <= __Str_9){
-		str++;
-	}
+/**
+ * @brief find a number and return last digit of it with ending charachter condition
+ *
+ * @param str address of string
+ * @param endChar ending charachter
+ * @return char* address of digit in str, return null if nothing found
+ */
+char*       Str_FindLastDigitUntil(const char* str, char endChar) {
+    str = Str_FindDigitUntil(str, endChar);
+    if (str != NULL) {
+        while (*str >= __Str_0 && *str <= __Str_9){
+            str++;
+        }
+        str--;
+    }
 	return (char*) str;
 }
-
+/**
+ * @brief find a number and return last digit of it with length condition
+ *
+ * @param str address of string
+ * @param len length of string
+ * @return char* address of digit in str, return null if nothing found
+ */
 char*       Str_FindLastDigitFix(const char* str, Str_LenType len) {
     str = Str_FindDigitFix(str, len);
-	while (*str >= __Str_0 && *str <= __Str_9){
-		str++;
-	}
+    if (str != NULL) {
+        while (*str >= __Str_0 && *str <= __Str_9){
+            str++;
+        }
+        str--;
+    }
 	return (char*) str;
 }
-
+/**
+ * @brief find digit from end of string in backward
+ *
+ * @param str address of string, must include null
+ * @return char* address of digit in str, return null if nothing found
+ */
 char*       Str_FindReverseDigit(const char* str) {
     return Str_FindReverseDigitFix(str, Str_Length(str));
 }
-
+/**
+ * @brief find digit from end of string in backward with fixed string length
+ *
+ * @param str address of string
+ * @param len lenght of string
+ * @return char* address of digit in str, return null if nothing found
+ */
 char*       Str_FindReverseDigitFix(const char* str, Str_LenType len) {
     str = &str[len - 1];
     while ((*str < __Str_0 || *str > __Str_9) &&
@@ -136,7 +230,14 @@ char*       Str_FindReverseDigitFix(const char* str, Str_LenType len) {
 	}
 	return *str == '\0' || len == 0 ? NULL : (char*) str;
 }
-
+/**
+ * @brief find multiple indexes of 'c' in string
+ *
+ * @param str address of strings
+ * @param c charachter that we want search for indexes
+ * @param indexes a pointer array that will hold our indexes
+ * @return Str_LenType number of indexes that found
+ */
 Str_LenType Str_IndexesOf(const char* str, char c, char const** indexes) {
     Str_LenType count = 0;
 	while (*str != '\0'){
@@ -148,7 +249,15 @@ Str_LenType Str_IndexesOf(const char* str, char c, char const** indexes) {
 	}
 	return count;
 }
-
+/**
+ * @brief find multiple indexes of 'c' in string until reach null or pass the limit
+ *
+ * @param str address of strings
+ * @param c charachter that we want search for indexes
+ * @param indexes a pointer array that will hold our indexes
+ * @param len lenght of string
+ * @return Str_LenType number of indexes that found
+ */
 Str_LenType Str_IndexesOfFix(const char* str, char c, char const** indexes, Str_LenType len) {
     Str_LenType count = 0;
 	while (*str != '\0' && len-- > 0){
@@ -160,10 +269,18 @@ Str_LenType Str_IndexesOfFix(const char* str, char c, char const** indexes, Str_
 	}
 	return count;
 }
-
-Str_LenType Str_IndexesOfUntil(const char* str, char c, char const** indexes, char end) {
+/**
+ * @brief find multiple indexes of 'c' in string until reach null or ending charachter
+ *
+ * @param str address of strings
+ * @param c charachter that we want search for indexes
+ * @param indexes a pointer array that will hold our indexes
+ * @param endChar ending charachter
+ * @return Str_LenType number of indexes that found
+ */
+Str_LenType Str_IndexesOfUntil(const char* str, char c, char const** indexes, char endChar) {
     Str_LenType count = 0;
-	while (*str != '\0' && *str != end){
+	while (*str != '\0' && *str != endChar){
 		if (c == *str){
 			*indexes++ = str;
 			count++;
@@ -172,8 +289,14 @@ Str_LenType Str_IndexesOfUntil(const char* str, char c, char const** indexes, ch
 	}
 	return count;
 }
-
-
+/**
+ * @brief This function finds the address of a character in a given number and returns the last one
+ *
+ * @param str address of string
+ * @param c charachter that we want to search
+ * @param num The number of times the function looks for a character
+ * @return char* address of charachter, return null if not found
+ */
 char*       Str_IndexOfAt(const char* str, char c, Str_LenType num) {
     while (num-- > 0) {
         if (!(str = Str_IndexOf(str, c))){
@@ -182,11 +305,27 @@ char*       Str_IndexOfAt(const char* str, char c, Str_LenType num) {
     }
     return (char*) str;
 }
-
+/**
+ * @brief This function finds the address of a character in a given number and returns the last one until reach null or ending charachter
+ *
+ * @param str address of string
+ * @param c charachter that we want to search
+ * @param num The number of times the function looks for a character
+ * @param end ending charachter
+ * @return char* address of charachter, return null if not found
+ */
 char*       Str_IndexOfAtUntil(const char* str, char c, Str_LenType num, char end) {
     return Str_IndexOfAtFix(str, c, num, Str_PosOf(str, end));
 }
-
+/**
+ * @brief This function finds the address of a character in a given number and returns the last one until reach null or pass the limit
+ *
+ * @param str address of string
+ * @param c charachter that we want to search
+ * @param num The number of times the function looks for a character
+ * @param len length of string
+ * @return char* address of charachter, return null if not found
+ */
 char*       Str_IndexOfAtFix(const char* str, char c, Str_LenType num, Str_LenType len) {
     char* temp;
     while (num-- > 0) {
@@ -199,27 +338,61 @@ char*       Str_IndexOfAtFix(const char* str, char c, Str_LenType num, Str_LenTy
     }
     return temp;
 }
-
+/**
+ * @brief revesre order of charachter in string
+ *
+ * @param str address of string
+ * @return char* address of str
+ */
 char*       Str_Reverse(char* str) {
     return Mem_Reverse(str, Str_Length(str));
 }
-
+/**
+ * @brief copy sorce string in revesre order into destination string
+ *
+ * @param src address of source string
+ * @param dest address of destination string
+ * @return char* address of dest
+ */
 char*       Str_CopyReverse(const char* src, char* dest) {
     return Mem_CopyReverse(src, dest, Str_Length(src));
 }
-
+/**
+ * @brief copy a string into dest from given start position
+ *
+ * @param str address of base string
+ * @param dest address of destination string
+ * @param start Copy start location
+ * @return char* address of dest
+ */
 char*       Str_Substr(const char* str, char* dest, Str_LenType start) {
     return Str_Copy(&str[start], dest);
 }
-
+/**
+ * @brief copy a string into dest from given start position
+ *
+ * @param str address of base string
+ * @param dest address of destination string
+ * @param start Copy start location
+ * @param len length of charachters to be copy
+ * @return char* address of dest
+ */
 char*       Str_SubstrFix(const char* str, char* dest, Str_LenType start, Str_LenType len) {
     Str_CopyFix(&str[start], dest, len);
     dest[len] = '\0';
     return dest;
 }
-
-char*       Str_SubstrUntil(const char* str, char* dest, Str_LenType start, char c) {
-    Str_LenType len = Str_PosOf(str, c);
+/**
+ * @brief copy a string into dest from given start position until reach ending charachter
+ *
+ * @param str address of base string
+ * @param dest address of destination string
+ * @param start Copy start location
+ * @param endChar ending charachter
+ * @return char* address of dest
+ */
+char*       Str_SubstrUntil(const char* str, char* dest, Str_LenType start, char endChar) {
+    Str_LenType len = Str_PosOf(str, endChar);
     Str_CopyFix(&str[start], dest, len);
     dest[len] = '\0';
     return dest;
@@ -381,13 +554,13 @@ Str_LenType Str_ParseUNum(Str_UNumType num, char base, char len, char* str) {
 	return count;
 }
 
-Str_Result Str_ConvertNum(const char* str, Str_NumType* num, char base) {
+Str_Result Str_ConvertNum(const char* str, Str_NumType* num, Str_BaseIndex base) {
     return Str_ConvertNumFix(str, num, base, __Str_MaxLength);
 }
-Str_Result Str_ConvertUNum(const char* str, Str_UNumType* num, char base) {
+Str_Result Str_ConvertUNum(const char* str, Str_UNumType* num, Str_BaseIndex base) {
     return Str_ConvertUNumFix(str, num, base, __Str_MaxLength);
 }
-Str_Result Str_ConvertNumFix(const char* str, Str_NumType* num, char base, Str_LenType len) {
+Str_Result Str_ConvertNumFix(const char* str, Str_NumType* num, Str_BaseIndex base, Str_LenType len) {
     if (*str == '-'){
 		char res;
 		res = Str_ConvertUNumFix(++str, num, base, --len);
@@ -398,7 +571,7 @@ Str_Result Str_ConvertNumFix(const char* str, Str_NumType* num, char base, Str_L
 		return Str_ConvertUNumFix(str, num, base, len);
 	}
 }
-Str_Result Str_ConvertUNumFix(const char* str, Str_UNumType* num, char base, Str_LenType len) {
+Str_Result Str_ConvertUNumFix(const char* str, Str_UNumType* num, Str_BaseIndex base, Str_LenType len) {
     Str_UNumType temp;
 	*num = 0;
 	while (*str != '\0' && len-- > 0){
@@ -485,7 +658,7 @@ Str_Result Str_GetNum(const char* str, Str_NumType* num, const char** numPos) {
 			str--;
 		}
 		*numPos = str;
-		if (Str_ConvertNumFix(str, num, __Str_Decimal, (Str_LenType) (Str_FindLastDigit(str) - str)) == Str_Ok){
+		if (Str_ConvertNumFix(str, num, __Str_Decimal, (Str_LenType) (Str_FindLastDigit(str) - str + 1)) == Str_Ok){
 			return Str_Ok;
 		}
 	}
@@ -495,7 +668,7 @@ Str_Result Str_GetUNum(const char* str, Str_UNumType* num, const char** numPos) 
 	str = Str_FindDigit(str);
 	if (str != 0){
 		*numPos = str;
-		if (Str_ConvertUNumFix(str, num, __Str_Decimal, (Str_LenType) (Str_FindLastDigit(str) - str)) == Str_Ok){
+		if (Str_ConvertUNumFix(str, num, __Str_Decimal, (Str_LenType) (Str_FindLastDigit(str) - str + 1)) == Str_Ok){
 			return Str_Ok;
 		}
 	}
@@ -509,9 +682,10 @@ Str_Result Str_GetFloat(const char* str, Str_FloatType* num, const char** numPos
 		if (pDot < str && *(str - 1) == '-'){
 			str--;
 		}
-		pDot = Str_FindLastDigit(str);
+		pDot = Str_FindLastDigit(str) + 1;
 		if (*(pDot) == '.'){
 			pDot = Str_FindLastDigit(pDot);
+            pDot = pDot == NULL ? Str_IndexOfEnd(str) : pDot + 1;
 		}
 		*numPos = str;
 		if (Str_ConvertFloatFix(str, num, pDot - str) == Str_Ok){

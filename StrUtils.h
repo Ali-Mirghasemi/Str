@@ -162,10 +162,10 @@ const char* Str_FindStrsSorted(const char* src, const char** strs, Str_LenType l
 Str_LenType Str_ParseNum(Str_NumType num, char base, char len, char* str);
 Str_LenType Str_ParseUNum(Str_UNumType num, char base, char len, char* str);
 
-Str_Result Str_ConvertNum(const char* str, Str_NumType* num, char base);
-Str_Result Str_ConvertUNum(const char* str, Str_UNumType* num, char base);
-Str_Result Str_ConvertNumFix(const char* str, Str_NumType* num, char base, Str_LenType len);
-Str_Result Str_ConvertUNumFix(const char* str, Str_UNumType* num, char base, Str_LenType len);
+Str_Result Str_ConvertNum(const char* str, Str_NumType* num, Str_BaseIndex base);
+Str_Result Str_ConvertUNum(const char* str, Str_UNumType* num, Str_BaseIndex base);
+Str_Result Str_ConvertNumFix(const char* str, Str_NumType* num, Str_BaseIndex base, Str_LenType len);
+Str_Result Str_ConvertUNumFix(const char* str, Str_UNumType* num, Str_BaseIndex base, Str_LenType len);
 
 Str_LenType Str_ParseFloat(Str_FloatType num, char* str, Str_LenType decimalLen);
 
