@@ -19,7 +19,7 @@
 
 #define STR_USE_CONST_VARIABLES
 
-#define STR_USE_STRING_LIBRARY
+//#define STR_USE_STRING_LIBRARY
 
 #if STR_MAX_LENGTH < 0x7F
     typedef char Str_LenType;
@@ -66,7 +66,7 @@ void*       Mem_Copy(const void* src, void* dest, Mem_LenType len);
 char        Mem_Compare(const void* arr1, const void* arr2, Mem_LenType len);
 void*       Mem_Move(const void* src, void* dest, Mem_LenType len);
 void*       Mem_IndexOf(const void* arr, unsigned char value, Mem_LenType len);
-void*       Mem_Set(const void* arr, unsigned char value, Mem_LenType len);
+void*       Mem_Set(void* arr, unsigned char value, Mem_LenType len);
 
 
 
@@ -142,10 +142,10 @@ char*       Str_SubstrUntil(const char* str, char* dest, Str_LenType start, char
 
 char*       Str_Replace(char* str, const char* word, const char* replacement);
 
-char**      Str_Sort(const char** strs, Str_LenType len);
-char**      Str_QuickSort(const char** strs, Str_LenType len);
-char**      Str_SortReverse(const char** strs, Str_LenType len);
-char**      Str_QuickSortReverse(const char** strs, Str_LenType len);
+const char** Str_Sort(const char** strs, Str_LenType len);
+const char** Str_QuickSort(const char** strs, Str_LenType len);
+const char** Str_SortReverse(const char** strs, Str_LenType len);
+const char** Str_QuickSortReverse(const char** strs, Str_LenType len);
 
 Str_LenType Str_Split(const char* src, char c, char** strs);
 Str_LenType Str_SplitFix(const char* src, char c, char** strs, Str_LenType len);
@@ -159,8 +159,11 @@ Str_LenType Str_MultiCompareSorted(const char** strs, Str_LenType len, const cha
 const char* Str_FindStrs(const char* src, const char** strs, Str_LenType len, Str_MultiResult* result);
 const char* Str_FindStrsSorted(const char* src, const char** strs, Str_LenType len, Str_MultiResult* result);
 
-Str_LenType Str_ParseNum(Str_NumType num, char base, char len, char* str);
-Str_LenType Str_ParseUNum(Str_UNumType num, char base, char len, char* str);
+const char* Str_FindStrsFix(const char* src, const char** strs, Str_LenType len, Str_MultiResult* result, Str_LenType srcLen);
+const char* Str_FindStrsSortedFix(const char* src, const char** strs, Str_LenType len, Str_MultiResult* result, Str_LenType srcLen);
+
+Str_LenType Str_ParseNum(Str_NumType num, Str_BaseIndex base, char len, char* str);
+Str_LenType Str_ParseUNum(Str_UNumType num, Str_BaseIndex base, char len, char* str);
 
 Str_Result Str_ConvertNum(const char* str, Str_NumType* num, Str_BaseIndex base);
 Str_Result Str_ConvertUNum(const char* str, Str_UNumType* num, Str_BaseIndex base);
@@ -193,9 +196,9 @@ typedef char (*Str_CompareFunc) (const char* itemA, const char* ItemB);
 
 void        Str_Swap(const char** itemA, const char** ItemB);
 Str_LenType Str_Partition(const char** items, Str_LenType low, Str_LenType high, Str_CompareFunc cmp);
-char**      Str_QuickSortBlock(const char** items, Mem_LenType low, Mem_LenType high, Str_CompareFunc cmp);
+const char** Str_QuickSortBlock(const char** items, Mem_LenType low, Mem_LenType high, Str_CompareFunc cmp);
 
-char**      Str_SelectionSortBlock(const char** items, Mem_LenType len, Str_CompareFunc cmp);
+const char** Str_SelectionSortBlock(const char** items, Mem_LenType len, Str_CompareFunc cmp);
 
 Str_LenType Str_LinearSearch(const char** strs, Str_LenType len, const char* str, Str_CompareFunc cmp);
 Str_LenType Str_BinarySearch(const char** strs, Str_LenType len, const char* str, Str_CompareFunc cmp);
