@@ -55,7 +55,6 @@ int main(void) {
 	}
 	puts("Test Done\r\n");
 	printf("Tests Errors: %d\r\n", countTestError);
-
 }
 
 int Test_Parse(void) {
@@ -127,6 +126,12 @@ int Test_Convert(void) {
 	Str_ConvertFloat("-5.5", &tempFloat);
 	assert(Float, tempFloat, -5.5f);
 
+	Str_ConvertFloat("-5", &tempFloat);
+	assert(Float, tempFloat, -5.0f);
+
+	Str_ConvertFloat("3.", &tempFloat);
+	assert(Float, tempFloat, 3.0f);
+
 	Str_ConvertFloatFix("5.575", &tempFloat, 3);
 	assert(Float, tempFloat, 5.5f);
 
@@ -151,9 +156,11 @@ int Test_Get(void) {
 	Str_GetNum("-- 88 --", &tempNum, &numPos);
 	assert(Num, tempNum, 88);
 
+	Str_GetFloat("-- 2. --", &tempFloat, &numPos);
+	assert(Float, tempFloat, 2.0f);
+
 	Str_GetFloat("-- 3.5 --", &tempFloat, &numPos);
 	assert(Float, tempFloat, 3.5f);
-
 
 	return Str_Ok;
 }

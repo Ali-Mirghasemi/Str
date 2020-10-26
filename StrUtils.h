@@ -19,7 +19,7 @@
 
 #define STR_USE_CONST_VARIABLES
 
-//#define STR_USE_STRING_LIBRARY
+#define STR_USE_STRING_LIBRARY
 
 #if STR_MAX_LENGTH < 0x7F
     typedef char Str_LenType;
