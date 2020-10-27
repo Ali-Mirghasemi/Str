@@ -170,7 +170,8 @@ Str_Result Str_ConvertUNum(const char* str, Str_UNumType* num, Str_BaseIndex bas
 Str_Result Str_ConvertNumFix(const char* str, Str_NumType* num, Str_BaseIndex base, Str_LenType len);
 Str_Result Str_ConvertUNumFix(const char* str, Str_UNumType* num, Str_BaseIndex base, Str_LenType len);
 
-Str_LenType Str_ParseFloat(Str_FloatType num, char* str, Str_LenType decimalLen);
+Str_LenType Str_ParseFloat(Str_FloatType num, char* str);
+Str_LenType Str_ParseFloatFix(Str_FloatType num, char* str, Str_LenType decimalLen);
 
 Str_Result Str_ConvertFloat(const char* str, Str_FloatType* num);
 Str_Result Str_ConvertFloatFix(const char* str, Str_FloatType* num, Str_LenType len);

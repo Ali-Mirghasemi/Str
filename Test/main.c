@@ -76,26 +76,35 @@ int Test_Parse(void) {
 	Str_ParseNum(255, Str_Hex, 4, tempStr);
 	assert(Str, tempStr, "00FF");
 
-	Str_ParseFloat(2.45f, tempStr, 2);
+	Str_ParseFloatFix(2.45f, tempStr, 2);
 	assert(Str, tempStr, "2.45");
 
-	Str_ParseFloat(5.75f, tempStr, 1);
+	Str_ParseFloatFix(5.75f, tempStr, 1);
 	assert(Str, tempStr, "5.7");
 
-	Str_ParseFloat(-5.75f, tempStr, 1);
+	Str_ParseFloatFix(-5.75f, tempStr, 1);
 	assert(Str, tempStr, "-5.7");
 
-	Str_ParseFloat(5.75f, tempStr, 3);
+	Str_ParseFloatFix(5.75f, tempStr, 3);
 	assert(Str, tempStr, "5.750");
 
-	Str_ParseFloat(5.754f, tempStr, 0);
+	Str_ParseFloatFix(5.754f, tempStr, 0);
 	assert(Str, tempStr, "5");
 
-	Str_ParseFloat(-5.754f, tempStr, 0);
+	Str_ParseFloatFix(-5.754f, tempStr, 0);
 	assert(Str, tempStr, "-5");
 
-	Str_ParseFloat(10.456f, tempStr, 3);
+	Str_ParseFloatFix(10.456f, tempStr, 3);
 	assert(Str, tempStr, "10.456");
+
+	Str_ParseFloat(10.5f, tempStr);
+	assert(Str, tempStr, "10.5");
+
+	Str_ParseFloat(10.75f, tempStr);
+	assert(Str, tempStr, "10.75");
+
+	Str_ParseFloat(10.125f, tempStr);
+	assert(Str, tempStr, "10.125");
 
 	return Str_Ok;
 }

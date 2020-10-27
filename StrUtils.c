@@ -23,7 +23,7 @@
     #define __Str_9                     '9'
     #define __Str_Zero                  0
     #define __Str_One                   1
-    #define __Str_Null                  '\0'    
+    #define __Str_Null                  '\0'
 #endif // STR_USE_CONST_VARIABLES
 
 #ifndef NULL
@@ -805,10 +805,41 @@ Str_Result Str_ConvertUNumFix(const char* str, Str_UNumType* num, Str_BaseIndex 
  *
  * @param num float number
  * @param str address of output string
+ * @return Str_LenType
+ */
+Str_LenType Str_ParseFloat(Str_FloatType num, char* str) {
+	Str_NumType numInt = (Str_NumType) num;
+	Str_LenType len;
+	len = Str_ParseNum(numInt, __Str_Decimal, STR_NORMAL_LEN, str);
+    str = str + len;
+    num = num - numInt;
+    if (num != 0) {
+        *str++ = '.';
+        len++;
+        if (num < 0){
+            num *= -1;
+        }
+        numInt = (Str_NumType) num;
+        while (num != 0) {
+            num *= __Str_Decimal;
+            numInt = (int) num;
+            *str++ = numInt + __Str_0;
+            len++;
+            num -= numInt;
+        }
+    }
+    *str = __Str_Null;
+	return len;
+}
+/**
+ * @brief convert float number into string
+ *
+ * @param num float number
+ * @param str address of output string
  * @param decimalLen resolution of floating part
  * @return Str_LenType
  */
-Str_LenType Str_ParseFloat(Str_FloatType num, char* str, Str_LenType decimalLen) {
+Str_LenType Str_ParseFloatFix(Str_FloatType num, char* str, Str_LenType decimalLen) {
     Str_NumType pow = decimalLen;
 	Str_NumType numInt = (Str_NumType) num;
 	Str_LenType len;
