@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "regex": "c",
-        "sstream": "c"
+        "sstream": "c",
+        "RGB-V3.C": "cpp"
     }
 }

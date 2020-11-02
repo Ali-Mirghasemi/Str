@@ -2,8 +2,8 @@
 #include "StrUtils.h"
 
 int Assert_Str(const char* str1, const char* str2, int line);
-int Assert_Num(Str_NumType num1, Str_NumType num2, int line);
-int Assert_Float(Str_FloatType num1, Str_FloatType num2, int line);
+int Assert_Num(int num1, int num2, int line);
+int Assert_Float(float num1, float num2, int line);
 int Assert_Strs(const char** strs1, const char** strs2, int len, int line);
 
 int assertResult = 0;
@@ -110,8 +110,8 @@ int Test_Parse(void) {
 }
 
 int Test_Convert(void) {
-	Str_NumType tempNum;
-	Str_FloatType tempFloat;
+	int tempNum;
+	float tempFloat;
 	puts("Convert:");
 
 	Str_ConvertNum("123", &tempNum, Str_Decimal);
@@ -148,8 +148,8 @@ int Test_Convert(void) {
 }
 
 int Test_Get(void) {
-	Str_NumType tempNum;
-	Str_FloatType tempFloat;
+	int tempNum;
+	float tempFloat;
 	const char* numPos;
 	puts("Get:");
 
@@ -392,14 +392,14 @@ int Assert_Str(const char* str1, const char* str2, int line) {
 	}
 	return (int) Str_Ok;
 }
-int Assert_Num(Str_NumType num1, Str_NumType num2, int line) {
+int Assert_Num(int num1, int num2, int line) {
 	if (num1 != num2) {
 		printf("%d\r\n", (num1));
 		return Str_Error | line << 1;
 	}
 	return (int) Str_Ok;
 }
-int Assert_Float(Str_FloatType num1, Str_FloatType num2, int line) {
+int Assert_Float(float num1, float num2, int line) {
 	if (num1 != num2) {
 		printf("%f\r\n", (num1));
 		return Str_Error | line << 1;

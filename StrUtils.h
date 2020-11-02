@@ -13,9 +13,9 @@
 
 #define STR_MAX_LENGTH                                      255
 
-#define STR_NUM_TYPE                                        int
+#define STR_ENABLE_LONG_NUMBER
 
-#define STR_FLOAT_TYPE                                      float
+#define STR_ENABLE_DOUBLE
 
 #define STR_USE_CONST_VARIABLES
 
@@ -36,10 +36,6 @@
 #else
     typedef int Mem_LenType;
 #endif // STR_MAX_Length
-
-typedef STR_NUM_TYPE            Str_NumType;
-typedef unsigned STR_NUM_TYPE   Str_UNumType;
-typedef STR_FLOAT_TYPE          Str_FloatType;
 
 #ifdef STR_USE_STRING_LIBRARY
 #include <string.h>
@@ -108,6 +104,9 @@ void*       Mem_Reverse(void* arr, Mem_LenType len);
 char*       Str_CopyUntil(const char* src, char* dest, char c);
 char*       Str_CopyLine(const char* src, char* dest);
 
+char*       Str_ReverseIndexOf(const char* str, char c, const char* startOfStr);
+char*       Str_ReverseIndexOfFix(const char* str, char c, int length);
+
 char*       Str_IndexOfEnd(const char* str);
 
 char        Str_CompareInverse(const char* str1, const char* str2);
@@ -141,6 +140,7 @@ char*       Str_SubstrFix(const char* str, char* dest, Str_LenType start, Str_Le
 char*       Str_SubstrUntil(const char* str, char* dest, Str_LenType start, char c);
 
 char*       Str_Replace(char* str, const char* word, const char* replacement);
+int         Str_ReplaceAll(char* str, const char* word, const char* replacement);
 
 const char** Str_Sort(const char** strs, Str_LenType len);
 const char** Str_QuickSort(const char** strs, Str_LenType len);
@@ -162,23 +162,45 @@ const char* Str_FindStrsSorted(const char* src, const char** strs, Str_LenType l
 const char* Str_FindStrsFix(const char* src, const char** strs, Str_LenType len, Str_MultiResult* result, Str_LenType srcLen);
 const char* Str_FindStrsSortedFix(const char* src, const char** strs, Str_LenType len, Str_MultiResult* result, Str_LenType srcLen);
 
-Str_LenType Str_ParseNum(Str_NumType num, Str_BaseIndex base, char len, char* str);
-Str_LenType Str_ParseUNum(Str_UNumType num, Str_BaseIndex base, char len, char* str);
+Str_LenType Str_ParseNum(int num, Str_BaseIndex base, char len, char* str);
+Str_LenType Str_ParseUNum(unsigned int num, Str_BaseIndex base, char len, char* str);
 
-Str_Result Str_ConvertNum(const char* str, Str_NumType* num, Str_BaseIndex base);
-Str_Result Str_ConvertUNum(const char* str, Str_UNumType* num, Str_BaseIndex base);
-Str_Result Str_ConvertNumFix(const char* str, Str_NumType* num, Str_BaseIndex base, Str_LenType len);
-Str_Result Str_ConvertUNumFix(const char* str, Str_UNumType* num, Str_BaseIndex base, Str_LenType len);
+Str_Result Str_ConvertNum(const char* str, int* num, Str_BaseIndex base);
+Str_Result Str_ConvertUNum(const char* str, unsigned int* num, Str_BaseIndex base);
+Str_Result Str_ConvertNumFix(const char* str, int* num, Str_BaseIndex base, Str_LenType len);
+Str_Result Str_ConvertUNumFix(const char* str, unsigned int* num, Str_BaseIndex base, Str_LenType len);
 
-Str_LenType Str_ParseFloat(Str_FloatType num, char* str);
-Str_LenType Str_ParseFloatFix(Str_FloatType num, char* str, Str_LenType decimalLen);
+#ifdef STR_ENABLE_LONG_NUMBER
 
-Str_Result Str_ConvertFloat(const char* str, Str_FloatType* num);
-Str_Result Str_ConvertFloatFix(const char* str, Str_FloatType* num, Str_LenType len);
+Str_LenType Str_ParseLong(long num, Str_BaseIndex base, char len, char* str);
+Str_LenType Str_ParseULong(unsigned long num, Str_BaseIndex base, char len, char* str);
 
-Str_Result Str_GetNum(const char* str, Str_NumType* num, const char** numPos);
-Str_Result Str_GetUNum(const char* str, Str_UNumType* num, const char** numPos);
-Str_Result Str_GetFloat(const char* str, Str_FloatType* num, const char** numPos);
+Str_Result Str_ConvertLong(const char* str, long* num, Str_BaseIndex base);
+Str_Result Str_ConvertULong(const char* str, unsigned long* num, Str_BaseIndex base);
+Str_Result Str_ConvertLongFix(const char* str, long* num, Str_BaseIndex base, Str_LenType len);
+Str_Result Str_ConvertULongFix(const char* str, unsigned long* num, Str_BaseIndex base, Str_LenType len);
+
+#endif // STR_ENABLE_LONG_NUMBER
+
+Str_LenType Str_ParseFloat(float num, char* str);
+Str_LenType Str_ParseFloatFix(float num, char* str, Str_LenType decimalLen);
+
+Str_Result Str_ConvertFloat(const char* str, float* num);
+Str_Result Str_ConvertFloatFix(const char* str, float* num, Str_LenType len);
+
+#ifdef STR_ENABLE_DOUBLE
+
+Str_LenType Str_ParseDouble(double num, char* str);
+Str_LenType Str_ParseDoubleFix(double num, char* str, Str_LenType decimalLen);
+
+Str_Result Str_ConvertDouble(const char* str, double* num);
+Str_Result Str_ConvertDoubleFix(const char* str, double* num, Str_LenType len);
+
+#endif // STR_ENABLE_DOUBLE
+
+Str_Result Str_GetNum(const char* str, int* num, const char** numPos);
+Str_Result Str_GetUNum(const char* str, unsigned int* num, const char** numPos);
+Str_Result Str_GetFloat(const char* str, float* num, const char** numPos);
 
 /**
  * Sorting Functions

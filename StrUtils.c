@@ -340,6 +340,27 @@ char*       Str_IndexOfAtFix(const char* str, char c, Str_LenType num, Str_LenTy
     }
     return temp;
 }
+
+char*       Str_ReverseIndexOf(const char* str, char c, const char* startOfStr) {
+    while (startOfStr <= str) {
+        if (*str == c) {
+            return str;
+        }
+        str--;
+    }
+    return NULL;
+}
+
+char*       Str_ReverseIndexOfFix(const char* str, char c, int length) {
+    while (length-- > 0) {
+        if (*str == c) {
+            return str;
+        }
+        str--;
+    }
+    return NULL;
+}
+
 /**
  * @brief revesre order of charachter in string
  *
@@ -418,9 +439,26 @@ char*       Str_Replace(char* str, const char* word, const char* replacement) {
             Mem_Move(pEndOfWord, pEndOfWord + (repLen - wordLen), len);
         }
         Str_CopyFix(replacement, pWord, repLen);
-        return str;
+        return pWord;
     }
     return NULL;
+}
+/**
+ * @brief replace all words that find in string with a replacement word
+ *
+ * @param str address of string
+ * @param word addres of word
+ * @param replacement address of replacement
+ * @return char* return address of str if word found otherwise return null
+ */
+int       Str_ReplaceAll(char* str, const char* word, const char* replacement) {
+    int count = 0;
+    int replacementLen = Str_Length(replacement);
+    while ((str = Str_Replace(str, word, replacement)) != NULL) {
+        str = str + replacementLen;
+        count++;
+    }
+    return count;
 }
 /**
  * @brief copy sourc string into destination string until reach ending char
@@ -694,14 +732,14 @@ const char* Str_FindStrsSortedFix(const char* src, const char** strs, Str_LenTyp
  * @param str address destination string
  * @return Str_LenType return length of str
  */
-Str_LenType Str_ParseNum(Str_NumType num, Str_BaseIndex base, char minLen, char* str) {
+Str_LenType Str_ParseNum(int num, Str_BaseIndex base, char minLen, char* str) {
     if (num < 0){
 		*str++ = '-';
 		num *= -1;
-		return Str_ParseUNum((Str_NumType) num, base, minLen, str) + 1;
+		return Str_ParseUNum((int) num, base, minLen, str) + 1;
 	}
 	else {
-		return Str_ParseUNum((Str_NumType) num, base, minLen, str);
+		return Str_ParseUNum((int) num, base, minLen, str);
 	}
 }
 /**
@@ -713,7 +751,7 @@ Str_LenType Str_ParseNum(Str_NumType num, Str_BaseIndex base, char minLen, char*
  * @param str address destination string
  * @return Str_LenType return length of str
  */
-Str_LenType Str_ParseUNum(Str_UNumType num, Str_BaseIndex base, char minLen, char* str) {
+Str_LenType Str_ParseUNum(unsigned int num, Str_BaseIndex base, char minLen, char* str) {
     Str_LenType count = 0;
 	char* pStr = str;
 	char temp;
@@ -735,7 +773,7 @@ Str_LenType Str_ParseUNum(Str_UNumType num, Str_BaseIndex base, char minLen, cha
  * @param base base index
  * @return Str_Result result of convert
  */
-Str_Result Str_ConvertNum(const char* str, Str_NumType* num, Str_BaseIndex base) {
+Str_Result Str_ConvertNum(const char* str, int* num, Str_BaseIndex base) {
     return Str_ConvertNumFix(str, num, base, __Str_MaxLength);
 }
 /**
@@ -746,7 +784,7 @@ Str_Result Str_ConvertNum(const char* str, Str_NumType* num, Str_BaseIndex base)
  * @param base base index
  * @return Str_Result result of convert
  */
-Str_Result Str_ConvertUNum(const char* str, Str_UNumType* num, Str_BaseIndex base) {
+Str_Result Str_ConvertUNum(const char* str, unsigned int* num, Str_BaseIndex base) {
     return Str_ConvertUNumFix(str, num, base, __Str_MaxLength);
 }
 /**
@@ -757,7 +795,7 @@ Str_Result Str_ConvertUNum(const char* str, Str_UNumType* num, Str_BaseIndex bas
  * @param base base index
  * @return Str_Result result of convert
  */
-Str_Result Str_ConvertNumFix(const char* str, Str_NumType* num, Str_BaseIndex base, Str_LenType len) {
+Str_Result Str_ConvertNumFix(const char* str, int* num, Str_BaseIndex base, Str_LenType len) {
     if (*str == '-'){
 		char res;
 		res = Str_ConvertUNumFix(++str, num, base, --len);
@@ -776,8 +814,8 @@ Str_Result Str_ConvertNumFix(const char* str, Str_NumType* num, Str_BaseIndex ba
  * @param base base index
  * @return Str_Result result of convert
  */
-Str_Result Str_ConvertUNumFix(const char* str, Str_UNumType* num, Str_BaseIndex base, Str_LenType len) {
-    Str_UNumType temp;
+Str_Result Str_ConvertUNumFix(const char* str, unsigned int* num, Str_BaseIndex base, Str_LenType len) {
+    unsigned int temp;
 	*num = 0;
 	while (*str != __Str_Null && len-- > 0){
 		if (*str >= __Str_0 && *str <= __Str_9){
@@ -800,6 +838,123 @@ Str_Result Str_ConvertUNumFix(const char* str, Str_UNumType* num, Str_BaseIndex 
 	}
 	return Str_Ok;
 }
+#ifdef STR_ENABLE_LONG_NUMBER
+/**
+ * @brief convert a long number into string with specific base index and length
+ *
+ * @param num number that we want convert
+ * @param base base index
+ * @param minLen minimum length of result string
+ * @param str address destination string
+ * @return Str_LenType return length of str
+ */
+Str_LenType Str_ParseLong(long num, Str_BaseIndex base, char minLen, char* str) {
+    if (num < 0){
+		*str++ = '-';
+		num *= -1;
+		return Str_ParseULong((long) num, base, minLen, str) + 1;
+	}
+	else {
+		return Str_ParseULong((long) num, base, minLen, str);
+	}
+}
+/**
+ * @brief convert a unsigned long number into string with specific base index and length
+ *
+ * @param num number that we want convert
+ * @param base base index
+ * @param minLen minimum length of result string
+ * @param str address destination string
+ * @return Str_LenType return length of str
+ */
+Str_LenType Str_ParseULong(unsigned long num, Str_BaseIndex base, char minLen, char* str) {
+    Str_LenType count = 0;
+	char* pStr = str;
+	char temp;
+	do {
+		temp = num % (Str_LenType) base;
+		*pStr++ = temp < __Str_Decimal ? (temp + __Str_0) : (temp + 0x37);
+		count++;
+		num /= base;
+	} while (num != 0 || count < minLen);
+	Mem_Reverse(str, (Mem_LenType) count);
+	*pStr = __Str_Null;
+	return count;
+}
+/**
+ * @brief convert a string into long number
+ *
+ * @param str address of source string
+ * @param num address of output number
+ * @param base base index
+ * @return Str_Result result of convert
+ */
+Str_Result Str_ConvertLong(const char* str, long* num, Str_BaseIndex base) {
+    return Str_ConvertLongFix(str, num, base, __Str_MaxLength);
+}
+/**
+ * @brief convert a string into unsigned long number
+ *
+ * @param str address of source string
+ * @param num address of output number
+ * @param base base index
+ * @return Str_Result result of convert
+ */
+Str_Result Str_ConvertULong(const char* str, unsigned long* num, Str_BaseIndex base) {
+    return Str_ConvertULongFix(str, num, base, __Str_MaxLength);
+}
+/**
+ * @brief convert a string into long number with fixed length
+ *
+ * @param str address of source string
+ * @param num address of output number
+ * @param base base index
+ * @return Str_Result result of convert
+ */
+Str_Result Str_ConvertLongFix(const char* str, long* num, Str_BaseIndex base, Str_LenType len) {
+    if (*str == '-'){
+		char res;
+		res = Str_ConvertULongFix(++str, num, base, --len);
+		*num *= -1;
+		return res;
+	}
+	else {
+		return Str_ConvertULongFix(str, num, base, len);
+	}
+}
+/**
+ * @brief convert a string into unsigned long number with fixed length
+ *
+ * @param str address of source string
+ * @param num address of output number
+ * @param base base index
+ * @return Str_Result result of convert
+ */
+Str_Result Str_ConvertULongFix(const char* str, unsigned long* num, Str_BaseIndex base, Str_LenType len) {
+    char temp;
+	*num = 0;
+	while (*str != __Str_Null && len-- > 0){
+		if (*str >= __Str_0 && *str <= __Str_9){
+			temp = *str - __Str_0;
+		}
+		else if (*str >= 'A' && *str <= 'Z'){
+			temp = *str - 0x37;
+		}
+		else if (*str >= 'a' && *str <= 'z'){
+			temp = *str - 0x57;
+		}
+		else {
+			return Str_Error;
+		}
+		if (temp >= base){
+			return Str_Error;
+		}
+		*num = *num * base + temp;
+		str++;
+	}
+	return Str_Ok;
+}
+#endif // STR_ENABLE_LONG_NUMBER
 /**
  * @brief convert float number into string
  *
@@ -807,8 +962,8 @@ Str_Result Str_ConvertUNumFix(const char* str, Str_UNumType* num, Str_BaseIndex 
  * @param str address of output string
  * @return Str_LenType
  */
-Str_LenType Str_ParseFloat(Str_FloatType num, char* str) {
-	Str_NumType numInt = (Str_NumType) num;
+Str_LenType Str_ParseFloat(float num, char* str) {
+	int numInt = (int) num;
 	Str_LenType len;
 	len = Str_ParseNum(numInt, __Str_Decimal, STR_NORMAL_LEN, str);
     str = str + len;
@@ -819,7 +974,7 @@ Str_LenType Str_ParseFloat(Str_FloatType num, char* str) {
         if (num < 0){
             num *= -1;
         }
-        numInt = (Str_NumType) num;
+        numInt = (int) num;
         while (num != 0) {
             num *= __Str_Decimal;
             numInt = (int) num;
@@ -839,9 +994,9 @@ Str_LenType Str_ParseFloat(Str_FloatType num, char* str) {
  * @param decimalLen resolution of floating part
  * @return Str_LenType
  */
-Str_LenType Str_ParseFloatFix(Str_FloatType num, char* str, Str_LenType decimalLen) {
-    Str_NumType pow = decimalLen;
-	Str_NumType numInt = (Str_NumType) num;
+Str_LenType Str_ParseFloatFix(float num, char* str, Str_LenType decimalLen) {
+    int pow = decimalLen;
+	int numInt = (int) num;
 	Str_LenType len;
 	len = Str_ParseNum(numInt, __Str_Decimal, STR_NORMAL_LEN, str);
     if (decimalLen != 0) {
@@ -854,7 +1009,7 @@ Str_LenType Str_ParseFloatFix(Str_FloatType num, char* str, Str_LenType decimalL
         while (pow-- != 0){
             num *= __Str_Decimal;
         }
-	    len += Str_ParseNum((Str_NumType) num, __Str_Decimal, STR_NORMAL_LEN, str) + 1;
+	    len += Str_ParseNum((int) num, __Str_Decimal, STR_NORMAL_LEN, str) + 1;
     }
 	return len;
 }
@@ -865,7 +1020,7 @@ Str_LenType Str_ParseFloatFix(Str_FloatType num, char* str, Str_LenType decimalL
  * @param num address of output number
  * @return Str_Result result of convert
  */
-Str_Result Str_ConvertFloat(const char* str, Str_FloatType* num) {
+Str_Result Str_ConvertFloat(const char* str, float* num) {
     return Str_ConvertFloatFix(str, num, Str_Length(str));
 }
 /**
@@ -875,10 +1030,10 @@ Str_Result Str_ConvertFloat(const char* str, Str_FloatType* num) {
  * @param num address of output number
  * @return Str_Result result of convert
  */
-Str_Result Str_ConvertFloatFix(const char* str, Str_FloatType* num, Str_LenType len) {
+Str_Result Str_ConvertFloatFix(const char* str, float* num, Str_LenType len) {
     const char* pDot = Str_IndexOf(str, '.');
-	Str_FloatType temp;
-	Str_NumType numInt;
+	float temp;
+	int numInt;
 	Str_LenType strLen;
 	if (pDot == NULL){
 		pDot = Mem_IndexOf(str, __Str_Null, __Str_MaxLength);
@@ -904,6 +1059,114 @@ Str_Result Str_ConvertFloatFix(const char* str, Str_FloatType* num, Str_LenType 
 	}
 	return Str_Error;
 }
+#ifdef STR_ENABLE_DOUBLE
+/**
+ * @brief convert double number into string
+ *
+ * @param num float number
+ * @param str address of output string
+ * @return Str_LenType
+ */
+Str_LenType Str_ParseDouble(double num, char* str) {
+	int numInt = (int) num;
+	Str_LenType len;
+	len = Str_ParseNum(numInt, __Str_Decimal, STR_NORMAL_LEN, str);
+    str = str + len;
+    num = num - numInt;
+    if (num != 0) {
+        *str++ = '.';
+        len++;
+        if (num < 0){
+            num *= -1;
+        }
+        numInt = (int) num;
+        while (num != 0) {
+            num *= __Str_Decimal;
+            numInt = (int) num;
+            *str++ = numInt + __Str_0;
+            len++;
+            num -= numInt;
+        }
+    }
+    *str = __Str_Null;
+	return len;
+}
+/**
+ * @brief convert double number into string
+ *
+ * @param num float number
+ * @param str address of output string
+ * @param decimalLen resolution of floating part
+ * @return Str_LenType
+ */
+Str_LenType Str_ParseDoubleFix(double num, char* str, Str_LenType decimalLen) {
+    int pow = decimalLen;
+	int numInt = (int) num;
+	Str_LenType len;
+	len = Str_ParseNum(numInt, __Str_Decimal, STR_NORMAL_LEN, str);
+    if (decimalLen != 0) {
+        str = str + len;
+        *str++ = '.';
+        num = num - numInt;
+        if (num < 0){
+            num *= -1;
+        }
+        while (pow-- != 0){
+            num *= __Str_Decimal;
+        }
+	    len += Str_ParseNum((int) num, __Str_Decimal, STR_NORMAL_LEN, str) + 1;
+    }
+	return len;
+}
+
+/**
+ * @brief convert a string into double number
+ *
+ * @param str address of source string
+ * @param num address of output number
+ * @return Str_Result result of convert
+ */
+Str_Result Str_ConvertDouble(const char* str, double* num) {
+    return Str_ConvertDoubleFix(str, num, Str_Length(str));
+}
+/**
+ * @brief convert a string into double number with fixed length
+ *
+ * @param str address of source string
+ * @param num address of output number
+ * @return Str_Result result of convert
+ */
+Str_Result Str_ConvertDoubleFix(const char* str, double* num, Str_LenType len) {
+    const char* pDot = Str_IndexOf(str, '.');
+	double temp;
+	int numInt;
+	Str_LenType strLen;
+	if (pDot == NULL){
+		pDot = Mem_IndexOf(str, __Str_Null, __Str_MaxLength);
+	}
+	strLen = (Str_LenType)(pDot - str);
+	if (strLen > len){
+		strLen = len;
+	}
+	if (Str_ConvertNumFix(str, &numInt, __Str_Decimal, strLen) == Str_Ok){
+		*num = numInt;
+		if (*pDot != __Str_Null){
+			len -= strLen + 1;
+			if (Str_ConvertNumFix(++pDot, &numInt, __Str_Decimal, len) != Str_Ok){
+				return Str_Error;
+			}
+			temp = numInt;
+            while (len-- > 0) {
+                temp /= __Str_Decimal;
+            }
+            *num = *num < 0 ? *num - temp : *num + temp;
+		}
+		return Str_Ok;
+	}
+	return Str_Error;
+}
+
+#endif // STR_ENABLE_DOUBLE
 /**
  * @brief get first number that found in string
  *
@@ -912,7 +1175,7 @@ Str_Result Str_ConvertFloatFix(const char* str, Str_FloatType* num, Str_LenType 
  * @param numPos index of number that found
  * @return Str_Result result of searching for number
  */
-Str_Result Str_GetNum(const char* str, Str_NumType* num, const char** numPos) {
+Str_Result Str_GetNum(const char* str, int* num, const char** numPos) {
     const char* baseStr = str;
 	str = Str_FindDigit(str);
 	if (str != NULL){
@@ -934,7 +1197,7 @@ Str_Result Str_GetNum(const char* str, Str_NumType* num, const char** numPos) {
  * @param numPos index of number that found
  * @return Str_Result result of searching for number
  */
-Str_Result Str_GetUNum(const char* str, Str_UNumType* num, const char** numPos) {
+Str_Result Str_GetUNum(const char* str, unsigned int* num, const char** numPos) {
 	str = Str_FindDigit(str);
 	if (str != 0){
 		*numPos = str;
@@ -952,7 +1215,7 @@ Str_Result Str_GetUNum(const char* str, Str_UNumType* num, const char** numPos) 
  * @param numPos index of number that found
  * @return Str_Result result of searching for number
  */
-Str_Result Str_GetFloat(const char* str, Str_FloatType* num, const char** numPos) {
+Str_Result Str_GetFloat(const char* str, float* num, const char** numPos) {
 	const char* pDot = str;
 	str = Str_FindDigit(str);
 	if (str != NULL){
