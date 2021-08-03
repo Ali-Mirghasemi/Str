@@ -1,0 +1,6 @@
+docs/
+Test/bin
+Test/obj
+Test/Test.depend
+Test/Test.cbp
+Test/Test.layout
