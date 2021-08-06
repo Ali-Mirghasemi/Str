@@ -5,3 +5,7 @@ Test/obj
 Test/Test.depend
 Test/Test.cbp
 Test/Test.layout
+Example/obj
+Example/bin
+*.layout
+*.depend

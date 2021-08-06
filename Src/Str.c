@@ -32,7 +32,7 @@
 
 
 /**
- * @brief thie function can use for copy array into another array with reverse order
+ * @brief thie Fntion can use for copy array into another array with reverse order
  *
  * @param src address of source array that we want copy from
  * @param dest address of destination array that we want copy into
@@ -72,8 +72,14 @@ void*       Mem_reverse(void* arr, Mem_LenType len) {
  * @param str address of string must include 'null' in end of it
  * @return char* address of null charachter
  */
-char*       Str_indexOfEnd(const char* str) {
-    return (char*) &str[Str_len(str) - 1];
+char* Str_indexOfEnd(const char* str) {
+    Str_LenType len = Str_len(str);
+    if (len) {
+        return (char*) &str[len - 1];
+    }
+    else {
+        return NULL;
+    }
 }
 /**
  * @brief compare two string and result is opposite of Str_compare
@@ -285,11 +291,11 @@ Str_LenType Str_indexesOfUntil(const char* str, char c, char const** indexes, ch
 	return count;
 }
 /**
- * @brief This function finds the address of a character in a given number and returns the last one
+ * @brief This Fntion finds the address of a character in a given number and returns the last one
  *
  * @param str address of string
  * @param c charachter that we want to search
- * @param num The number of times the function looks for a character
+ * @param num The number of times the Fntion looks for a character
  * @return char* address of charachter, return null if not found
  */
 char*       Str_indexOfAt(const char* str, char c, Str_LenType num) {
@@ -301,11 +307,11 @@ char*       Str_indexOfAt(const char* str, char c, Str_LenType num) {
     return (char*) str;
 }
 /**
- * @brief This function finds the address of a character in a given number and returns the last one until reach null or ending charachter
+ * @brief This Fntion finds the address of a character in a given number and returns the last one until reach null or ending charachter
  *
  * @param str address of string
  * @param c charachter that we want to search
- * @param num The number of times the function looks for a character
+ * @param num The number of times the Fntion looks for a character
  * @param end ending charachter
  * @return char* address of charachter, return null if not found
  */
@@ -313,11 +319,11 @@ char*       Str_indexOfAtUntil(const char* str, char c, Str_LenType num, char en
     return Str_indexOfAtFix(str, c, num, Str_posOf(str, end));
 }
 /**
- * @brief This function finds the address of a character in a given number and returns the last one until reach null or pass the limit
+ * @brief This Fntion finds the address of a character in a given number and returns the last one until reach null or pass the limit
  *
  * @param str address of string
  * @param c charachter that we want to search
- * @param num The number of times the function looks for a character
+ * @param num The number of times the Fntion looks for a character
  * @param len length of string
  * @return char* address of charachter, return null if not found
  */
@@ -492,7 +498,7 @@ char*       Str_copyLine(char* dest, const char* src) {
  * @return char** return address of strs
  */
 const char** Str_sort(const char** strs, Str_LenType len) {
-    return Str_selectionSortBlock(strs, (Mem_LenType) len, (Str_CompareFunc) Str_compare);
+    return Str_selectionSortBlock(strs, (Mem_LenType) len, (Str_CompareFn) Str_compare);
 }
 /**
  * @brief sort array of strings with quick sort algorithm
@@ -502,7 +508,7 @@ const char** Str_sort(const char** strs, Str_LenType len) {
  * @return const char** return address of strs
  */
 const char** Str_quickSort(const char** strs, Str_LenType len) {
-    return Str_quickSortBlock(strs, 0, (Mem_LenType) len - 1, (Str_CompareFunc) Str_compare);
+    return Str_quickSortBlock(strs, 0, (Mem_LenType) len - 1, (Str_CompareFn) Str_compare);
 }
 /**
  * @brief sort array of strings in reverse order, use selection sort algorithm
@@ -512,7 +518,7 @@ const char** Str_quickSort(const char** strs, Str_LenType len) {
  * @return char** return address of strs
  */
 const char** Str_sortReverse(const char** strs, Str_LenType len) {
-    return Str_selectionSortBlock(strs, (Mem_LenType) len, (Str_CompareFunc) Str_compareInverse);
+    return Str_selectionSortBlock(strs, (Mem_LenType) len, (Str_CompareFn) Str_compareInverse);
 }
 /**
  * @brief sort array of strings in reverse order, use quick sort algorithm
@@ -522,10 +528,10 @@ const char** Str_sortReverse(const char** strs, Str_LenType len) {
  * @return char** return address of strs
  */
 const char** Str_quickSortReverse(const char** strs, Str_LenType len) {
-    return Str_quickSortBlock(strs, 0, (Mem_LenType) len - 1, (Str_CompareFunc) Str_compareInverse);
+    return Str_quickSortBlock(strs, 0, (Mem_LenType) len - 1, (Str_CompareFn) Str_compareInverse);
 }
 /**
- * @brief splite a strings into multiple addresses, it's unsafe function
+ * @brief splite a strings into multiple addresses, it's unsafe Fntion
  *
  * @param src address of main string
  * @param seperator seperator character
@@ -608,7 +614,7 @@ Str_LenType Str_lastPosOf(const char* str, char c) {
  * @return Str_LenType position of str in strs
  */
 Str_LenType Str_multiCompare(const char** strs, Str_LenType len, const char* str) {
-    return Str_linearSearch(strs, len, str, (Str_CompareFunc) Str_compare);
+    return Str_linearSearch(strs, len, str, (Str_CompareFn) Str_compare);
 }
 /**
  * @brief find string in array of strings with binary search algorithm
@@ -619,7 +625,7 @@ Str_LenType Str_multiCompare(const char** strs, Str_LenType len, const char* str
  * @return Str_LenType position of str in strs
  */
 Str_LenType Str_multiCompareSorted(const char** strs, Str_LenType len, const char* str) {
-    return Str_binarySearch(strs, len, str, (Str_CompareFunc) Str_compare);
+    return Str_binarySearch(strs, len, str, (Str_CompareFn) Str_compare);
 }
 /**
  * @brief find first string that found in array of strings
@@ -660,7 +666,7 @@ const char* Str_findStrsSorted(const char* src, const char** strs, Str_LenType l
 
     while (*src != __Str_Null) {
         for (index = 0; index < len; index++) {
-            if ((pos = Str_binarySearch(strs, len, src, (Str_CompareFunc) Str_compareWord)) != -1) {
+            if ((pos = Str_binarySearch(strs, len, src, (Str_CompareFn) Str_compareWord)) != -1) {
                 result->IndexOf = src;
                 result->Position = pos;
                 return src;
@@ -711,7 +717,7 @@ const char* Str_findStrsSortedFix(const char* src, const char** strs, Str_LenTyp
 
     while (*src != __Str_Null && srcLen-- > 0) {
         for (index = 0; index < len; index++) {
-            if ((pos = Str_binarySearch(strs, len, src, (Str_CompareFunc) Str_compareWord)) != -1) {
+            if ((pos = Str_binarySearch(strs, len, src, (Str_CompareFn) Str_compareWord)) != -1) {
                 result->IndexOf = src;
                 result->Position = pos;
                 return src;
@@ -1057,12 +1063,91 @@ Str_Result Str_convertFloatFix(const char* str, float* num, Str_LenType len) {
 	}
 	return Str_Error;
 }
-
+/**
+ * @brief ignore all characters below than space character (' ' = 0x20)
+ * 
+ * @param str 
+ * @return char* return address of first character
+ */
 char* Str_ignoreWhitespace(const char* str) {
-    while (*str <= ' ' && *str++ != __Str_Null) {}
+    while (*str <= ' ' && *str != __Str_Null) {
+        str++;
+    }
+    return (char*) str;
+}
+/**
+ * @brief ignore all characters above than space character (' ' = 0x20)
+ * 
+ * @param str 
+ * @return char* return address of first whitespace
+ */
+char* Str_ignoreCharacters(const char* str) {
+    while (*str > ' ' && *str != __Str_Null) {
+        str++;
+    }
+    return (char*) str;
+}
+/**
+ * @brief ignore whitespaces from last of string
+ * 
+ * @param str 
+ * @return char* 
+ */
+char* Str_ignoreWhitespaceReverse(const char* str) {
+    str = Str_indexOfEnd(str);
+    while (*str <= ' ' && *str != __Str_Null) {
+        str--;
+    }
+    return (char*) str;
+}
+/**
+ * @brief ignore characters from last of string
+ * 
+ * @param str 
+ * @return char* 
+ */
+char* Str_ignoreCharactersReverse(const char* str) {
+    str = Str_indexOfEnd(str);
+    while (*str > ' ' && *str != __Str_Null) {
+        str--;
+    }
+    return (char*) str;
+}
+/**
+ * @brief remove all whitespace in left of string
+ * 
+ * @param str 
+ * @return char* 
+ */
+char* Str_trimLeft(char* str) {
+    char* pEnd = Str_ignoreWhitespace(str);
+    if (pEnd != str) {
+        Mem_move(str, pEnd, Str_len(str) - (Mem_LenType)(pEnd - str) + 1);
+    }
     return str;
 }
-
+/**
+ * @brief remove all whitespaces in right of string
+ * 
+ * @param str 
+ * @return char* 
+ */
+char* Str_trimRight(char* str) {
+    char* pEnd = Str_ignoreWhitespaceReverse(str) + 1;
+    *pEnd = __Str_Null;
+    return str;
+}
+/**
+ * @brief trim left and right of string
+ * 
+ * @param str 
+ * @return char* 
+ */
+char* Str_trim(char* str) {
+    Str_trimRight(str);
+    Str_trimLeft(str);
+    return str;
+}
 #if STR_ENABLE_DOUBLE
 /**
  * @brief convert double number into string
@@ -1250,7 +1335,7 @@ void Str_swap(const char** itemA, const char** itemB) {
     *itemB = temp;
 }
 
-Str_LenType Str_partition(const char** items, Str_LenType low, Str_LenType high, Str_CompareFunc cmp) {
+Str_LenType Str_partition(const char** items, Str_LenType low, Str_LenType high, Str_CompareFn cmp) {
     const char* pivot = items[high];    // pivot
     Str_LenType i = (low - 1);  // Index of smaller element
     Str_LenType j;
@@ -1267,17 +1352,16 @@ Str_LenType Str_partition(const char** items, Str_LenType low, Str_LenType high,
     return (i + 1);
 }
 /**
- * @brief run quick sort algorithm for items with given compare function
+ * @brief run quick sort algorithm for items with given compare Fntion
  *
  * @param items array of strings
  * @param low position of start
  * @param high position of end
- * @param cmp address of compare function
+ * @param cmp address of compare Fntion
  * @return char** return items
  */
-const char** Str_quickSortBlock(const char** items, Mem_LenType low, Mem_LenType high, Str_CompareFunc cmp) {
-    if (low < high)
-    {
+const char** Str_quickSortBlock(const char** items, Mem_LenType low, Mem_LenType high, Str_CompareFn cmp) {
+    if (low < high) {
         /* pi is partitioning index, arr[p] is now
            at right place */
         Str_LenType pi = Str_partition(items, low, high, cmp);
@@ -1290,15 +1374,17 @@ const char** Str_quickSortBlock(const char** items, Mem_LenType low, Mem_LenType
     return items;
 }
 /**
- * @brief run selection sort algorithm for item with given compare function
+ * @brief run selection sort algorithm for item with given compare Fntion
  *
  * @param items array of strings
  * @param len length of array
- * @param cmp address of compare function
+ * @param cmp address of compare Fntion
  * @return char**
  */
-const char** Str_selectionSortBlock(const char** items, Mem_LenType len, Str_CompareFunc cmp) {
-    Mem_LenType i, j, min_idx;
+const char** Str_selectionSortBlock(const char** items, Mem_LenType len, Str_CompareFn cmp) {
+    Mem_LenType i;
+    Mem_LenType j;
+    Mem_LenType min_idx;
 
     // One by one move boundary of unsorted sub-array
     for (i = 0; i < len-1; i++)
@@ -1315,18 +1401,34 @@ const char** Str_selectionSortBlock(const char** items, Mem_LenType len, Str_Com
     }
     return items;
 }
-
-Str_LenType Str_linearSearch(const char** strs, Str_LenType len, const char* str, Str_CompareFunc cmp) {
+/**
+ * @brief find string in array of strings
+ *
+ * @param strs array of strings
+ * @param len len of array
+ * @param str
+ * @param cmp address of comperator function
+ * @return Str_LenType index of string in array
+ */
+Str_LenType Str_linearSearch(const char** strs, Str_LenType len, const char* str, Str_CompareFn cmp) {
     Str_LenType tempLen = len;
     while (len--) {
-        if (cmp(*strs++, str) == 0) {
+        if (cmp(str, *strs++) == 0) {
             return tempLen - len - 1;
         }
     }
     return -1;
 }
-
-Str_LenType Str_binarySearch(const char** strs, Str_LenType len, const char* str, Str_CompareFunc cmp) {
+/**
+ * @brief search a string in array of strings with binary search algorithm
+ *
+ * @param strs
+ * @param len
+ * @param str
+ * @param cmp
+ * @return Str_LenType
+ */
+Str_LenType Str_binarySearch(const char** strs, Str_LenType len, const char* str, Str_CompareFn cmp) {
     Str_LenType left = 0;
     Str_LenType mid;
     char result;
@@ -1336,6 +1438,144 @@ Str_LenType Str_binarySearch(const char** strs, Str_LenType len, const char* str
     while (left <= len) {
         mid = (len + left) >> 1;
         result = cmp(str, strs[mid]);
+        // Check if str is present at mid
+        if (result == 0) {
+            return mid;
+        }
+        // If str greater, ignore left half
+        else if (result > 0) {
+            left = mid + 1;
+        }
+        // If x is smaller, ignore right half
+        else {
+            len = mid - 1;
+        }
+    }
+    // if we reach here, then element was
+    // not present
+    return -1;
+}
+/**
+ * @brief run selection sort algorithm for item with given compare Fntion, and swap function
+ *
+ * @param items array of items such as struct
+ * @param len length of array
+ * @param itemLen size of single item
+ * @param cmp address of compare Fntion
+ * @param swap address of swap function
+ * @return char**
+ */
+void* Mem_sort(void* items, Mem_LenType len, Mem_LenType itemLen, Mem_CompareFn cmp, Mem_SwapFn swap) {
+    Mem_LenType i;
+    Mem_LenType j;
+    Mem_LenType min_idx;
+    unsigned char* pItems = (unsigned char*) items;
+
+    // One by one move boundary of unsorted sub-array
+    len *= itemLen;
+    for (i = 0; i < len - itemLen; i += itemLen)
+    {
+        // Find the minimum element in unsorted array
+        min_idx = i;
+        for (j = i + itemLen; j < len; j += itemLen) {
+          if (cmp(&pItems[j], &pItems[min_idx], itemLen) < 0) {
+            min_idx = j;
+          }
+        }
+        // Swap the found minimum element with the first element
+        swap(&pItems[min_idx], &pItems[i], itemLen);
+    }
+    return items;
+}
+/**
+ * @brief sort array of items with quick sort algorithm
+ *
+ * @param items array of items such as struct
+ * @param len length of array
+ * @param itemLen sizeof single item
+ * @param cmp address of compare function
+ * @param swap address of swap function
+ * @return const char** return address of strs
+ */
+void* Mem_quickSort(void* items, Mem_LenType len, Mem_LenType itemLen, Mem_CompareFn cmp, Mem_SwapFn swap) {
+    return Mem_quickSortBlock(items, 0, (Mem_LenType) (len - 1) * itemLen, itemLen, cmp, swap);
+}
+Mem_LenType Mem_partition(void* items, Mem_LenType low, Mem_LenType high, Mem_LenType itemLen, Mem_CompareFn cmp, Mem_SwapFn swap) {
+    unsigned char* pItems = (unsigned char*) items;
+    const char* pivot = &pItems[high];    // pivot
+    Mem_LenType i = (low - itemLen);  // Index of smaller element
+    Mem_LenType j;
+    for (j = low; j <= high - itemLen; j += itemLen)
+    {
+        // If current element is smaller than the pivot
+        if (cmp(&pItems[j], pivot, itemLen) < 0)
+        {
+            i += itemLen;    // increment index of smaller element
+            swap(&pItems[i], &pItems[j], itemLen);
+        }
+    }
+    swap(&pItems[i + itemLen], &pItems[high], itemLen);
+    return (i + itemLen);
+}
+void* Mem_quickSortBlock(void* items, Mem_LenType low, Mem_LenType high, Mem_LenType itemLen, Mem_CompareFn cmp, Mem_SwapFn swap) {
+    if (low < high) {
+        /* pi is partitioning index, arr[p] is now
+           at right place */
+        Mem_LenType pi = Mem_partition(items, low, high, itemLen, cmp, swap);
+
+        // Separately sort elements before
+        // partition and after partition
+        Mem_quickSortBlock(items, low, pi - itemLen, itemLen, cmp, swap);
+        Mem_quickSortBlock(items, pi + itemLen, high, itemLen, cmp, swap);
+    }
+    return items;
+}
+/**
+ * @brief find item in array
+ *
+ * @param items
+ * @param len
+ * @param itemLen
+ * @param item
+ * @param cmp
+ * @return Mem_LenType
+ */
+Mem_LenType Mem_linearSearch(const void* items, Mem_LenType len, Mem_LenType itemLen, const void* item, Mem_CompareFn cmp) {
+    unsigned char* pItems = (unsigned char*) items;
+    Mem_LenType tempLen;
+    len *= itemLen;
+    tempLen = len;
+
+    while (len) {
+        len -= itemLen;
+        if (cmp(item, pItems, itemLen) == 0) {
+            return (tempLen - len - itemLen) / itemLen;
+        }
+        pItems += itemLen;
+    }
+    return -1;
+}
+/**
+ * @brief find item in array with binary search algorithm
+ *
+ * @param items
+ * @param len
+ * @param itemLen
+ * @param item
+ * @param cmp
+ * @return Mem_LenType
+ */
+Mem_LenType Mem_binarySearch(const void* items, Mem_LenType len, Mem_LenType itemLen, const void* item, Mem_CompareFn cmp) {
+    unsigned char* pItems = (unsigned char*) items;
+    Mem_LenType left = 0;
+    Mem_LenType mid;
+    char result;
+
+    len--;
+
+    while (left <= len) {
+        mid = (len + left) >> 1;
+        result = cmp(item, &pItems[mid * itemLen], itemLen);
         // Check if str is present at mid
         if (result == 0) {
             return mid;

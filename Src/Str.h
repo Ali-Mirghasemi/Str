@@ -126,6 +126,14 @@ char*       Str_findLastDigitUntil(const char* str, char c);
 char*       Str_findLastDigitFix(const char* str, Str_LenType len);
 
 char*       Str_ignoreWhitespace(const char* str);
+char*       Str_ignoreCharacters(const char* str);
+
+char*       Str_ignoreWhitespaceReverse(const char* str);
+char*       Str_ignoreCharactersReverse(const char* str);
+
+char*       Str_trimLeft(char* str);
+char*       Str_trimRight(char* str);
+char*       Str_trim(char* str);
 
 char*       Str_findReverseDigit(const char* str);
 char*       Str_findReverseDigitFix(const char* str, Str_LenType len);
@@ -213,25 +221,28 @@ Str_Result Str_getFloat(const char* str, float* num, const char** numPos);
  * Sorting Functions
  **/
 
-typedef char (*Mem_CompareFunc) (const void* itemA, const void* ItemB, Mem_LenType itemLen);
+typedef char (*Mem_CompareFn) (const void* itemA, const void* itemB, Mem_LenType itemLen);
+typedef void (*Mem_SwapFn) (const void* itemA, const void* itemB, Mem_LenType itemLen);
 
-void*       Mem_sort(void* items, Mem_LenType len, Mem_LenType itemLen, Mem_CompareFunc func);
-void*       Mem_quickSort(void* items, Mem_LenType len, Mem_LenType itemLen, Mem_CompareFunc func);
+void*       Mem_sort(void* items, Mem_LenType len, Mem_LenType itemLen, Mem_CompareFn cmp, Mem_SwapFn swap);
+void*       Mem_quickSort(void* items, Mem_LenType len, Mem_LenType itemLen, Mem_CompareFn cmp, Mem_SwapFn swap);
 
-void        Mem_swap(void* itemA, void* itemB, Mem_LenType item_len);
-Mem_LenType Mem_partition(void* items, Mem_LenType low, Mem_LenType high);
-void*       Mem_quickSortBlock(void* items, Mem_LenType low, Mem_LenType high);
+Mem_LenType Mem_partition(void* items, Mem_LenType low, Mem_LenType high, Mem_LenType itemLen, Mem_CompareFn cmp, Mem_SwapFn swap);
+void*       Mem_quickSortBlock(void* items, Mem_LenType low, Mem_LenType high, Mem_LenType itemLen, Mem_CompareFn cmp, Mem_SwapFn swap);
 
-typedef char (*Str_CompareFunc) (const char* itemA, const char* ItemB);
+Mem_LenType Mem_linearSearch(const void* items, Mem_LenType len, Mem_LenType itemLen, const void* item, Mem_CompareFn cmp);
+Mem_LenType Mem_binarySearch(const void* items, Mem_LenType len, Mem_LenType itemLen, const void* item, Mem_CompareFn cmp);
+
+typedef char (*Str_CompareFn) (const char* itemA, const char* ItemB);
 
 void        Str_swap(const char** itemA, const char** ItemB);
-Str_LenType Str_partition(const char** items, Str_LenType low, Str_LenType high, Str_CompareFunc cmp);
-const char** Str_quickSortBlock(const char** items, Mem_LenType low, Mem_LenType high, Str_CompareFunc cmp);
+Str_LenType Str_partition(const char** items, Str_LenType low, Str_LenType high, Str_CompareFn cmp);
+const char** Str_quickSortBlock(const char** items, Mem_LenType low, Mem_LenType high, Str_CompareFn cmp);
 
-const char** Str_selectionSortBlock(const char** items, Mem_LenType len, Str_CompareFunc cmp);
+const char** Str_selectionSortBlock(const char** items, Mem_LenType len, Str_CompareFn cmp);
 
-Str_LenType Str_linearSearch(const char** strs, Str_LenType len, const char* str, Str_CompareFunc cmp);
-Str_LenType Str_binarySearch(const char** strs, Str_LenType len, const char* str, Str_CompareFunc cmp);
+Str_LenType Str_linearSearch(const char** strs, Str_LenType len, const char* str, Str_CompareFn cmp);
+Str_LenType Str_binarySearch(const char** strs, Str_LenType len, const char* str, Str_CompareFn cmp);
 
 #ifdef __cplusplus
 }
