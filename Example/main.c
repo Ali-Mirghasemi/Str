@@ -280,6 +280,15 @@ uint32_t Test_sort(void) {
 	};
 	const int tempStrs_Length = ARRAY_LEN(tempStrs);
 
+	const char* tempStrs2[] = {
+		"",
+		"=",
+		"?",
+		"=?",
+		":",
+	};
+	const int tempStrs2_Length = ARRAY_LEN(tempStrs);
+
 	const char* sortedStrs[] = {
 		"-w-",
 		"123",
@@ -287,10 +296,22 @@ uint32_t Test_sort(void) {
 		"ABCD",
 		"abcd",
 	};
+
+	const char* sortedStrs2[] = {
+		"",
+		":",
+		"=",
+		"=?",
+		"?",
+	};
+
 	PRINTLN("Sort:");
 
 	Str_sort(tempStrs, tempStrs_Length);
 	assert(Strs, tempStrs, sortedStrs, tempStrs_Length);
+
+	Str_sort(tempStrs2, tempStrs2_Length);
+	assert(Strs, tempStrs2, sortedStrs2, tempStrs2_Length);
 
 	return (uint32_t) Str_Ok;
 }

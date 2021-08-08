@@ -1,3 +1,13 @@
+/**
+ * @file Str.h
+ * @author Ali Mirghasemi (ali.mirghasemi1376@gmail.com)
+ * @brief this library can use to handle with ASCII strings in c
+ * @version 0.2
+ * @date 2021-08-08
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
 #ifndef _STR_UTILS_H_
 #define _STR_UTILS_H_
 
@@ -84,17 +94,24 @@ char*       Str_append(char* str, char* sub);
 #endif // STR_USE_STRING_LIBRARY
 
 #define STR_NORMAL_LEN      0
-
+/**
+ * @brief result type for str functions
+ */
 typedef enum {
-    Str_Ok,
-    Str_Error
+    Str_Ok      = 0,
+    Str_Error   = 1,
 } Str_Result;
-
+/**
+ * @brief hold result of multi str find
+ */
 typedef struct {
     const char*     IndexOf;
     Str_LenType     Position;
 } Str_MultiResult;
-
+/**
+ * @brief custom radix for parse and convert functions
+ * other values is valid too
+ */
 typedef enum {
     Str_Binary      = 2,
     Str_Nibble      = 4,
@@ -102,6 +119,17 @@ typedef enum {
     Str_Decimal     = 10,
     Str_Hex         = 16,
 }  Str_Radix;
+/**
+ * @brief return type for ignore role function
+ */
+typedef enum {
+    Str_NotIgnore   = 0,
+    Str_Ignore      = 1,
+} Str_Ignore_Result;
+/**
+ * @brief custom role for ignore characters
+ */
+typedef Str_Ignore_Result (*Str_IgnoreRoleFn) (char character);
 
 void*       Mem_copyReverse(void* dest, const void* src, Mem_LenType len);
 void*       Mem_reverse(void* arr, Mem_LenType len);
@@ -127,6 +155,11 @@ char*       Str_findLastDigitFix(const char* str, Str_LenType len);
 
 char*       Str_ignoreWhitespace(const char* str);
 char*       Str_ignoreCharacters(const char* str);
+char*       Str_ignoreAlphaNumeric(const char* str);
+char*       Str_ignoreSpecialCharacters(const char* str);
+char*       Str_ignoreNameCharacters(const char* str);
+char*       Str_ignoreCommandCharacters(const char* str);
+char*       Str_ignore(const char* str, Str_IgnoreRoleFn cmp);
 
 char*       Str_ignoreWhitespaceReverse(const char* str);
 char*       Str_ignoreCharactersReverse(const char* str);

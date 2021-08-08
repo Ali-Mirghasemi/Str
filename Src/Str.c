@@ -802,12 +802,12 @@ Str_Result Str_convertUNum(const char* str, unsigned int* num, Str_Radix base) {
 Str_Result Str_convertNumFix(const char* str, int* num, Str_Radix base, Str_LenType len) {
     if (*str == '-'){
 		char res;
-		res = Str_convertUNumFix(++str, num, base, --len);
+		res = Str_convertUNumFix(++str, (unsigned int*) num, base, --len);
 		*num *= -1;
 		return res;
 	}
 	else {
-		return Str_convertUNumFix(str, num, base, len);
+		return Str_convertUNumFix(str, (unsigned int*) num, base, len);
 	}
 }
 /**
@@ -1065,8 +1065,8 @@ Str_Result Str_convertFloatFix(const char* str, float* num, Str_LenType len) {
 }
 /**
  * @brief ignore all characters below than space character (' ' = 0x20)
- * 
- * @param str 
+ *
+ * @param str
  * @return char* return address of first character
  */
 char* Str_ignoreWhitespace(const char* str) {
@@ -1077,8 +1077,8 @@ char* Str_ignoreWhitespace(const char* str) {
 }
 /**
  * @brief ignore all characters above than space character (' ' = 0x20)
- * 
- * @param str 
+ *
+ * @param str
  * @return char* return address of first whitespace
  */
 char* Str_ignoreCharacters(const char* str) {
@@ -1088,10 +1088,80 @@ char* Str_ignoreCharacters(const char* str) {
     return (char*) str;
 }
 /**
- * @brief ignore whitespaces from last of string
+ * @brief ignore all a-z,A-Z,0-9 characters
  * 
  * @param str 
  * @return char* 
+ */
+char* Str_ignoreAlphaNumeric(const char* str) {
+    while (*str != __Str_Null &&
+            ((*str >= '0' && *str <= '9') ||
+             (*str >= 'A' && *str <= 'z') ||
+             (*str >= 'a' && *str <= 'z'))) {
+        str++;
+    }
+    return (char*) str;
+}
+/**
+ * @brief ignore all special characters
+ * 
+ * @param str 
+ * @return char* 
+ */
+char* Str_ignoreSpecialCharacters(const char* str) {
+    while (*str != __Str_Null &&
+            ((*str >= '!' && *str <= '/') ||
+             (*str >= ':' && *str <= '@') ||
+             (*str >= '[' && *str <= '`') ||
+             (*str >= '{' && *str <= '~'))) {
+        str++;
+    }
+    return (char*) str;
+}
+/**
+ * @brief ignore all following characters: 0-9,A-Z,a-z, '-', '_'
+ * 
+ * @param str 
+ * @return char* 
+ */
+char* Str_ignoreNameCharacters(const char* str) {
+    while (*str != __Str_Null &&
+            ((*str >= '0' && *str <= '9') ||
+             (*str >= 'A' && *str <= 'z') ||
+             (*str >= 'a' && *str <= 'z') ||
+              *str == '-' || *str <= '_')) {
+        str++;
+    }
+    return (char*) str;
+}
+
+char* Str_ignoreCommandCharacters(const char* str) {
+    while (*str != __Str_Null &&
+            ((*str >= ':' && *str <= '@') ||
+             (*str >= '#' && *str <= '&') ||
+              *str == '!')) {
+        str++;
+    }
+    return (char*) str;
+}
+/**
+ * @brief ignore characters in given str with custom role
+ * 
+ * @param str 
+ * @param cmp 
+ * @return char* 
+ */
+char* Str_ignore(const char* str, Str_IgnoreRoleFn cmp) {
+    while (*str != __Str_Null && (char) cmp(*str)) {
+        str++;
+    }
+    return (char*) str;
+}
+/**
+ * @brief ignore whitespaces from last of string
+ *
+ * @param str
+ * @return char*
  */
 char* Str_ignoreWhitespaceReverse(const char* str) {
     str = Str_indexOfEnd(str);
@@ -1102,9 +1172,9 @@ char* Str_ignoreWhitespaceReverse(const char* str) {
 }
 /**
  * @brief ignore characters from last of string
- * 
- * @param str 
- * @return char* 
+ *
+ * @param str
+ * @return char*
  */
 char* Str_ignoreCharactersReverse(const char* str) {
     str = Str_indexOfEnd(str);
@@ -1115,9 +1185,9 @@ char* Str_ignoreCharactersReverse(const char* str) {
 }
 /**
  * @brief remove all whitespace in left of string
- * 
- * @param str 
- * @return char* 
+ *
+ * @param str
+ * @return char*
  */
 char* Str_trimLeft(char* str) {
     char* pEnd = Str_ignoreWhitespace(str);
@@ -1128,9 +1198,9 @@ char* Str_trimLeft(char* str) {
 }
 /**
  * @brief remove all whitespaces in right of string
- * 
- * @param str 
- * @return char* 
+ *
+ * @param str
+ * @return char*
  */
 char* Str_trimRight(char* str) {
     char* pEnd = Str_ignoreWhitespaceReverse(str) + 1;
@@ -1139,9 +1209,9 @@ char* Str_trimRight(char* str) {
 }
 /**
  * @brief trim left and right of string
- * 
- * @param str 
- * @return char* 
+ *
+ * @param str
+ * @return char*
  */
 char* Str_trim(char* str) {
     Str_trimRight(str);
