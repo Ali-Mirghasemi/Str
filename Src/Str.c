@@ -1089,14 +1089,14 @@ char* Str_ignoreCharacters(const char* str) {
 }
 /**
  * @brief ignore all a-z,A-Z,0-9 characters
- * 
- * @param str 
- * @return char* 
+ *
+ * @param str
+ * @return char*
  */
 char* Str_ignoreAlphaNumeric(const char* str) {
     while (*str != __Str_Null &&
             ((*str >= '0' && *str <= '9') ||
-             (*str >= 'A' && *str <= 'z') ||
+             (*str >= 'A' && *str <= 'Z') ||
              (*str >= 'a' && *str <= 'z'))) {
         str++;
     }
@@ -1104,9 +1104,9 @@ char* Str_ignoreAlphaNumeric(const char* str) {
 }
 /**
  * @brief ignore all special characters
- * 
- * @param str 
- * @return char* 
+ *
+ * @param str
+ * @return char*
  */
 char* Str_ignoreSpecialCharacters(const char* str) {
     while (*str != __Str_Null &&
@@ -1120,21 +1120,26 @@ char* Str_ignoreSpecialCharacters(const char* str) {
 }
 /**
  * @brief ignore all following characters: 0-9,A-Z,a-z, '-', '_'
- * 
- * @param str 
- * @return char* 
+ *
+ * @param str
+ * @return char*
  */
 char* Str_ignoreNameCharacters(const char* str) {
     while (*str != __Str_Null &&
             ((*str >= '0' && *str <= '9') ||
-             (*str >= 'A' && *str <= 'z') ||
+             (*str >= 'A' && *str <= 'Z') ||
              (*str >= 'a' && *str <= 'z') ||
-              *str == '-' || *str <= '_')) {
+              *str == '-' || *str == '_')) {
         str++;
     }
     return (char*) str;
 }
-
+/**
+ * @brief ingore following characters: ':'-'@','#'-'&','!'
+ *
+ * @param str
+ * @return char*
+ */
 char* Str_ignoreCommandCharacters(const char* str) {
     while (*str != __Str_Null &&
             ((*str >= ':' && *str <= '@') ||
@@ -1146,10 +1151,10 @@ char* Str_ignoreCommandCharacters(const char* str) {
 }
 /**
  * @brief ignore characters in given str with custom role
- * 
- * @param str 
- * @param cmp 
- * @return char* 
+ *
+ * @param str
+ * @param cmp
+ * @return char*
  */
 char* Str_ignore(const char* str, Str_IgnoreRoleFn cmp) {
     while (*str != __Str_Null && (char) cmp(*str)) {

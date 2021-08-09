@@ -477,11 +477,10 @@ uint32_t Test_findStrsSorted(void) {
 // -------------------------------------------------------------------------------
 
 void ItemUser_swap(const void* itemA, const void* itemB, Mem_LenType itemLen) {
-	ItemUser* temp;
-	temp = itemA;
-	Mem_copy(&temp, itemA, sizeof(ItemUser));
-	Mem_copy(itemA, itemB, sizeof(ItemUser));
-	Mem_copy(itemB, &temp, sizeof(ItemUser));
+	ItemUser temp;
+	Mem_copy(&temp, itemA, itemLen);
+	Mem_copy(itemA, itemB, itemLen);
+	Mem_copy(itemB, &temp, itemLen);
 }
 
 char ItemUser_compareName(const void* itemA, const void* itemB, Mem_LenType itemLen) {
