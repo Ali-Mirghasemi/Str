@@ -728,6 +728,82 @@ const char* Str_findStrsSortedFix(const char* src, const char** strs, Str_LenTyp
     return NULL;
 }
 /**
+ * @brief parse string text into real values, string values must
+ * ex: "\"Test\"" -> "Test"
+ * ex: "\"Line1 \\nLine 2\"" -> "Line 1 \nLine 2"
+ * 
+ * @param string 
+ * @param str 
+ * @return Str_LenType 
+ */
+Str_LenType Str_parseString(const char* string, char* str) {
+    unsigned int unicodeChar;
+    char* pSrc = str;
+    // check start double quote
+    if (*string++ != '"') {
+        return -1;
+    }
+    // parse string
+    while (*string != NULL && *string != '"') {
+        if (*string == '\\') { 
+            string++;
+            switch (*string) {
+                case '"': // quotaion mark
+                    *str = '"';
+                    break;
+                case '\\': // reverse solidus
+                    *str = '\\';
+                    break;
+                case '/': // solidus
+                    *str = '/';
+                    break;
+                case 'b': // backspace
+                    *str = '\b';
+                    break;
+                case 'f': // formfeed
+                    *str = '\f';
+                    break;
+                case 'n': // line feed
+                    *str = '\n';
+                    break;
+                case 'r': // carriage return
+                    *str = '\r';
+                    break;
+                case 't': // tab
+                    *str = '\t';
+                    break;
+                case 'u': // 4x HEX Digit
+                    if (Str_convertUNumFix(++string, &unicodeChar, Str_Hex, 4) == Str_Ok) {
+                        char temp = (char) (unicodeChar >> 8);
+                        string += 3;
+                        if (temp != __Str_Null) {
+                            *str++ = temp;
+                        }
+                        *str = (char) unicodeChar;
+                    }
+                    else {
+                        return -1;
+                    }
+                    break;
+                default: // not support
+                    return -1;
+            }
+        }
+        else {
+            *str = *string;
+        }
+        str++;
+        string++;
+    }
+    // check end double quote
+    if (*string != '"') {
+        return -1;
+    }
+    // return len of str
+    *str = __Str_Null;
+    return (Str_LenType)(str - pSrc);
+}
+/**
  * @brief convert a number into string with specific base index and length
  *
  * @param num number that we want convert
@@ -1076,13 +1152,13 @@ char* Str_ignoreWhitespace(const char* str) {
     return (char*) str;
 }
 /**
- * @brief ignore all characters above than space character (' ' = 0x20)
+ * @brief ignore all characters above and equal than space character (' ' = 0x20)
  *
  * @param str
  * @return char* return address of first whitespace
  */
 char* Str_ignoreCharacters(const char* str) {
-    while (*str > ' ' && *str != __Str_Null) {
+    while (*str >= ' ' && *str != __Str_Null) {
         str++;
     }
     return (char*) str;
@@ -1098,6 +1174,18 @@ char* Str_ignoreAlphaNumeric(const char* str) {
             ((*str >= '0' && *str <= '9') ||
              (*str >= 'A' && *str <= 'Z') ||
              (*str >= 'a' && *str <= 'z'))) {
+        str++;
+    }
+    return (char*) str;
+}
+/**
+ * @brief ignore all numeric characters, 0-9
+ *
+ * @param str
+ * @return char*
+ */
+char* Str_ignoreNumeric(const char* str) {
+    while (*str != __Str_Null && (*str >= '0' && *str <= '9')) {
         str++;
     }
     return (char*) str;
@@ -1189,6 +1277,33 @@ char* Str_ignoreCharactersReverse(const char* str) {
     return (char*) str;
 }
 /**
+ * @brief change all characters into upper case
+ *
+ * @param str
+ * @return char*
+ */
+void Str_upperCase(char* str) {
+    while (*str != __Str_Null) {
+        if (*str >= 'a' && *str <= 'z') {
+            *str = *str - 32;
+        }
+        str++;
+    }
+}
+/**
+ * @brief change all characters into lower case
+ *
+ * @param str
+ */
+void Str_lowerCase(char* str) {
+    while (*str != __Str_Null) {
+        if (*str >= 'A' && *str <= 'Z') {
+            *str = *str + 32;
+        }
+        str++;
+    }
+}
+/**
  * @brief remove all whitespace in left of string
  *
  * @param str
@@ -1222,6 +1337,30 @@ char* Str_trim(char* str) {
     Str_trimRight(str);
     Str_trimLeft(str);
     return str;
+}
+/**
+ * @brief remove all backspace ('\b') characters and left character
+ * ex: "ABCD\bER" -> "ABCER"
+ *
+ * @param str
+ * @return Str_LenType return new length
+ */
+Str_LenType Str_removeBackspace(char* str) {
+    Str_LenType len = Str_len(str);
+    if (len > 0) {
+        char* pStr = str + len - 1;
+        while (str < pStr) {
+            if (*pStr-- == '\b') {
+                Mem_move(pStr, pStr + 2, len - (Mem_LenType)(pStr - str));
+                len -= 2;
+            }
+        }
+        if (*pStr == '\b') {
+            Mem_move(pStr, pStr + 1, len - (Mem_LenType)(pStr - str));
+            len -= 1;
+        }
+    }
+    return len;
 }
 #if STR_ENABLE_DOUBLE
 /**

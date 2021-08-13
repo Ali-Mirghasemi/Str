@@ -45,6 +45,8 @@ uint32_t Test_memQuickSort(void);
 uint32_t Test_memLinearSearch(void);
 uint32_t Test_memBinarySearch(void);
 uint32_t Test_trim(void);
+uint32_t Test_removeBackspace(void);
+uint32_t Test_caseChange(void);
 
 const TestFunc Tests[] = {
     Test_basic,
@@ -63,6 +65,8 @@ const TestFunc Tests[] = {
 	Test_memLinearSearch,
 	Test_memBinarySearch,
 	Test_trim,
+	Test_removeBackspace,
+	Test_caseChange,
 };
 const int Tests_Length = ARRAY_LEN(Tests);
 
@@ -168,6 +172,24 @@ uint32_t Test_parse(void) {
 
 	Str_parseFloat(10.125f, tempStr);
 	assert(Str, tempStr, "10.125");
+
+	Str_parseString("\"Test\"", tempStr);
+	assert(Str, tempStr, "Test");
+
+	Str_parseString("\"Test\"", tempStr);
+	assert(Str, tempStr, "Test");
+
+	Str_parseString("\"Line 1\\nLine 2\"", tempStr);
+	assert(Str, tempStr, "Line 1\nLine 2");
+
+	Str_parseString("\"Test\\u000A\"", tempStr);
+	assert(Str, tempStr, "Test\n");
+
+	Str_parseString("\"Test\\r\\n\"", tempStr);
+	assert(Str, tempStr, "Test\r\n");
+
+	Str_parseString("\"123\\\"123\"", tempStr);
+	assert(Str, tempStr, "123\"123");
 
 	return Str_Ok;
 }
@@ -484,11 +506,11 @@ void ItemUser_swap(const void* itemA, const void* itemB, Mem_LenType itemLen) {
 }
 
 char ItemUser_compareName(const void* itemA, const void* itemB, Mem_LenType itemLen) {
-	return Str_compare(((ItemUser*) itemA)->Name, ((ItemUser*) itemB)->Name);
+	return Str_compare(Mem_castItem(ItemUser, itemA)->Name, Mem_castItem(ItemUser, itemB)->Name);
 }
 
 char ItemUser_compareAge(const void* itemA, const void* itemB, Mem_LenType itemLen) {
-	return Mem_compare(&((ItemUser*) itemA)->Age, &((ItemUser*) itemB)->Age, sizeof(int));
+	return Mem_compare(&Mem_castItem(ItemUser, itemA)->Age, &Mem_castItem(ItemUser, itemB)->Age, sizeof(int));
 }
 
 uint32_t Test_memSort(void) {
@@ -735,7 +757,6 @@ uint32_t Test_trim(void) {
 
 	PRINTLN("Trim:");
 
-
 	Str_copy(tempStr, "Hello");
 	Str_trimLeft(tempStr);
 	assert(Str, tempStr, "Hello");
@@ -771,6 +792,58 @@ uint32_t Test_trim(void) {
 	Str_copy(tempStr, "  Test Case  ");
 	Str_trim(tempStr);
 	assert(Str, tempStr, "Test Case");
+
+	return (uint32_t) Str_Ok;
+}
+// -------------------------------------------------------------------------------
+uint32_t Test_removeBackspace(void) {
+	char* tempStr[64];
+
+	PRINTLN("Remove Backspace:");
+
+	Str_copy(tempStr, "ABCD\bER");
+	Str_removeBackspace(tempStr);
+	assert(Str, tempStr, "ABCER");
+
+	Str_copy(tempStr, "Hello  \bWorld");
+	Str_removeBackspace(tempStr);
+	assert(Str, tempStr, "Hello World");
+
+
+	Str_copy(tempStr, "\b\b\b\b");
+	Str_removeBackspace(tempStr);
+	assert(Str, tempStr, "");
+
+	Str_copy(tempStr, "12345\b");
+	Str_removeBackspace(tempStr);
+	assert(Str, tempStr, "1234");
+
+	Str_copy(tempStr, "\b12345\b");
+	Str_removeBackspace(tempStr);
+	assert(Str, tempStr, "1234");
+
+	return (uint32_t) Str_Ok;
+}
+uint32_t Test_caseChange(void) {
+	char tempStr[64];
+
+	PRINTLN("Case Change:");
+
+	Str_copy(tempStr, "abcd");
+	Str_upperCase(tempStr);
+	assert(Str, tempStr, "ABCD");
+
+	Str_copy(tempStr, "AbCd");
+	Str_upperCase(tempStr);
+	assert(Str, tempStr, "ABCD");
+
+	Str_copy(tempStr, "abcd");
+	Str_lowerCase(tempStr);
+	assert(Str, tempStr, "abcd");
+
+	Str_copy(tempStr, "ABcd");
+	Str_lowerCase(tempStr);
+	assert(Str, tempStr, "abcd");
 
 	return (uint32_t) Str_Ok;
 }

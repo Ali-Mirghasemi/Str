@@ -156,6 +156,7 @@ char*       Str_findLastDigitFix(const char* str, Str_LenType len);
 char*       Str_ignoreWhitespace(const char* str);
 char*       Str_ignoreCharacters(const char* str);
 char*       Str_ignoreAlphaNumeric(const char* str);
+char*       Str_ignoreNumeric(const char* str);
 char*       Str_ignoreSpecialCharacters(const char* str);
 char*       Str_ignoreNameCharacters(const char* str);
 char*       Str_ignoreCommandCharacters(const char* str);
@@ -164,9 +165,14 @@ char*       Str_ignore(const char* str, Str_IgnoreRoleFn cmp);
 char*       Str_ignoreWhitespaceReverse(const char* str);
 char*       Str_ignoreCharactersReverse(const char* str);
 
+void        Str_upperCase(char* str);
+void        Str_lowerCase(char* str);
+
 char*       Str_trimLeft(char* str);
 char*       Str_trimRight(char* str);
 char*       Str_trim(char* str);
+
+Str_LenType Str_removeBackspace(char* str);
 
 char*       Str_findReverseDigit(const char* str);
 char*       Str_findReverseDigitFix(const char* str, Str_LenType len);
@@ -213,6 +219,8 @@ const char* Str_findStrsSortedFix(const char* src, const char** strs, Str_LenTyp
 Str_LenType Str_parseNum(int num, Str_Radix base, char len, char* str);
 Str_LenType Str_parseUNum(unsigned int num, Str_Radix base, char len, char* str);
 
+Str_LenType Str_parseString(const char* string, char* str);
+
 Str_Result Str_convertNum(const char* str, int* num, Str_Radix base);
 Str_Result Str_convertUNum(const char* str, unsigned int* num, Str_Radix base);
 Str_Result Str_convertNumFix(const char* str, int* num, Str_Radix base, Str_LenType len);
@@ -253,6 +261,8 @@ Str_Result Str_getFloat(const char* str, float* num, const char** numPos);
 /**
  * Sorting Functions
  **/
+
+#define Mem_castItem(TYPE, ITEM)            ((TYPE*) ITEM)
 
 typedef char (*Mem_CompareFn) (const void* itemA, const void* itemB, Mem_LenType itemLen);
 typedef void (*Mem_SwapFn) (const void* itemA, const void* itemB, Mem_LenType itemLen);
