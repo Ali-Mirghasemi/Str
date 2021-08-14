@@ -728,7 +728,7 @@ const char* Str_findStrsSortedFix(const char* src, const char** strs, Str_LenTyp
     return NULL;
 }
 /**
- * @brief parse string text into real values, string values must
+ * @brief parse string text into real values
  * ex: "\"Test\"" -> "Test"
  * ex: "\"Line1 \\nLine 2\"" -> "Line 1 \nLine 2"
  * 
@@ -802,6 +802,132 @@ Str_LenType Str_parseString(const char* string, char* str) {
     // return len of str
     *str = __Str_Null;
     return (Str_LenType)(str - pSrc);
+}
+/**
+ * @brief parse string text into real values
+ * ex: "\"Test\"" -> "Test"
+ * ex: "\"Line1 \\nLine 2\"" -> "Line 1 \nLine 2"
+ * 
+ * @param str 
+ * @return Str_LenType 
+ */
+Str_LenType Str_fromString(const char* str) {
+    return Str_parseString(str, str);
+}
+/**
+ * @brief convert str into valid string format for serialize
+ * ex: "Text\n" -> "\"Text\\n\""
+ * 
+ * @param str 
+ * @param string 
+ * @return char* return last index of string 
+ */
+char* Str_convertString(const char* str, char* string) {
+    // set first double quote
+    *string++ = '"';
+    // convert str
+    while (*str != __Str_Null) {
+        if (*str < ' ' || *str == '\\' || *str == '/' || *str == '"') {
+            *string++ = '\\';
+            switch (*str) {
+                case '"':
+                    *string = '"';
+                    break;
+                case '\n':
+                    *string = 'n';
+                    break;
+                case '\r':
+                    *string = 'r';
+                    break;
+                case '\t':
+                    *string = 't';
+                    break;
+                case '\\':
+                    *string = '\\';
+                    break;
+                case '/':
+                    *string = '/';
+                    break;
+                case '\b':
+                    *string = 'b';
+                    break;
+                case '\f':
+                    *string = 'f';
+                    break;
+                default:
+                    // ignore character
+                    string--;
+                    break;
+            }
+        }
+        else {
+            *string = *str;
+        }
+        string++;
+        str++;
+    }
+    // set second double qoute
+    *string++ = '"';
+    *string = __Str_Null;
+    return string;
+}
+/**
+ * @brief convert str into valid string format for serialize
+ * ex: "Text\n" -> "\"Text\\n\""
+ * 
+ * @param str 
+ * @param string 
+ * @param len number of characters for convert
+ * @return char* return last index of string 
+ */
+char* Str_convertStringFix(const char* str, char* string, Str_LenType len) {
+    // set first double quote
+    *string++ = '"';
+    // convert str
+    while (*str != __Str_Null && len-- > 0) {
+        if (*str < ' ' || *str == '\\' || *str == '/' || *str == '"') {
+            *string++ = '\\';
+            switch (*str) {
+                case '"':
+                    *string = '"';
+                    break;
+                case '\n':
+                    *string = 'n';
+                    break;
+                case '\r':
+                    *string = 'r';
+                    break;
+                case '\t':
+                    *string = 't';
+                    break;
+                case '\\':
+                    *string = '\\';
+                    break;
+                case '/':
+                    *string = '/';
+                    break;
+                case '\b':
+                    *string = 'b';
+                    break;
+                case '\f':
+                    *string = 'f';
+                    break;
+                default:
+                    // ignore character
+                    string--;
+                    break;
+            }
+        }
+        else {
+            *string = *str;
+        }
+        string++;
+        str++;
+    }
+    // set second double qoute
+    *string++ = '"';
+    *string = __Str_Null;
+    return string;
 }
 /**
  * @brief convert a number into string with specific base index and length
@@ -1108,6 +1234,7 @@ Str_Result Str_convertFloat(const char* str, float* num) {
  *
  * @param str address of source string
  * @param num address of output number
+ * @param len number of charactres for convert
  * @return Str_Result result of convert
  */
 Str_Result Str_convertFloatFix(const char* str, float* num, Str_LenType len) {
@@ -1173,6 +1300,20 @@ char* Str_ignoreAlphaNumeric(const char* str) {
     while (*str != __Str_Null &&
             ((*str >= '0' && *str <= '9') ||
              (*str >= 'A' && *str <= 'Z') ||
+             (*str >= 'a' && *str <= 'z'))) {
+        str++;
+    }
+    return (char*) str;
+}
+/**
+ * @brief ignore all alphabet characters, A-Z,a-z
+ * 
+ * @param str 
+ * @return char* 
+ */
+char*       Str_ignoreAlphabet(const char* str) {
+    while (*str != __Str_Null &&
+            ((*str >= 'A' && *str <= 'Z') ||
              (*str >= 'a' && *str <= 'z'))) {
         str++;
     }
@@ -1291,12 +1432,40 @@ void Str_upperCase(char* str) {
     }
 }
 /**
+ * @brief change all characters into upper case, with fixed Length
+ *
+ * @param str
+ * @param len
+ * @return char*
+ */
+void Str_upperCaseFix(char* str, Str_LenType len) {
+    while (*str != __Str_Null && len-- > 0) {
+        if (*str >= 'a' && *str <= 'z') {
+            *str = *str - 32;
+        }
+        str++;
+    }
+}
+/**
  * @brief change all characters into lower case
  *
  * @param str
  */
 void Str_lowerCase(char* str) {
     while (*str != __Str_Null) {
+        if (*str >= 'A' && *str <= 'Z') {
+            *str = *str + 32;
+        }
+        str++;
+    }
+}
+/**
+ * @brief change all characters into lower case with fix Length
+ *
+ * @param str
+ */
+void Str_lowerCaseFix(char* str, Str_LenType len) {
+    while (*str != __Str_Null && len-- > 0) {
         if (*str >= 'A' && *str <= 'Z') {
             *str = *str + 32;
         }
@@ -1348,6 +1517,30 @@ char* Str_trim(char* str) {
 Str_LenType Str_removeBackspace(char* str) {
     Str_LenType len = Str_len(str);
     if (len > 0) {
+        char* pStr = str + len - 1;
+        while (str < pStr) {
+            if (*pStr-- == '\b') {
+                Mem_move(pStr, pStr + 2, len - (Mem_LenType)(pStr - str));
+                len -= 2;
+            }
+        }
+        if (*pStr == '\b') {
+            Mem_move(pStr, pStr + 1, len - (Mem_LenType)(pStr - str));
+            len -= 1;
+        }
+    }
+    return len;
+}
+/**
+ * @brief remove all backspace ('\b') characters and left character with fix len
+ * ex: "ABCD\bER" -> "ABCER"
+ *
+ * @param str
+ * @param len
+ * @return Str_LenType return new length
+ */
+Str_LenType Str_removeBackspaceFix(char* str, Str_LenType len) {
+    if (len > 0) {  
         char* pStr = str + len - 1;
         while (str < pStr) {
             if (*pStr-- == '\b') {

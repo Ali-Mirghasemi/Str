@@ -156,6 +156,7 @@ char*       Str_findLastDigitFix(const char* str, Str_LenType len);
 char*       Str_ignoreWhitespace(const char* str);
 char*       Str_ignoreCharacters(const char* str);
 char*       Str_ignoreAlphaNumeric(const char* str);
+char*       Str_ignoreAlphabet(const char* str);
 char*       Str_ignoreNumeric(const char* str);
 char*       Str_ignoreSpecialCharacters(const char* str);
 char*       Str_ignoreNameCharacters(const char* str);
@@ -166,13 +167,16 @@ char*       Str_ignoreWhitespaceReverse(const char* str);
 char*       Str_ignoreCharactersReverse(const char* str);
 
 void        Str_upperCase(char* str);
+void        Str_upperCaseFix(char* str, Str_LenType len);
 void        Str_lowerCase(char* str);
+void        Str_lowerCaseFix(char* str, Str_LenType len);
 
 char*       Str_trimLeft(char* str);
 char*       Str_trimRight(char* str);
 char*       Str_trim(char* str);
 
 Str_LenType Str_removeBackspace(char* str);
+Str_LenType Str_removeBackspaceFix(char* str, Str_LenType len);
 
 char*       Str_findReverseDigit(const char* str);
 char*       Str_findReverseDigitFix(const char* str, Str_LenType len);
@@ -220,11 +224,15 @@ Str_LenType Str_parseNum(int num, Str_Radix base, char len, char* str);
 Str_LenType Str_parseUNum(unsigned int num, Str_Radix base, char len, char* str);
 
 Str_LenType Str_parseString(const char* string, char* str);
+Str_LenType Str_fromString(const char* str);
 
 Str_Result Str_convertNum(const char* str, int* num, Str_Radix base);
 Str_Result Str_convertUNum(const char* str, unsigned int* num, Str_Radix base);
 Str_Result Str_convertNumFix(const char* str, int* num, Str_Radix base, Str_LenType len);
 Str_Result Str_convertUNumFix(const char* str, unsigned int* num, Str_Radix base, Str_LenType len);
+
+char* Str_convertString(const char* str, char* string);
+char* Str_convertStringFix(const char* str, char* string, Str_LenType len);
 
 #if STR_ENABLE_LONG_NUMBER
 

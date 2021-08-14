@@ -191,12 +191,29 @@ uint32_t Test_parse(void) {
 	Str_parseString("\"123\\\"123\"", tempStr);
 	assert(Str, tempStr, "123\"123");
 
+	Str_copy(tempStr, "\"+++\\nTemp\\n---\"");
+	Str_fromString(tempStr);
+	assert(Str, tempStr, "+++\nTemp\n---");
+
+	Str_copy(tempStr, "\"123\"");
+	Str_fromString(tempStr);
+	assert(Str, tempStr, "123");
+
+	Str_copy(tempStr, "\"22\\b33\"");
+	Str_fromString(tempStr);
+	assert(Str, tempStr, "22\b33");
+
+	Str_copy(tempStr, "\"\"");
+	Str_fromString(tempStr);
+	assert(Str, tempStr, "");
+
 	return Str_Ok;
 }
 // -------------------------------------------------------------------------------
 uint32_t Test_convert(void) {
 	int tempNum;
 	float tempFloat;
+	char tempStr[64];
 	PRINTLN("Convert:");
 
 	Str_convertNum("123", &tempNum, Str_Decimal);
@@ -231,6 +248,18 @@ uint32_t Test_convert(void) {
 
 	Str_convertFloatFix("5.575", &tempFloat, 3);
 	assert(Float, tempFloat, 5.5f);
+
+	Str_convertString("Test", tempStr);
+	assert(Str, tempStr, "\"Test\"");
+
+	Str_convertString("123\n456", tempStr);
+	assert(Str, tempStr, "\"123\\n456\"");
+
+	Str_convertString("", tempStr);
+	assert(Str, tempStr, "\"\"");
+
+	Str_convertString("\"Temp\"", tempStr);
+	assert(Str, tempStr, "\"\\\"Temp\\\"\"");
 
 	return Str_Ok;
 }
