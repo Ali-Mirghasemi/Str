@@ -4,9 +4,9 @@
  * @brief this library can use to handle with ASCII strings in c
  * @version 0.2
  * @date 2021-08-08
- * 
+ *
  * @copyright Copyright (c) 2021
- * 
+ *
  */
 #ifndef _STR_UTILS_H_
 #define _STR_UTILS_H_
@@ -273,7 +273,7 @@ Str_Result Str_getFloat(const char* str, float* num, const char** numPos);
 #define Mem_castItem(TYPE, ITEM)            ((TYPE*) ITEM)
 
 typedef char (*Mem_CompareFn) (const void* itemA, const void* itemB, Mem_LenType itemLen);
-typedef void (*Mem_SwapFn) (const void* itemA, const void* itemB, Mem_LenType itemLen);
+typedef void (*Mem_SwapFn) (void* itemA, void* itemB, Mem_LenType itemLen);
 
 void*       Mem_sort(void* items, Mem_LenType len, Mem_LenType itemLen, Mem_CompareFn cmp, Mem_SwapFn swap);
 void*       Mem_quickSort(void* items, Mem_LenType len, Mem_LenType itemLen, Mem_CompareFn cmp, Mem_SwapFn swap);
