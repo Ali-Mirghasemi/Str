@@ -1114,18 +1114,19 @@ Str_Result Str_convertULong(const char* str, unsigned long* num, Str_Radix base)
  *
  * @param str address of source string
  * @param num address of output number
- * @param base base index
+ * @param base base index       
+ * @param len 
  * @return Str_Result result of convert
  */
 Str_Result Str_convertLongFix(const char* str, long* num, Str_Radix base, Str_LenType len) {
     if (*str == '-'){
 		char res;
-		res = Str_convertULongFix(++str, num, base, --len);
+		res = Str_convertULongFix(++str, (unsigned long*) num, base, --len);
 		*num *= -1;
 		return res;
 	}
 	else {
-		return Str_convertULongFix(str, num, base, len);
+		return Str_convertULongFix(str, (unsigned long*) num, base, len);
 	}
 }
 /**
@@ -1909,7 +1910,7 @@ void* Mem_quickSort(void* items, Mem_LenType len, Mem_LenType itemLen, Mem_Compa
 }
 Mem_LenType Mem_partition(void* items, Mem_LenType low, Mem_LenType high, Mem_LenType itemLen, Mem_CompareFn cmp, Mem_SwapFn swap) {
     unsigned char* pItems = (unsigned char*) items;
-    const char* pivot = &pItems[high];    // pivot
+    const unsigned char* pivot = &pItems[high];    // pivot
     Mem_LenType i = (low - itemLen);  // Index of smaller element
     Mem_LenType j;
     for (j = low; j <= high - itemLen; j += itemLen)

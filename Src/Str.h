@@ -22,13 +22,13 @@ extern "C" {
 
 #define STR_ENABLE_CONVERT_STR                              1
 
-#define MEM_MAX_LENGTH                                      255
+#define MEM_MAX_LENGTH                                      127
 
-#define STR_MAX_LENGTH                                      255
+#define STR_MAX_LENGTH                                      127
 
 #define STR_ENABLE_LONG_NUMBER                              1
 
-#define STR_ENABLE_DOUBLE                                   1
+#define STR_ENABLE_DOUBLE                                   0
 
 #define STR_USE_CONST_VARIABLES                             0
 
@@ -36,9 +36,9 @@ extern "C" {
 
 /********************************************************************************************/
 
-#if STR_MAX_LENGTH < 0x7F
+#if STR_MAX_LENGTH <= 0x7F
     typedef char Str_LenType;
-#elif STR_MAX_LENGTH < 0x7FFF
+#elif STR_MAX_LENGTH <= 0x7FFF
     typedef short Str_LenType;
 #else
     typedef int Str_LenType;
@@ -134,7 +134,7 @@ typedef Str_Ignore_Result (*Str_IgnoreRoleFn) (char character);
 void*       Mem_copyReverse(void* dest, const void* src, Mem_LenType len);
 void*       Mem_reverse(void* arr, Mem_LenType len);
 
-char*       Str_copyUntil(char* dest, const char* src, char c);
+char*       Str_copyUntil(char* dest, const char* src, char endChar);
 char*       Str_copyLine(char* dest, const char* src);
 
 char*       Str_reverseIndexOf(const char* str, char c, const char* startOfStr);
@@ -146,11 +146,11 @@ char        Str_compareInverse(const char* str1, const char* str2);
 char        Str_compareWord(const char* str, const char* word);
 
 char*       Str_findDigit(const char* str);
-char*       Str_findDigitUntil(const char* str, char c);
+char*       Str_findDigitUntil(const char* str, char endChar);
 char*       Str_findDigitFix(const char* str, Str_LenType len);
 
 char*       Str_findLastDigit(const char* str);
-char*       Str_findLastDigitUntil(const char* str, char c);
+char*       Str_findLastDigitUntil(const char* str, char endChar);
 char*       Str_findLastDigitFix(const char* str, Str_LenType len);
 
 char*       Str_ignoreWhitespace(const char* str);
@@ -183,7 +183,7 @@ char*       Str_findReverseDigitFix(const char* str, Str_LenType len);
 
 Str_LenType Str_indexesOf(const char* str, char c, char const** indexes);
 Str_LenType Str_indexesOfFix(const char* str, char c, char const** indexes, Str_LenType len);
-Str_LenType Str_indexesOfUntil(const char* str, char c, char const** indexes, char end);
+Str_LenType Str_indexesOfUntil(const char* str, char c, char const** indexes, char endChar);
 
 char*       Str_indexOfAt(const char* str, char c, Str_LenType num);
 char*       Str_indexOfAtUntil(const char* str, char c, Str_LenType num, char end);
@@ -195,7 +195,7 @@ char*       Str_copyReverse(char* dest, const char* src);
 
 char*       Str_substr(char* dest, const char* str, Str_LenType start);
 char*       Str_substrFix(char* dest, const char* str, Str_LenType start, Str_LenType len);
-char*       Str_substrUntil(char* dest, const char* str, Str_LenType start, char c);
+char*       Str_substrUntil(char* dest, const char* str, Str_LenType start, char endChar);
 
 char*       Str_replace(char* str, const char* word, const char* replacement);
 int         Str_replaceAll(char* str, const char* word, const char* replacement);
@@ -205,8 +205,8 @@ const char** Str_quickSort(const char** strs, Str_LenType len);
 const char** Str_sortReverse(const char** strs, Str_LenType len);
 const char** Str_quickSortReverse(const char** strs, Str_LenType len);
 
-Str_LenType Str_split(const char* src, char c, char** strs);
-Str_LenType Str_splitFix(const char* src, char c, char** strs, Str_LenType len);
+Str_LenType Str_split(const char* src, char seperator, char** strs);
+Str_LenType Str_splitFix(const char* src, char seperator, char** strs, Str_LenType len);
 
 Str_LenType Str_posOf(const char* str, char c);
 Str_LenType Str_lastPosOf(const char* str, char c);
@@ -220,8 +220,8 @@ const char* Str_findStrsSorted(const char* src, const char** strs, Str_LenType l
 const char* Str_findStrsFix(const char* src, const char** strs, Str_LenType len, Str_MultiResult* result, Str_LenType srcLen);
 const char* Str_findStrsSortedFix(const char* src, const char** strs, Str_LenType len, Str_MultiResult* result, Str_LenType srcLen);
 
-Str_LenType Str_parseNum(int num, Str_Radix base, char len, char* str);
-Str_LenType Str_parseUNum(unsigned int num, Str_Radix base, char len, char* str);
+Str_LenType Str_parseNum(int num, Str_Radix base, char minLen, char* str);
+Str_LenType Str_parseUNum(unsigned int num, Str_Radix base, char minLen, char* str);
 
 Str_LenType Str_parseString(const char* string, char* str);
 Str_LenType Str_fromString(const char* str);
@@ -236,8 +236,8 @@ char* Str_convertStringFix(const char* str, char* string, Str_LenType len);
 
 #if STR_ENABLE_LONG_NUMBER
 
-Str_LenType Str_parseLong(long num, Str_Radix base, char len, char* str);
-Str_LenType Str_parseULong(unsigned long num, Str_Radix base, char len, char* str);
+Str_LenType Str_parseLong(long num, Str_Radix base, Str_LenType minLen, char* str);
+Str_LenType Str_parseULong(unsigned long num, Str_Radix base, Str_LenType minLen, char* str);
 
 Str_Result Str_convertLong(const char* str, long* num, Str_Radix base);
 Str_Result Str_convertULong(const char* str, unsigned long* num, Str_Radix base);
@@ -286,7 +286,7 @@ Mem_LenType Mem_binarySearch(const void* items, Mem_LenType len, Mem_LenType ite
 
 typedef char (*Str_CompareFn) (const char* itemA, const char* ItemB);
 
-void        Str_swap(const char** itemA, const char** ItemB);
+void        Str_swap(const char** itemA, const char** itemB);
 Str_LenType Str_partition(const char** items, Str_LenType low, Str_LenType high, Str_CompareFn cmp);
 const char** Str_quickSortBlock(const char** items, Mem_LenType low, Mem_LenType high, Str_CompareFn cmp);
 

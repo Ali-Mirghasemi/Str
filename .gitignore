@@ -9,3 +9,7 @@ Example/obj
 Example/bin
 *.layout
 *.depend
+*.c~
+*.cci
+*.h~
+*.hci
