@@ -9,7 +9,7 @@
  **/
 
 #if STR_USE_CONST_VARIABLES
-    const char __Str_Decimal            = 10;
+    const Str_Radix __Str_Decimal       = Str_Decimal;
     const char __Str_0                  = '0';
     const char __Str_9                  = '9';
     const char __Str_Zero               = 0;
@@ -17,7 +17,7 @@
     const char __Str_Null               = '\0';
     const Str_LenType __Str_MaxLength   = STR_MAX_LENGTH;
 #else
-    #define __Str_Decimal               10
+    #define __Str_Decimal               Str_Decimal
     #define __Str_MaxLength             STR_MAX_LENGTH
     #define __Str_0                     '0'
     #define __Str_9                     '9'
@@ -811,7 +811,7 @@ Str_LenType Str_parseString(const char* string, char* str) {
  * @param str 
  * @return Str_LenType 
  */
-Str_LenType Str_fromString(const char* str) {
+Str_LenType Str_fromString(char* str) {
     return Str_parseString(str, str);
 }
 /**
@@ -1003,7 +1003,7 @@ Str_Result Str_convertUNum(const char* str, unsigned int* num, Str_Radix base) {
  */
 Str_Result Str_convertNumFix(const char* str, int* num, Str_Radix base, Str_LenType len) {
     if (*str == '-'){
-		char res;
+		Str_Result res;
 		res = Str_convertUNumFix(++str, (unsigned int*) num, base, --len);
 		*num *= -1;
 		return res;
@@ -1120,7 +1120,7 @@ Str_Result Str_convertULong(const char* str, unsigned long* num, Str_Radix base)
  */
 Str_Result Str_convertLongFix(const char* str, long* num, Str_Radix base, Str_LenType len) {
     if (*str == '-'){
-		char res;
+		Str_Result res;
 		res = Str_convertULongFix(++str, (unsigned long*) num, base, --len);
 		*num *= -1;
 		return res;
@@ -1254,7 +1254,7 @@ Str_Result Str_convertFloatFix(const char* str, float* num, Str_LenType len) {
 		*num = numInt;
 		if (*pDot != __Str_Null){
 			len -= strLen + 1;
-			if (Str_convertNumFix(++pDot, &numInt, __Str_Decimal, len) != Str_Ok){
+			if (Str_convertNumFix(++pDot, &numInt, Str_Decimal, len) != Str_Ok){
 				return Str_Error;
 			}
 			temp = numInt;

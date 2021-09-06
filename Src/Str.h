@@ -224,7 +224,7 @@ Str_LenType Str_parseNum(int num, Str_Radix base, char minLen, char* str);
 Str_LenType Str_parseUNum(unsigned int num, Str_Radix base, char minLen, char* str);
 
 Str_LenType Str_parseString(const char* string, char* str);
-Str_LenType Str_fromString(const char* str);
+Str_LenType Str_fromString(char* str);
 
 Str_Result Str_convertNum(const char* str, int* num, Str_Radix base);
 Str_Result Str_convertUNum(const char* str, unsigned int* num, Str_Radix base);
