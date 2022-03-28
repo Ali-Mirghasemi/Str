@@ -121,6 +121,19 @@ uint32_t Test_basic(void) {
     Str_copyReverse(temp, temp2);
     assert(Str, temp, "ZYX");
 
+    Str_copy(temp, "Test,Index,At");
+    pChar = Str_indexOfAt(temp, ',', 0);
+	assert(Ptr, pChar, NULL);
+
+    pChar = Str_indexOfAt(temp, ',', 1);
+	assert(Ptr, pChar, &temp[4]);
+
+    pChar = Str_indexOfAt(temp, ',', 2);
+	assert(Ptr, pChar, &temp[10]);
+
+    pChar = Str_indexOfAt(temp, ',', 3);
+	assert(Ptr, pChar, NULL);
+
     return (uint32_t) Str_Ok;
 }
 // -------------------------------------------------------------------------------
