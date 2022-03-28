@@ -67,10 +67,10 @@ void*       Mem_reverse(void* arr, Mem_LenType len) {
 	return arr;
 }
 /**
- * @brief this function return end of string (Null charachter)
+ * @brief this function return end of string (Null character)
  *
  * @param str address of string must include 'null' in end of it
- * @return char* address of null charachter
+ * @return char* address of null character
  */
 char* Str_indexOfEnd(const char* str) {
     Str_LenType len = Str_len(str);
@@ -295,16 +295,19 @@ Str_LenType Str_indexesOfUntil(const char* str, char c, char const** indexes, ch
  *
  * @param str address of string
  * @param c charachter that we want to search
- * @param num The number of times the Fntion looks for a character
+ * @param num The number of times the Fuction looks for a character, must greater than 0
  * @return char* address of charachter, return null if not found
  */
-char*       Str_indexOfAt(const char* str, char c, Str_LenType num) {
-    while (num-- > 0) {
-        if (!(str = Str_indexOf(str, c))){
-            break;
+char* Str_indexOfAt(const char* str, char c, Str_LenType num) {
+    if (num > 0 && str != NULL) {
+        while ((str = Str_indexOf(str, c)) != NULL && --num > 0) {
+            str = str + 1;
         }
+        return (char*) str;
     }
-    return (char*) str;
+    else {
+        return NULL;
+    }
 }
 /**
  * @brief This Fntion finds the address of a character in a given number and returns the last one until reach null or ending charachter
@@ -315,7 +318,7 @@ char*       Str_indexOfAt(const char* str, char c, Str_LenType num) {
  * @param end ending charachter
  * @return char* address of charachter, return null if not found
  */
-char*       Str_indexOfAtUntil(const char* str, char c, Str_LenType num, char end) {
+char* Str_indexOfAtUntil(const char* str, char c, Str_LenType num, char end) {
     return Str_indexOfAtFix(str, c, num, Str_posOf(str, end));
 }
 /**
@@ -327,8 +330,8 @@ char*       Str_indexOfAtUntil(const char* str, char c, Str_LenType num, char en
  * @param len length of string
  * @return char* address of charachter, return null if not found
  */
-char*       Str_indexOfAtFix(const char* str, char c, Str_LenType num, Str_LenType len) {
-    char* temp;
+char* Str_indexOfAtFix(const char* str, char c, Str_LenType num, Str_LenType len) {
+    char* temp = NULL;
     while (num-- > 0) {
         temp = Mem_indexOf(str, c, len);
         if (!temp) {
@@ -340,7 +343,7 @@ char*       Str_indexOfAtFix(const char* str, char c, Str_LenType num, Str_LenTy
     return temp;
 }
 
-char*       Str_reverseIndexOf(const char* str, char c, const char* startOfStr) {
+char* Str_reverseIndexOf(const char* str, char c, const char* startOfStr) {
     while (startOfStr <= str) {
         if (*str == c) {
             return (char*) str;
@@ -350,7 +353,7 @@ char*       Str_reverseIndexOf(const char* str, char c, const char* startOfStr) 
     return NULL;
 }
 
-char*       Str_reverseIndexOfFix(const char* str, char c, int length) {
+char* Str_reverseIndexOfFix(const char* str, char c, int length) {
     while (length-- > 0) {
         if (*str == c) {
             return (char*) str;
@@ -731,10 +734,10 @@ const char* Str_findStrsSortedFix(const char* src, const char** strs, Str_LenTyp
  * @brief parse string text into real values
  * ex: "\"Test\"" -> "Test"
  * ex: "\"Line1 \\nLine 2\"" -> "Line 1 \nLine 2"
- * 
- * @param string 
- * @param str 
- * @return Str_LenType 
+ *
+ * @param string
+ * @param str
+ * @return Str_LenType
  */
 Str_LenType Str_parseString(const char* string, char* str) {
     unsigned int unicodeChar;
@@ -745,7 +748,7 @@ Str_LenType Str_parseString(const char* string, char* str) {
     }
     // parse string
     while (*string != NULL && *string != '"') {
-        if (*string == '\\') { 
+        if (*string == '\\') {
             string++;
             switch (*string) {
                 case '"': // quotaion mark
@@ -807,9 +810,9 @@ Str_LenType Str_parseString(const char* string, char* str) {
  * @brief parse string text into real values
  * ex: "\"Test\"" -> "Test"
  * ex: "\"Line1 \\nLine 2\"" -> "Line 1 \nLine 2"
- * 
- * @param str 
- * @return Str_LenType 
+ *
+ * @param str
+ * @return Str_LenType
  */
 Str_LenType Str_fromString(char* str) {
     return Str_parseString(str, str);
@@ -817,10 +820,10 @@ Str_LenType Str_fromString(char* str) {
 /**
  * @brief convert str into valid string format for serialize
  * ex: "Text\n" -> "\"Text\\n\""
- * 
- * @param str 
- * @param string 
- * @return char* return last index of string 
+ *
+ * @param str
+ * @param string
+ * @return char* return last index of string
  */
 char* Str_convertString(const char* str, char* string) {
     // set first double quote
@@ -874,11 +877,11 @@ char* Str_convertString(const char* str, char* string) {
 /**
  * @brief convert str into valid string format for serialize
  * ex: "Text\n" -> "\"Text\\n\""
- * 
- * @param str 
- * @param string 
+ *
+ * @param str
+ * @param string
  * @param len number of characters for convert
- * @return char* return last index of string 
+ * @return char* return last index of string
  */
 char* Str_convertStringFix(const char* str, char* string, Str_LenType len) {
     // set first double quote
@@ -1114,8 +1117,8 @@ Str_Result Str_convertULong(const char* str, unsigned long* num, Str_Radix base)
  *
  * @param str address of source string
  * @param num address of output number
- * @param base base index       
- * @param len 
+ * @param base base index
+ * @param len
  * @return Str_Result result of convert
  */
 Str_Result Str_convertLongFix(const char* str, long* num, Str_Radix base, Str_LenType len) {
@@ -1308,9 +1311,9 @@ char* Str_ignoreAlphaNumeric(const char* str) {
 }
 /**
  * @brief ignore all alphabet characters, A-Z,a-z
- * 
- * @param str 
- * @return char* 
+ *
+ * @param str
+ * @return char*
  */
 char*       Str_ignoreAlphabet(const char* str) {
     while (*str != __Str_Null &&
@@ -1541,7 +1544,7 @@ Str_LenType Str_removeBackspace(char* str) {
  * @return Str_LenType return new length
  */
 Str_LenType Str_removeBackspaceFix(char* str, Str_LenType len) {
-    if (len > 0) {  
+    if (len > 0) {
         char* pStr = str + len - 1;
         while (str < pStr) {
             if (*pStr-- == '\b') {
@@ -2004,7 +2007,7 @@ Mem_LenType Mem_binarySearch(const void* items, Mem_LenType len, Mem_LenType ite
 
 #ifndef STR_USE_STRING_LIBRARY
 
-void*       Mem_copy(void* dest, const void* src, Mem_LenType len) {
+void* Mem_copy(void* dest, const void* src, Mem_LenType len) {
     unsigned char* pDest = (unsigned char*) dest;
     const unsigned char* pSrc = (const unsigned char*) src;
     while (len-- > 0) {
@@ -2012,7 +2015,7 @@ void*       Mem_copy(void* dest, const void* src, Mem_LenType len) {
     }
     return dest;
 }
-char        Mem_compare(const void* arr1, const void* arr2, Mem_LenType len) {
+char Mem_compare(const void* arr1, const void* arr2, Mem_LenType len) {
     const unsigned char* pArr1 = (const unsigned char*) arr1;
     const unsigned char* pArr2 = (const unsigned char*) arr2;
     char result;
@@ -2023,7 +2026,7 @@ char        Mem_compare(const void* arr1, const void* arr2, Mem_LenType len) {
     }
     return result;
 }
-void*       Mem_move(void* dest, const void* src, Mem_LenType len) {
+void* Mem_move(void* dest, const void* src, Mem_LenType len) {
     unsigned char* pDest = (unsigned char*) dest;
     const unsigned char* pSrc = (const unsigned char*) src;
     if (len <= 0 || src == dest) {
@@ -2043,7 +2046,7 @@ void*       Mem_move(void* dest, const void* src, Mem_LenType len) {
     }
     return dest;
 }
-void*       Mem_indexOf(const void* arr, unsigned char value, Mem_LenType len) {
+void* Mem_indexOf(const void* arr, unsigned char value, Mem_LenType len) {
     const unsigned char* pArr = (const unsigned char*) arr;
 
     while (len-- > 0) {
@@ -2054,7 +2057,7 @@ void*       Mem_indexOf(const void* arr, unsigned char value, Mem_LenType len) {
     }
     return NULL;
 }
-void*       Mem_set(void* arr, unsigned char value, Mem_LenType len) {
+void* Mem_set(void* arr, unsigned char value, Mem_LenType len) {
     unsigned char* pArr = (unsigned char*) arr;
 
     while (len-- > 0) {
@@ -2065,7 +2068,7 @@ void*       Mem_set(void* arr, unsigned char value, Mem_LenType len) {
 
 
 
-char*       Str_copy(char* dest, const char* src) {
+char* Str_copy(char* dest, const char* src) {
     char* pDest = dest;
     while (*src != __Str_Null) {
         *pDest++ = *src++;
@@ -2073,10 +2076,10 @@ char*       Str_copy(char* dest, const char* src) {
     *pDest = __Str_Null;
     return dest;
 }
-char*       Str_copyFix(char* dest, const char* src, Str_LenType len) {
+char* Str_copyFix(char* dest, const char* src, Str_LenType len) {
     return Mem_copy(dest, src, len);
 }
-char        Str_compare(const char* str1, const char* str2) {
+char Str_compare(const char* str1, const char* str2) {
     char result;
     while (*str1 != __Str_Null) {
         if ((result = *str1++ - *str2++)) {
@@ -2085,7 +2088,7 @@ char        Str_compare(const char* str1, const char* str2) {
     }
     return result;
 }
-char        Str_compareFix(const char* str1, const char* str2, Str_LenType len) {
+char Str_compareFix(const char* str1, const char* str2, Str_LenType len) {
     return Mem_compare(str1, str2, len);
 }
 Str_LenType Str_len(const char* str) {
@@ -2095,7 +2098,7 @@ Str_LenType Str_len(const char* str) {
     }
     return (Str_LenType) (pStr - str);
 }
-char*       Str_indexOf(char* str, char c) {
+char* Str_indexOf(char* str, char c) {
     while (*str != __Str_Null) {
         if (*str == c) {
             return str;
@@ -2104,7 +2107,7 @@ char*       Str_indexOf(char* str, char c) {
     }
     return NULL;
 }
-char*       Str_lastIndexOf(char* str, char c) {
+char* Str_lastIndexOf(char* str, char c) {
     char* pStr = (char*) Mem_indexOf(str, '\'0', __Str_MaxLength) - 1;
     while (pStr >= str) {
         if (*pStr == c) {
@@ -2114,7 +2117,7 @@ char*       Str_lastIndexOf(char* str, char c) {
     }
     return NULL;
 }
-char*       Str_indexOfStr(char* str, char* sub) {
+char* Str_indexOfStr(char* str, char* sub) {
     while (*str != __Str_Null && str != NULL) {
         str = Str_indexOf(str, *sub);
         if (Str_compareWord(str, sub) == 0) {
@@ -2123,7 +2126,7 @@ char*       Str_indexOfStr(char* str, char* sub) {
     }
     return NULL;
 }
-char*       Str_append(char* str, char* sub) {
+char* Str_append(char* str, char* sub) {
     char* pStr = (char*) Mem_indexOf(str, '\'0', __Str_MaxLength);
     Str_copy(pStr, sub);
     return str;
