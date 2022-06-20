@@ -609,6 +609,16 @@ Str_LenType Str_lastPosOf(const char* str, char c) {
     return (Str_LenType) (Str_lastIndexOf(str, c) - str);
 }
 /**
+ * @brief find position of start of word in string
+ * 
+ * @param str address of string
+ * @param word searching string
+ * @return Str_LenType 
+ */
+Str_LenType Str_posOfStr(const char* str, const char* word) {
+    return (Str_LenType) (Str_indexOfStr(str, word) - str);
+}
+/**
  * @brief find string in array of strings with linear search algorithm
  *
  * @param strs array of strings

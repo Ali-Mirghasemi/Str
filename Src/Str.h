@@ -211,6 +211,8 @@ Str_LenType Str_splitFix(const char* src, char seperator, char** strs, Str_LenTy
 Str_LenType Str_posOf(const char* str, char c);
 Str_LenType Str_lastPosOf(const char* str, char c);
 
+Str_LenType Str_posOfStr(const char* str, const char* word);
+
 Str_LenType Str_multiCompare(const char** strs, Str_LenType len, const char* str);
 Str_LenType Str_multiCompareSorted(const char** strs, Str_LenType len, const char* str);
 
