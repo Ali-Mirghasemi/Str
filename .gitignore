@@ -13,3 +13,5 @@ Example/bin
 *.cci
 *.h~
 *.hci
+Example/Param-Test/obj/
+Example/Str-Test/obj/Debug/
