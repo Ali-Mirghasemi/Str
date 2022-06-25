@@ -15,6 +15,10 @@
 extern "C" {
 #endif /* __cplusplus */
 
+#define STR_VER_MAJOR       0
+#define STR_VER_MINOR       1
+#define STR_VER_FIX         0
+
 /********************************************************************************************/
 /*                                     Configuration                                        */
 /********************************************************************************************/
@@ -22,9 +26,9 @@ extern "C" {
 
 #define STR_ENABLE_CONVERT_STR                              1
 
-#define MEM_MAX_LENGTH                                      127
+#define MEM_MAX_LENGTH                                      512
 
-#define STR_MAX_LENGTH                                      127
+#define STR_MAX_LENGTH                                      512
 
 #define STR_ENABLE_LONG_NUMBER                              1
 
@@ -130,6 +134,21 @@ typedef enum {
  * @brief custom role for ignore characters
  */
 typedef Str_Ignore_Result (*Str_IgnoreRoleFn) (char character);
+/**
+ * @brief string holder
+ */
+typedef struct {
+    char*           Text;
+    Str_LenType     Len;
+} Str;
+/**
+ * @brief const string holder
+ */
+typedef struct {
+    const char*     Text;
+    Str_LenType     Len;
+} StrConst;
+
 
 void*       Mem_copyReverse(void* dest, const void* src, Mem_LenType len);
 void*       Mem_reverse(void* arr, Mem_LenType len);
@@ -222,8 +241,8 @@ const char* Str_findStrsSorted(const char* src, const char** strs, Str_LenType l
 const char* Str_findStrsFix(const char* src, const char** strs, Str_LenType len, Str_MultiResult* result, Str_LenType srcLen);
 const char* Str_findStrsSortedFix(const char* src, const char** strs, Str_LenType len, Str_MultiResult* result, Str_LenType srcLen);
 
-Str_LenType Str_parseNum(int num, Str_Radix base, char minLen, char* str);
-Str_LenType Str_parseUNum(unsigned int num, Str_Radix base, char minLen, char* str);
+Str_LenType Str_parseNum(int num, Str_Radix base, Str_LenType minLen, char* str);
+Str_LenType Str_parseUNum(unsigned int num, Str_Radix base, Str_LenType minLen, char* str);
 
 Str_LenType Str_parseString(const char* string, char* str);
 Str_LenType Str_fromString(char* str);

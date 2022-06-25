@@ -829,7 +829,7 @@ Str_LenType Str_fromString(char* str) {
 }
 /**
  * @brief convert str into valid string format for serialize
- * ex: "Text\n" -> "\"Text\\n\""
+ * ex: "Text\\n" -> "\"Text\\n\""
  *
  * @param str
  * @param string
@@ -951,7 +951,7 @@ char* Str_convertStringFix(const char* str, char* string, Str_LenType len) {
  * @param str address destination string
  * @return Str_LenType return length of str
  */
-Str_LenType Str_parseNum(int num, Str_Radix base, char minLen, char* str) {
+Str_LenType Str_parseNum(int num, Str_Radix base, Str_LenType minLen, char* str) {
     if (num < 0){
 		*str++ = '-';
 		num *= -1;
@@ -970,7 +970,7 @@ Str_LenType Str_parseNum(int num, Str_Radix base, char minLen, char* str) {
  * @param str address destination string
  * @return Str_LenType return length of str
  */
-Str_LenType Str_parseUNum(unsigned int num, Str_Radix base, char minLen, char* str) {
+Str_LenType Str_parseUNum(unsigned int num, Str_Radix base, Str_LenType minLen, char* str) {
     Str_LenType count = 0;
 	char* pStr = str;
 	char temp;
@@ -1067,7 +1067,7 @@ Str_Result Str_convertUNumFix(const char* str, unsigned int* num, Str_Radix base
  * @param str address destination string
  * @return Str_LenType return length of str
  */
-Str_LenType Str_parseLong(long num, Str_Radix base, char minLen, char* str) {
+Str_LenType Str_parseLong(long num, Str_Radix base, Str_LenType minLen, char* str) {
     if (num < 0){
 		*str++ = '-';
 		num *= -1;
@@ -1086,7 +1086,7 @@ Str_LenType Str_parseLong(long num, Str_Radix base, char minLen, char* str) {
  * @param str address destination string
  * @return Str_LenType return length of str
  */
-Str_LenType Str_parseULong(unsigned long num, Str_Radix base, char minLen, char* str) {
+Str_LenType Str_parseULong(unsigned long num, Str_Radix base, Str_LenType minLen, char* str) {
     Str_LenType count = 0;
 	char* pStr = str;
 	char temp;
