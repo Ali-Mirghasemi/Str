@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
-#include "..\Src\Str.h"
+#include "Str.h"
 
 #define PRINTLN						puts
 #define PRINTF						printf
