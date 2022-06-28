@@ -32,7 +32,7 @@
 
 
 /**
- * @brief thie Fntion can use for copy array into another array with reverse order
+ * @brief this Function can use for copy array into another array with reverse order
  *
  * @param src address of source array that we want copy from
  * @param dest address of destination array that we want copy into
@@ -131,7 +131,7 @@ char*       Str_findDigit(const char* str) {
  * @brief find first digit in string and return address of digit, keep search until reach null or reach end charachter
  *
  * @param str address of string
- * @param endChar ending charachter
+ * @param endChar ending character
  * @return char* address of digit in str, return null if nothing found
  */
 char*       Str_findDigitUntil(const char* str, char endChar) {
