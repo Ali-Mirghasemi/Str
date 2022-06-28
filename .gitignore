@@ -15,3 +15,4 @@ Example/bin
 *.hci
 Example/Param-Test/obj/
 Example/Str-Test/obj/Debug/
+Examples/Str-Test/obj/
