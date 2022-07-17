@@ -1963,16 +1963,15 @@ void* Mem_quickSortBlock(void* items, Mem_LenType low, Mem_LenType high, Mem_Len
  */
 Mem_LenType Mem_linearSearch(const void* items, Mem_LenType len, Mem_LenType itemLen, const void* item, Mem_CompareFn cmp) {
     unsigned char* pItems = (unsigned char*) items;
-    Mem_LenType tempLen;
+    Mem_LenType pIndex;
     len *= itemLen;
-    tempLen = len;
+    
 
-    while (len) {
-        len -= itemLen;
+    for (pIndex = 0; pIndex < len; pIndex += itemLen, pItems += itemLen) {
         if (cmp(item, pItems, itemLen) == 0) {
-            return (tempLen - len - itemLen) / itemLen;
+            return pIndex / itemLen;
         }
-        pItems += itemLen;
+        
     }
     return -1;
 }

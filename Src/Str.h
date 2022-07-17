@@ -16,7 +16,7 @@ extern "C" {
 #endif /* __cplusplus */
 
 #define STR_VER_MAJOR       0
-#define STR_VER_MINOR       1
+#define STR_VER_MINOR       2
 #define STR_VER_FIX         0
 
 /********************************************************************************************/
@@ -38,6 +38,8 @@ extern "C" {
 
 #define STR_USE_STRING_LIBRARY                              1
 
+typedef int Mem_CmpResult;
+typedef short Str_CmpResult;
 /********************************************************************************************/
 
 #if STR_MAX_LENGTH <= 0x7F
@@ -293,7 +295,7 @@ Str_Result Str_getFloat(const char* str, float* num, const char** numPos);
 
 #define Mem_castItem(TYPE, ITEM)            ((TYPE*) ITEM)
 
-typedef char (*Mem_CompareFn) (const void* itemA, const void* itemB, Mem_LenType itemLen);
+typedef Mem_CmpResult (*Mem_CompareFn) (const void* itemA, const void* itemB, Mem_LenType itemLen);
 typedef void (*Mem_SwapFn) (void* itemA, void* itemB, Mem_LenType itemLen);
 
 void*       Mem_sort(void* items, Mem_LenType len, Mem_LenType itemLen, Mem_CompareFn cmp, Mem_SwapFn swap);
@@ -305,7 +307,7 @@ void*       Mem_quickSortBlock(void* items, Mem_LenType low, Mem_LenType high, M
 Mem_LenType Mem_linearSearch(const void* items, Mem_LenType len, Mem_LenType itemLen, const void* item, Mem_CompareFn cmp);
 Mem_LenType Mem_binarySearch(const void* items, Mem_LenType len, Mem_LenType itemLen, const void* item, Mem_CompareFn cmp);
 
-typedef char (*Str_CompareFn) (const char* itemA, const char* ItemB);
+typedef Str_CmpResult (*Str_CompareFn) (const char* itemA, const char* ItemB);
 
 void        Str_swap(const char** itemA, const char** itemB);
 Str_LenType Str_partition(const char** items, Str_LenType low, Str_LenType high, Str_CompareFn cmp);
