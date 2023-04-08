@@ -16,8 +16,10 @@ extern "C" {
 #endif /* __cplusplus */
 
 #define STR_VER_MAJOR       0
-#define STR_VER_MINOR       2
+#define STR_VER_MINOR       3
 #define STR_VER_FIX         0
+
+#include <stdint.h>
 
 /********************************************************************************************/
 /*                                     Configuration                                        */
@@ -40,6 +42,14 @@ extern "C" {
 
 typedef int Mem_CmpResult;
 typedef short Str_CmpResult;
+
+typedef int32_t  Str_Num;
+typedef uint32_t Str_UNum;
+
+#if STR_ENABLE_LONG_NUMBER
+    typedef int64_t  Str_Long;
+    typedef uint64_t Str_ULong;
+#endif
 /********************************************************************************************/
 
 #if STR_MAX_LENGTH <= 0x7F
@@ -243,29 +253,29 @@ const char* Str_findStrsSorted(const char* src, const char** strs, Str_LenType l
 const char* Str_findStrsFix(const char* src, const char** strs, Str_LenType len, Str_MultiResult* result, Str_LenType srcLen);
 const char* Str_findStrsSortedFix(const char* src, const char** strs, Str_LenType len, Str_MultiResult* result, Str_LenType srcLen);
 
-Str_LenType Str_parseNum(int num, Str_Radix base, Str_LenType minLen, char* str);
-Str_LenType Str_parseUNum(unsigned int num, Str_Radix base, Str_LenType minLen, char* str);
+Str_LenType Str_parseNum(Str_Num num, Str_Radix base, Str_LenType minLen, char* str);
+Str_LenType Str_parseUNum(Str_UNum num, Str_Radix base, Str_LenType minLen, char* str);
 
 Str_LenType Str_parseString(const char* string, char* str);
 Str_LenType Str_fromString(char* str);
 
-Str_Result Str_convertNum(const char* str, int* num, Str_Radix base);
-Str_Result Str_convertUNum(const char* str, unsigned int* num, Str_Radix base);
-Str_Result Str_convertNumFix(const char* str, int* num, Str_Radix base, Str_LenType len);
-Str_Result Str_convertUNumFix(const char* str, unsigned int* num, Str_Radix base, Str_LenType len);
+Str_Result Str_convertNum(const char* str, Str_Num* num, Str_Radix base);
+Str_Result Str_convertUNum(const char* str, Str_UNum* num, Str_Radix base);
+Str_Result Str_convertNumFix(const char* str, Str_Num* num, Str_Radix base, Str_LenType len);
+Str_Result Str_convertUNumFix(const char* str, Str_UNum* num, Str_Radix base, Str_LenType len);
 
 char* Str_convertString(const char* str, char* string);
 char* Str_convertStringFix(const char* str, char* string, Str_LenType len);
 
 #if STR_ENABLE_LONG_NUMBER
 
-Str_LenType Str_parseLong(long num, Str_Radix base, Str_LenType minLen, char* str);
-Str_LenType Str_parseULong(unsigned long num, Str_Radix base, Str_LenType minLen, char* str);
+Str_LenType Str_parseLong(Str_Long num, Str_Radix base, Str_LenType minLen, char* str);
+Str_LenType Str_parseULong(Str_ULong num, Str_Radix base, Str_LenType minLen, char* str);
 
-Str_Result Str_convertLong(const char* str, long* num, Str_Radix base);
-Str_Result Str_convertULong(const char* str, unsigned long* num, Str_Radix base);
-Str_Result Str_convertLongFix(const char* str, long* num, Str_Radix base, Str_LenType len);
-Str_Result Str_convertULongFix(const char* str, unsigned long* num, Str_Radix base, Str_LenType len);
+Str_Result Str_convertLong(const char* str, Str_Long* num, Str_Radix base);
+Str_Result Str_convertULong(const char* str, Str_ULong* num, Str_Radix base);
+Str_Result Str_convertLongFix(const char* str, Str_Long* num, Str_Radix base, Str_LenType len);
+Str_Result Str_convertULongFix(const char* str, Str_ULong* num, Str_Radix base, Str_LenType len);
 
 #endif // STR_ENABLE_LONG_NUMBER
 

@@ -951,14 +951,14 @@ char* Str_convertStringFix(const char* str, char* string, Str_LenType len) {
  * @param str address destination string
  * @return Str_LenType return length of str
  */
-Str_LenType Str_parseNum(int num, Str_Radix base, Str_LenType minLen, char* str) {
+Str_LenType Str_parseNum(Str_Num num, Str_Radix base, Str_LenType minLen, char* str) {
     if (num < 0){
 		*str++ = '-';
 		num *= -1;
-		return Str_parseUNum((int) num, base, minLen, str) + 1;
+		return Str_parseUNum((Str_UNum) num, base, minLen, str) + 1;
 	}
 	else {
-		return Str_parseUNum((int) num, base, minLen, str);
+		return Str_parseUNum((Str_UNum) num, base, minLen, str);
 	}
 }
 /**
@@ -970,7 +970,7 @@ Str_LenType Str_parseNum(int num, Str_Radix base, Str_LenType minLen, char* str)
  * @param str address destination string
  * @return Str_LenType return length of str
  */
-Str_LenType Str_parseUNum(unsigned int num, Str_Radix base, Str_LenType minLen, char* str) {
+Str_LenType Str_parseUNum(Str_UNum num, Str_Radix base, Str_LenType minLen, char* str) {
     Str_LenType count = 0;
 	char* pStr = str;
 	char temp;
@@ -992,7 +992,7 @@ Str_LenType Str_parseUNum(unsigned int num, Str_Radix base, Str_LenType minLen, 
  * @param base base index
  * @return Str_Result result of convert
  */
-Str_Result Str_convertNum(const char* str, int* num, Str_Radix base) {
+Str_Result Str_convertNum(const char* str, Str_Num* num, Str_Radix base) {
     return Str_convertNumFix(str, num, base, __Str_MaxLength);
 }
 /**
@@ -1003,7 +1003,7 @@ Str_Result Str_convertNum(const char* str, int* num, Str_Radix base) {
  * @param base base index
  * @return Str_Result result of convert
  */
-Str_Result Str_convertUNum(const char* str, unsigned int* num, Str_Radix base) {
+Str_Result Str_convertUNum(const char* str, Str_UNum* num, Str_Radix base) {
     return Str_convertUNumFix(str, num, base, __Str_MaxLength);
 }
 /**
@@ -1014,15 +1014,15 @@ Str_Result Str_convertUNum(const char* str, unsigned int* num, Str_Radix base) {
  * @param base base index
  * @return Str_Result result of convert
  */
-Str_Result Str_convertNumFix(const char* str, int* num, Str_Radix base, Str_LenType len) {
+Str_Result Str_convertNumFix(const char* str, Str_Num* num, Str_Radix base, Str_LenType len) {
     if (*str == '-'){
 		Str_Result res;
-		res = Str_convertUNumFix(++str, (unsigned int*) num, base, --len);
+		res = Str_convertUNumFix(++str, (Str_UNum*) num, base, --len);
 		*num *= -1;
 		return res;
 	}
 	else {
-		return Str_convertUNumFix(str, (unsigned int*) num, base, len);
+		return Str_convertUNumFix(str, (Str_UNum*) num, base, len);
 	}
 }
 /**
@@ -1033,8 +1033,8 @@ Str_Result Str_convertNumFix(const char* str, int* num, Str_Radix base, Str_LenT
  * @param base base index
  * @return Str_Result result of convert
  */
-Str_Result Str_convertUNumFix(const char* str, unsigned int* num, Str_Radix base, Str_LenType len) {
-    unsigned int temp;
+Str_Result Str_convertUNumFix(const char* str, Str_UNum* num, Str_Radix base, Str_LenType len) {
+    Str_UNum temp;
 	*num = 0;
 	while (*str != __Str_Null && len-- > 0){
 		if (*str >= __Str_0 && *str <= __Str_9){
@@ -1067,14 +1067,14 @@ Str_Result Str_convertUNumFix(const char* str, unsigned int* num, Str_Radix base
  * @param str address destination string
  * @return Str_LenType return length of str
  */
-Str_LenType Str_parseLong(long num, Str_Radix base, Str_LenType minLen, char* str) {
+Str_LenType Str_parseLong(Str_Long num, Str_Radix base, Str_LenType minLen, char* str) {
     if (num < 0){
 		*str++ = '-';
 		num *= -1;
-		return Str_parseULong((long) num, base, minLen, str) + 1;
+		return Str_parseULong((Str_ULong) num, base, minLen, str) + 1;
 	}
 	else {
-		return Str_parseULong((long) num, base, minLen, str);
+		return Str_parseULong((Str_ULong) num, base, minLen, str);
 	}
 }
 /**
@@ -1086,7 +1086,7 @@ Str_LenType Str_parseLong(long num, Str_Radix base, Str_LenType minLen, char* st
  * @param str address destination string
  * @return Str_LenType return length of str
  */
-Str_LenType Str_parseULong(unsigned long num, Str_Radix base, Str_LenType minLen, char* str) {
+Str_LenType Str_parseULong(Str_ULong num, Str_Radix base, Str_LenType minLen, char* str) {
     Str_LenType count = 0;
 	char* pStr = str;
 	char temp;
@@ -1108,7 +1108,7 @@ Str_LenType Str_parseULong(unsigned long num, Str_Radix base, Str_LenType minLen
  * @param base base index
  * @return Str_Result result of convert
  */
-Str_Result Str_convertLong(const char* str, long* num, Str_Radix base) {
+Str_Result Str_convertLong(const char* str, Str_Long* num, Str_Radix base) {
     return Str_convertLongFix(str, num, base, __Str_MaxLength);
 }
 /**
@@ -1119,7 +1119,7 @@ Str_Result Str_convertLong(const char* str, long* num, Str_Radix base) {
  * @param base base index
  * @return Str_Result result of convert
  */
-Str_Result Str_convertULong(const char* str, unsigned long* num, Str_Radix base) {
+Str_Result Str_convertULong(const char* str, Str_ULong* num, Str_Radix base) {
     return Str_convertULongFix(str, num, base, __Str_MaxLength);
 }
 /**
@@ -1131,15 +1131,15 @@ Str_Result Str_convertULong(const char* str, unsigned long* num, Str_Radix base)
  * @param len
  * @return Str_Result result of convert
  */
-Str_Result Str_convertLongFix(const char* str, long* num, Str_Radix base, Str_LenType len) {
+Str_Result Str_convertLongFix(const char* str, Str_Long* num, Str_Radix base, Str_LenType len) {
     if (*str == '-'){
 		Str_Result res;
-		res = Str_convertULongFix(++str, (unsigned long*) num, base, --len);
+		res = Str_convertULongFix(++str, (Str_ULong*) num, base, --len);
 		*num *= -1;
 		return res;
 	}
 	else {
-		return Str_convertULongFix(str, (unsigned long*) num, base, len);
+		return Str_convertULongFix(str, (Str_ULong*) num, base, len);
 	}
 }
 /**
@@ -1150,8 +1150,8 @@ Str_Result Str_convertLongFix(const char* str, long* num, Str_Radix base, Str_Le
  * @param base base index
  * @return Str_Result result of convert
  */
-Str_Result Str_convertULongFix(const char* str, unsigned long* num, Str_Radix base, Str_LenType len) {
-    char temp;
+Str_Result Str_convertULongFix(const char* str, Str_ULong* num, Str_Radix base, Str_LenType len) {
+    Str_UNum temp;
 	*num = 0;
 	while (*str != __Str_Null && len-- > 0){
 		if (*str >= __Str_0 && *str <= __Str_9){
