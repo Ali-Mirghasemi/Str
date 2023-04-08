@@ -34,7 +34,7 @@ extern "C" {
 
 #define STR_ENABLE_LONG_NUMBER                              1
 
-#define STR_ENABLE_DOUBLE                                   0
+#define STR_ENABLE_DOUBLE                                   1
 
 #define STR_USE_CONST_VARIABLES                             0
 
