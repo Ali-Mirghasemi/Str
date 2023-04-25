@@ -67,15 +67,30 @@ void*       Mem_reverse(void* arr, Mem_LenType len) {
 	return arr;
 }
 /**
- * @brief this function return end of string (Null character)
+ * @brief this function return address of last character
  *
- * @param str address of string must include 'null' in end of it
- * @return char* address of null character
+ * @param str 
+ * @return 
  */
 char* Str_indexOfEnd(const char* str) {
     Str_LenType len = Str_len(str);
     if (len) {
         return (char*) &str[len - 1];
+    }
+    else {
+        return NULL;
+    }
+}
+/**
+ * @brief this function return end of string (Null character)
+ * 
+ * @param str address of string must include 'null' in end of it
+ * @return char* address of null character
+ */
+char* Str_indexOfNull(const char* str) {
+    Str_LenType len = Str_len(str);
+    if (len) {
+        return (char*) &str[len];
     }
     else {
         return NULL;
@@ -299,9 +314,11 @@ Str_LenType Str_indexesOfUntil(const char* str, char c, char const** indexes, ch
  * @return char* address of charachter, return null if not found
  */
 char* Str_indexOfAt(const char* str, char c, Str_LenType num) {
-    if (num > 0 && str != NULL) {
-        while ((str = Str_indexOf(str, c)) != NULL && --num > 0) {
-            str = str + 1;
+    if (str != NULL) {
+        if (num > 0) {
+            while ((str = Str_indexOf(str, c)) != NULL && --num > 0) {
+                str = str + 1;
+            }
         }
         return (char*) str;
     }
@@ -610,10 +627,10 @@ Str_LenType Str_lastPosOf(const char* str, char c) {
 }
 /**
  * @brief find position of start of word in string
- * 
+ *
  * @param str address of string
  * @param word searching string
- * @return Str_LenType 
+ * @return Str_LenType
  */
 Str_LenType Str_posOfStr(const char* str, const char* word) {
     return (Str_LenType) (Str_indexOfStr(str, word) - str);
@@ -730,7 +747,7 @@ const char* Str_findStrsSortedFix(const char* src, const char** strs, Str_LenTyp
 
     while (*src != __Str_Null && srcLen-- > 0) {
         for (index = 0; index < len; index++) {
-            if ((pos = Str_binarySearch(strs, len, src, (Str_CompareFn) Str_compareWord)) != -1) {
+            if ((pos = Str_binarySearch(strs, len, src, (Str_CompareFn) Str_compareWord)) >= 0) {
                 result->IndexOf = src;
                 result->Position = pos;
                 return src;
@@ -757,7 +774,7 @@ Str_LenType Str_parseString(const char* string, char* str) {
         return -1;
     }
     // parse string
-    while (*string != NULL && *string != '"') {
+    while (*string != '\0' && *string != '"') {
         if (*string == '\\') {
             string++;
             switch (*string) {
@@ -1745,6 +1762,53 @@ Str_Result Str_getFloat(const char* str, float* num, const char** numPos) {
 	return Str_Error;
 }
 /**
+ * @brief get token from an string
+ * ex: getToken("123,ABCD,48", ',', 1, token);
+ *     assert(token, "ABCD");
+ *
+ * @param str
+ * @param separator
+ * @param index
+ * @param token
+ * @return Str_Result
+ */
+Str_Result Str_getToken(const char* str, char separator, Str_LenType index, char* token) {
+    return Str_getTokenFix(str, separator, index, token, __Str_MaxLength);
+}
+/**
+ * @brief get token from an string
+ * ex: getTokenFix("123,ABCD,48", ',', 1, token, sizeof(token));
+ *     assert(token, "ABCD");
+ * 
+ * @param str 
+ * @param separator 
+ * @param index 
+ * @param token 
+ * @param len 
+ * @return Str_Result 
+ */
+Str_Result Str_getTokenFix(const char* str, char separator, Str_LenType index, char* token, Str_LenType len) {
+    if ((str = Str_indexOfAt(str, separator, index)) != NULL) {
+        char* end;
+        Mem_LenType tokenLen;
+        if (*str == separator) {
+            str++;
+        }
+        if ((end = Str_indexOf(str, separator)) == NULL) {
+            end = Str_indexOfNull(str);
+        }
+        tokenLen = (Mem_LenType)(end - str);
+        if (tokenLen >= len) {
+            tokenLen = len - 1;
+        }
+        Mem_copy(token, str, tokenLen);
+        token[tokenLen] = __Str_Null;
+        return Str_Ok;
+    }
+
+    return Str_Error;
+}
+/**
  * @brief swap address of two string
  *
  * @param itemA string 1
@@ -1965,13 +2029,13 @@ Mem_LenType Mem_linearSearch(const void* items, Mem_LenType len, Mem_LenType ite
     unsigned char* pItems = (unsigned char*) items;
     Mem_LenType pIndex;
     len *= itemLen;
-    
+
 
     for (pIndex = 0; pIndex < len; pIndex += itemLen, pItems += itemLen) {
         if (cmp(item, pItems, itemLen) == 0) {
             return pIndex / itemLen;
         }
-        
+
     }
     return -1;
 }

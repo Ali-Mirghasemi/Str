@@ -16,7 +16,7 @@ extern "C" {
 #endif /* __cplusplus */
 
 #define STR_VER_MAJOR       0
-#define STR_VER_MINOR       3
+#define STR_VER_MINOR       4
 #define STR_VER_FIX         0
 
 #include <stdint.h>
@@ -27,6 +27,10 @@ extern "C" {
 #define STR_ENABLE_PARSE                                    1
 
 #define STR_ENABLE_CONVERT_STR                              1
+
+#define MEM_MAX_LENGTH                                      1024
+
+#define STR_MAX_LENGTH                                      1024
 
 #define STR_ENABLE_LONG_NUMBER                              1
 
@@ -155,6 +159,7 @@ char*       Str_reverseIndexOf(const char* str, char c, const char* startOfStr);
 char*       Str_reverseIndexOfFix(const char* str, char c, int length);
 
 char*       Str_indexOfEnd(const char* str);
+char*       Str_indexOfNull(const char* str);
 
 char        Str_compareInverse(const char* str1, const char* str2);
 char        Str_compareWord(const char* str, const char* word);
@@ -281,6 +286,9 @@ Str_Result Str_convertDoubleFix(const char* str, double* num, Str_LenType len);
 Str_Result Str_getNum(const char* str, int* num, const char** numPos);
 Str_Result Str_getUNum(const char* str, unsigned int* num, const char** numPos);
 Str_Result Str_getFloat(const char* str, float* num, const char** numPos);
+
+Str_Result Str_getToken(const char* str, char separator, Str_LenType index, char* token);
+Str_Result Str_getTokenFix(const char* str, char separator, Str_LenType index, char* token, Str_LenType len);
 
 /**
  * Sorting Functions
