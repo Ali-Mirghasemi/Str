@@ -83,7 +83,7 @@ int main(void) {
 			PRINTF("Error in Line: %d\r\n", res >> 1);
 		}
 		countTestError += (int) res & 1;
-		PRINTF("---------------------------------------------- \r\n", testIndex);
+		PRINTF("---------------------------------------------- \r\n");
 	}
 	PRINTLN("Test Done\r\n");
 	PRINTF("Tests Errors: %d\r\n", countTestError);
@@ -123,7 +123,7 @@ uint32_t Test_basic(void) {
 
     Str_copy(temp, "Test,Index,At");
     pChar = Str_indexOfAt(temp, ',', 0);
-	assert(Ptr, pChar, NULL);
+	assert(Ptr, pChar, &temp[0]);
 
     pChar = Str_indexOfAt(temp, ',', 1);
 	assert(Ptr, pChar, &temp[4]);
@@ -281,6 +281,7 @@ uint32_t Test_get(void) {
 	int tempNum;
 	float tempFloat;
 	const char* numPos;
+	char token[32];
 	PRINTLN("Get:");
 
 	Str_getNum("This is my number: 1234", &tempNum, &numPos);
@@ -303,6 +304,15 @@ uint32_t Test_get(void) {
 
 	Str_getFloat("-- 3.5 --", &tempFloat, &numPos);
 	assert(Float, tempFloat, 3.5f);
+
+	Str_getToken("ABCD,12345,QWERTY", ',', 2, token);
+	assert(Str, token, "QWERTY");
+
+	Str_getToken("ABCD,12345,QWERTY", ',', 1, token);
+	assert(Str, token, "12345");
+
+	Str_getToken("ABCD,12345,QWERTY", ',', 0, token);
+	assert(Str, token, "ABCD");
 
 	return Str_Ok;
 }
@@ -399,7 +409,6 @@ uint32_t Test_quickSort(void) {
 		"yellow",
 		"your",
 	};
-	const int sortedStrs_Length = ARRAY_LEN(sortedStrs);
 
 	PRINTLN("Quick Sort:");
 
@@ -495,15 +504,15 @@ uint32_t Test_findStrs(void) {
 
 	Str_findStrs(Text1, tempStrs, tempStrs_Length, &result);
 	assert(Num, result.Position, 0);
-	assert(Num, result.IndexOf, &Text1[0]);
+	assert(Ptr, result.IndexOf, &Text1[0]);
 
 	Str_findStrs(Text2, tempStrs, tempStrs_Length, &result);
 	assert(Num, result.Position, 3);
-	assert(Num, result.IndexOf, &Text2[12]);
+	assert(Ptr, result.IndexOf, &Text2[12]);
 
 	Str_findStrs(Text3, tempStrs, tempStrs_Length, &result);
 	assert(Num, result.Position, 4);
-	assert(Num, result.IndexOf, &Text3[24]);
+	assert(Ptr, result.IndexOf, &Text3[24]);
 
 	return (uint32_t) Str_Ok;
 }
@@ -526,32 +535,32 @@ uint32_t Test_findStrsSorted(void) {
 
 	Str_findStrsSorted(Text1, tempStrs, tempStrs_Length, &result);
 	assert(Num, result.Position, 0);
-	assert(Num, result.IndexOf, &Text1[0]);
+	assert(Ptr, result.IndexOf, &Text1[0]);
 
 	Str_findStrsSorted(Text2, tempStrs, tempStrs_Length, &result);
 	assert(Num, result.Position, 3);
-	assert(Num, result.IndexOf, &Text2[12]);
+	assert(Ptr, result.IndexOf, &Text2[12]);
 
 	Str_findStrsSorted(Text3, tempStrs, tempStrs_Length, &result);
 	assert(Num, result.Position, 4);
-	assert(Num, result.IndexOf, &Text3[24]);
+	assert(Ptr, result.IndexOf, &Text3[24]);
 
 	return (uint32_t) Str_Ok;
 }
 // -------------------------------------------------------------------------------
 
-void ItemUser_swap(const void* itemA, const void* itemB, Mem_LenType itemLen) {
+void ItemUser_swap(void* itemA, void* itemB, Mem_LenType itemLen) {
 	ItemUser temp;
 	Mem_copy(&temp, itemA, itemLen);
 	Mem_copy(itemA, itemB, itemLen);
 	Mem_copy(itemB, &temp, itemLen);
 }
 
-char ItemUser_compareName(const void* itemA, const void* itemB, Mem_LenType itemLen) {
+Mem_CmpResult ItemUser_compareName(const void* itemA, const void* itemB, Mem_LenType itemLen) {
 	return Str_compare(Mem_castItem(ItemUser, itemA)->Name, Mem_castItem(ItemUser, itemB)->Name);
 }
 
-char ItemUser_compareAge(const void* itemA, const void* itemB, Mem_LenType itemLen) {
+Mem_CmpResult ItemUser_compareAge(const void* itemA, const void* itemB, Mem_LenType itemLen) {
 	return Mem_compare(&Mem_castItem(ItemUser, itemA)->Age, &Mem_castItem(ItemUser, itemB)->Age, sizeof(int));
 }
 
@@ -663,12 +672,12 @@ uint32_t Test_memQuickSort(void) {
     return (uint32_t) Str_Ok;
 }
 // -------------------------------------------------------------------------------
-char ItemUser_compareByName(const void* name, const void* item, Mem_LenType itemLen) {
-	return Str_compare((const char*) name, ((ItemUser*) item)->Name);
+Mem_CmpResult ItemUser_compareByName(const void* name, const void* item, Mem_LenType itemLen) {
+	return (Mem_CmpResult) Str_compare((const char*) name, ((ItemUser*) item)->Name);
 }
 
-char ItemUser_compareByAge(const void* age, const void* item, Mem_LenType itemLen) {
-	return Mem_compare((const int*) age, &((ItemUser*) item)->Age, sizeof(int));
+Mem_CmpResult ItemUser_compareByAge(const void* age, const void* item, Mem_LenType itemLen) {
+	return (Mem_CmpResult) Mem_compare((const int*) age, &((ItemUser*) item)->Age, sizeof(int));
 }
 
 uint32_t Test_memLinearSearch(void) {
@@ -839,7 +848,7 @@ uint32_t Test_trim(void) {
 }
 // -------------------------------------------------------------------------------
 uint32_t Test_removeBackspace(void) {
-	char* tempStr[64];
+	char tempStr[64];
 
 	PRINTLN("Remove Backspace:");
 
@@ -934,7 +943,7 @@ uint32_t Assert_Ptr(const void* ptr1, const void* ptr2, uint32_t line) {
 
 uint32_t Assert_ItemUsers(const ItemUser* items1, const ItemUser* items2, int len, uint32_t line) {
 	int tempLen = len;
-	const char** tempStrs = items1;
+	const ItemUser* tempStrs = items1;
 	while (len--) {
 		if (Mem_compare(items1++, items2++, sizeof(ItemUser))) {
 			printItemUsers(tempStrs, tempLen);
