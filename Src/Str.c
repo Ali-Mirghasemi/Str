@@ -1773,7 +1773,7 @@ Str_Result Str_getFloat(const char* str, float* num, const char** numPos) {
  * @return Str_Result
  */
 Str_Result Str_getToken(const char* str, char separator, Str_LenType index, char* token) {
-    return Str_getTokenFix(str, separator, index, token, __Str_MaxLength);
+    return Str_getTokenFix(str, separator, index, token, STR_NORMAL_LEN);
 }
 /**
  * @brief get token from an string
@@ -1798,7 +1798,7 @@ Str_Result Str_getTokenFix(const char* str, char separator, Str_LenType index, c
             end = Str_indexOfNull(str);
         }
         tokenLen = (Mem_LenType)(end - str);
-        if (tokenLen >= len) {
+        if (STR_NORMAL_LEN != len && tokenLen >= len) {
             tokenLen = len - 1;
         }
         Mem_copy(token, str, tokenLen);
