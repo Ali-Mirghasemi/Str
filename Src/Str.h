@@ -28,10 +28,6 @@ extern "C" {
 
 #define STR_ENABLE_CONVERT_STR                              1
 
-#define MEM_MAX_LENGTH                                      512
-
-#define STR_MAX_LENGTH                                      512
-
 #define STR_ENABLE_LONG_NUMBER                              1
 
 #define STR_ENABLE_DOUBLE                                   1
@@ -50,23 +46,10 @@ typedef uint32_t Str_UNum;
     typedef int64_t  Str_Long;
     typedef uint64_t Str_ULong;
 #endif
+
+typedef int16_t Str_LenType;
+typedef int16_t Mem_LenType;
 /********************************************************************************************/
-
-#if STR_MAX_LENGTH <= 0x7F
-    typedef char Str_LenType;
-#elif STR_MAX_LENGTH <= 0x7FFF
-    typedef short Str_LenType;
-#else
-    typedef int Str_LenType;
-#endif // STR_MAX_Length
-
-#if MEM_MAX_LENGTH < 0x7F
-    typedef char Mem_LenType;
-#elif STR_MAX_LENGTH < 0x7FFF
-    typedef short Mem_LenType;
-#else
-    typedef int Mem_LenType;
-#endif // STR_MAX_Length
 
 #if STR_USE_STRING_LIBRARY
 #include <string.h>
