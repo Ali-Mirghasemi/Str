@@ -69,8 +69,8 @@ void*       Mem_reverse(void* arr, Mem_LenType len) {
 /**
  * @brief this function return address of last character
  *
- * @param str 
- * @return 
+ * @param str
+ * @return
  */
 char* Str_indexOfEnd(const char* str) {
     Str_LenType len = Str_len(str);
@@ -83,7 +83,7 @@ char* Str_indexOfEnd(const char* str) {
 }
 /**
  * @brief this function return end of string (Null character)
- * 
+ *
  * @param str address of string must include 'null' in end of it
  * @return char* address of null character
  */
@@ -1777,15 +1777,15 @@ Str_Result Str_getToken(const char* str, char separator, Str_LenType index, char
 }
 /**
  * @brief get token from an string
- * ex: getTokenFix("123,ABCD,48", ',', 1, token, sizeof(token));
+ * ex: getTokenFix("123,ABCD,48", ',', 1, token, sizeof(token) - 1);
  *     assert(token, "ABCD");
- * 
- * @param str 
- * @param separator 
- * @param index 
- * @param token 
- * @param len 
- * @return Str_Result 
+ *
+ * @param str
+ * @param separator
+ * @param index
+ * @param token
+ * @param len
+ * @return Str_Result
  */
 Str_Result Str_getTokenFix(const char* str, char separator, Str_LenType index, char* token, Str_LenType len) {
     if ((str = Str_indexOfAt(str, separator, index)) != NULL) {
@@ -1799,7 +1799,7 @@ Str_Result Str_getTokenFix(const char* str, char separator, Str_LenType index, c
         }
         tokenLen = (Mem_LenType)(end - str);
         if (STR_NORMAL_LEN != len && tokenLen >= len) {
-            tokenLen = len - 1;
+            tokenLen = len;
         }
         Mem_copy(token, str, tokenLen);
         token[tokenLen] = __Str_Null;
