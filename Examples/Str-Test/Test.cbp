@@ -13,6 +13,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add directory="../../Src" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -31,7 +32,7 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="../Src/Str.c">
+		<Unit filename="../../Src/Str.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../Str.h" />
@@ -40,9 +41,6 @@
 		</Unit>
 		<Extensions>
 			<lib_finder disable_auto="1" />
-			<code_completion />
-			<envvars />
-			<debugger />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>
