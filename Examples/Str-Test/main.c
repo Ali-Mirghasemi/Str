@@ -314,6 +314,15 @@ uint32_t Test_get(void) {
 	Str_getToken("ABCD,12345,QWERTY", ',', 0, token);
 	assert(Str, token, "ABCD");
 
+	Str_getTokenFix("1234567890,ABCDEFGHIJK,000", ',', 1, token, 4);
+	assert(Str, token, "ABCD");
+
+	Str_getTokenFix("1234567890,ABCDEFGHIJK,000", ',', 0, token, 5);
+	assert(Str, token, "12345");
+
+	Str_getTokenFix("1234567890,ABCDEFGHIJK,000", ',', 2, token, 5);
+	assert(Str, token, "000");
+
 	return Str_Ok;
 }
 // -------------------------------------------------------------------------------
