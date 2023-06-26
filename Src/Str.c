@@ -551,59 +551,121 @@ const char** Str_quickSortReverse(const char** strs, Str_LenType len) {
     return Str_quickSortBlock(strs, 0, (Mem_LenType) len - 1, (Str_CompareFn) Str_compareInverse);
 }
 /**
- * @brief split a strings into multiple addresses, it's unsafe Fntion
+ * @brief Split string into 2D character array
  *
- * @param src address of main string
+ * @param src address of string
  * @param separator separator character
- * @param strs array of strings addresses
- * @return Str_LenType number of strings that splitted
+ * @param strs address of 2D array
+ * @param rowLen length of each row
+ * @param len length of rows
+ * @return Str_LenType return number of strs found
  */
-Str_LenType Str_split(const char* src, char separator, char** strs) {
+Str_LenType Str_split(const char* src, char separator, char* strs, Str_LenType rowLen, Str_LenType len) {
     Str_LenType count = 0;
-    Str_LenType len;
-    char* index = Str_indexOf(src, separator);
-    if (index) {
-        while (index) {
-            len = index - src;
-            Str_copyFix(*strs, src, len);
-            *strs[len] = __Str_Null;
+    Str_LenType tmpLen;
+    char* end;
+
+    // for null character
+    rowLen--;
+
+    if (*src != __Str_Null) {
+        while ((end = Str_indexOf(src, separator)) != NULL && len-- > 0) {
+            tmpLen = (Str_UNum)(end - src);
+            // check it's enough space for string
+            if (rowLen < tmpLen) {
+                tmpLen = rowLen;
+            }
+            Str_copyFix(strs, src, tmpLen);
+            strs[tmpLen] = __Str_Null;
+            strs += rowLen + 1;
+            src = end + 1;
             count++;
-            strs++;
-            src = index + 1;
-            index = Str_indexOf(src, separator);
+        }
+
+        if (len > 0) {
+            end = Str_indexOfNull(src);
+            tmpLen = (Str_UNum)(end - src);
+            if (rowLen < tmpLen) {
+                tmpLen = rowLen;
+            }
+            Str_copyFix(strs, src, tmpLen);
+            strs[tmpLen] = __Str_Null;
+            count++;
         }
     }
-    Str_copy(*strs, src);
-    count++;
+
     return count;
 }
 /**
- * @brief splite a strings into multiple addresses with max number of strings
+ * @brief Split string into character pointer array
  *
- * @param src address of main string
+ * @param src address of string
  * @param separator separator character
- * @param strs array of strings addresses
- * @param len length of strs array
- * @return Str_LenType number of strings that splitted
+ * @param strs address of array
+ * @param len length of array
+ * @param setNull if it's 1 change base string and replace separator characters with null
+ * @return Str_LenType return number of strs found
  */
-Str_LenType Str_splitFix(const char* src, char separator, char** strs, Str_LenType len) {
-    Str_LenType count = 0;
-    Str_LenType strLen;
-    char* index = Str_indexOf(src, separator);
-    if (index) {
-        while (index && --len > 0) {
-            strLen = index - src;
-            Str_copyFix(*strs, src, strLen);
-            *strs[strLen] = __Str_Null;
-            count++;
+Str_LenType Str_splitPtr(char* src, char separator, char** strs, Str_LenType len, uint8_t setNull) {
+    Str_UNum count = 0;
+    char* end;
+
+    if (*src != __Str_Null) {
+        while ((end = Str_indexOf(src, separator)) != NULL && len-- > 0) {
+            *strs = src;
+            if (setNull) {
+                *end = __Str_Null;
+            }
             strs++;
-            src = index + 1;
-            index = Str_indexOf(src, separator);
+            src = end + 1;
+            count++;
+        }
+
+        if (len > 0) {
+            *strs = src;
+            count++;
         }
     }
-    Str_copy(*strs, src);
-    count++;
+
     return count;
+}
+/**
+ * @brief Split string in serialize mode, put in in loop until return NULL
+ * it's similar to strtok
+ * remember it will replace separator characters with null
+ *
+ * @param src address of base string
+ * @param separator separator character
+ * @param ptr temporay character pointer
+ * @return char* return next token or NULL if there is any
+ */
+char* Str_splitToken(char* src, char separator, char** ptr, uint8_t setNull) {
+    char* end;
+
+    if (src == NULL || *src == __Str_Null) {
+        *ptr = NULL;
+        return NULL;
+    }
+
+    if (*ptr < src) {
+        *ptr = src;
+    }
+
+    src = *ptr;
+    if (**ptr != __Str_Null) {
+        end = Str_indexOf(*ptr, separator);
+        if (end) {
+            *ptr = end + 1;
+            if (setNull) {
+                *end = __Str_Null;
+            }
+        }
+        else {
+            *ptr = Str_indexOfNull(*ptr);
+        }
+    }
+
+    return src;
 }
 /**
  * @brief find position of a character in string

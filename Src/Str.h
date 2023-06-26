@@ -224,8 +224,9 @@ const char** Str_quickSort(const char** strs, Str_LenType len);
 const char** Str_sortReverse(const char** strs, Str_LenType len);
 const char** Str_quickSortReverse(const char** strs, Str_LenType len);
 
-Str_LenType Str_split(const char* src, char seperator, char** strs);
-Str_LenType Str_splitFix(const char* src, char seperator, char** strs, Str_LenType len);
+Str_LenType Str_split(const char* src, char separator, char* strs, Str_LenType rowLen, Str_LenType len);
+Str_LenType Str_splitPtr(char* src, char separator, char** strs, Str_LenType len, uint8_t setNull);
+char*       Str_splitToken(char* src, char separator, char** ptr, uint8_t setNull);
 
 Str_LenType Str_posOf(const char* str, char c);
 Str_LenType Str_lastPosOf(const char* str, char c);
