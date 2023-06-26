@@ -16,7 +16,7 @@ extern "C" {
 #endif /* __cplusplus */
 
 #define STR_VER_MAJOR       0
-#define STR_VER_MINOR       4
+#define STR_VER_MINOR       5
 #define STR_VER_FIX         0
 
 #include <stdint.h>
