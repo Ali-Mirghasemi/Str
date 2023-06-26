@@ -551,17 +551,17 @@ const char** Str_quickSortReverse(const char** strs, Str_LenType len) {
     return Str_quickSortBlock(strs, 0, (Mem_LenType) len - 1, (Str_CompareFn) Str_compareInverse);
 }
 /**
- * @brief splite a strings into multiple addresses, it's unsafe Fntion
+ * @brief split a strings into multiple addresses, it's unsafe Fntion
  *
  * @param src address of main string
- * @param seperator seperator character
+ * @param separator separator character
  * @param strs array of strings addresses
  * @return Str_LenType number of strings that splitted
  */
-Str_LenType Str_split(const char* src, char seperator, char** strs) {
+Str_LenType Str_split(const char* src, char separator, char** strs) {
     Str_LenType count = 0;
     Str_LenType len;
-    char* index = Str_indexOf(src, seperator);
+    char* index = Str_indexOf(src, separator);
     if (index) {
         while (index) {
             len = index - src;
@@ -570,7 +570,7 @@ Str_LenType Str_split(const char* src, char seperator, char** strs) {
             count++;
             strs++;
             src = index + 1;
-            index = Str_indexOf(src, seperator);
+            index = Str_indexOf(src, separator);
         }
     }
     Str_copy(*strs, src);
@@ -581,15 +581,15 @@ Str_LenType Str_split(const char* src, char seperator, char** strs) {
  * @brief splite a strings into multiple addresses with max number of strings
  *
  * @param src address of main string
- * @param seperator seperator character
+ * @param separator separator character
  * @param strs array of strings addresses
  * @param len length of strs array
  * @return Str_LenType number of strings that splitted
  */
-Str_LenType Str_splitFix(const char* src, char seperator, char** strs, Str_LenType len) {
+Str_LenType Str_splitFix(const char* src, char separator, char** strs, Str_LenType len) {
     Str_LenType count = 0;
     Str_LenType strLen;
-    char* index = Str_indexOf(src, seperator);
+    char* index = Str_indexOf(src, separator);
     if (index) {
         while (index && --len > 0) {
             strLen = index - src;
@@ -598,7 +598,7 @@ Str_LenType Str_splitFix(const char* src, char seperator, char** strs, Str_LenTy
             count++;
             strs++;
             src = index + 1;
-            index = Str_indexOf(src, seperator);
+            index = Str_indexOf(src, separator);
         }
     }
     Str_copy(*strs, src);
