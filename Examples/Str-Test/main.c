@@ -13,6 +13,7 @@ typedef struct {
 #define ItemUser_init(NAME, AGE, HEIGHT)		{(NAME), (AGE), (HEIGHT)}
 
 uint32_t Assert_Str(const char* str1, const char* str2, uint32_t line);
+uint32_t Assert_Word(const char* str, const char* word, uint32_t line);
 uint32_t Assert_Num(int num1, int num2, uint32_t line);
 uint32_t Assert_Float(float num1, float num2, uint32_t line);
 uint32_t Assert_Strs(const char** strs1, const char** strs2, int len, uint32_t line);
@@ -47,6 +48,7 @@ uint32_t Test_memBinarySearch(void);
 uint32_t Test_trim(void);
 uint32_t Test_removeBackspace(void);
 uint32_t Test_caseChange(void);
+uint32_t Test_split(void);
 
 const TestFunc Tests[] = {
     Test_basic,
@@ -67,6 +69,7 @@ const TestFunc Tests[] = {
 	Test_trim,
 	Test_removeBackspace,
 	Test_caseChange,
+	Test_split,
 };
 const int Tests_Length = ARRAY_LEN(Tests);
 
@@ -908,9 +911,122 @@ uint32_t Test_caseChange(void) {
 	return (uint32_t) Str_Ok;
 }
 // -------------------------------------------------------------------------------
+uint32_t Test_split(void) {
+    char tempStr[128] = {0};
+    char strs[6][10] = {0};
+    char* strsPtr[6];
+	char* token;
+	char* tmpPtr;
+    Str_LenType count;
+
+    PRINTLN("Split:");
+
+    Str_copy(tempStr, "Ali,123,Hard,Soft");
+    count = Str_split(tempStr, ',', (char*) strs, sizeof(strs[0]), sizeof(strs) / sizeof(strs[0]));
+    assert(Num, count, 4);
+    assert(Word, &tempStr[0], strs[0]);
+    assert(Word, &tempStr[4], strs[1]);
+    assert(Word, &tempStr[8], strs[2]);
+    assert(Word, &tempStr[13], strs[3]);
+
+    Str_copy(tempStr, "XX, 1234 , POP");
+    count = Str_split(tempStr, ',', (char*) strs, sizeof(strs[0]), sizeof(strs) / sizeof(strs[0]));
+    assert(Num, count, 3);
+    assert(Word, &tempStr[0], strs[0]);
+    assert(Word, &tempStr[3], strs[1]);
+    assert(Word, &tempStr[10], strs[2]);
+
+    Str_copy(tempStr, " 0x13, 555, 44, 5578, off, on, ooo");
+    count = Str_split(tempStr, ',', (char*) strs, sizeof(strs[0]), sizeof(strs) / sizeof(strs[0]));
+    assert(Num, count, 6);
+    assert(Word, &tempStr[0], strs[0]);
+    assert(Word, &tempStr[6], strs[1]);
+    assert(Word, &tempStr[11], strs[2]);
+    assert(Word, &tempStr[15], strs[3]);
+    assert(Word, &tempStr[21], strs[4]);
+    assert(Word, &tempStr[26], strs[5]);
+
+    Str_copy(tempStr, "Ali,123,Hard,Soft");
+    count = Str_splitPtr(tempStr, ',', strsPtr, sizeof(strsPtr) / sizeof(strsPtr[0]), 0);
+    assert(Num, count, 4);
+    assert(Word, &tempStr[0], strsPtr[0]);
+    assert(Word, &tempStr[4], strsPtr[1]);
+    assert(Word, &tempStr[8], strsPtr[2]);
+    assert(Word, &tempStr[13], strsPtr[3]);
+
+    Str_copy(tempStr, "XX, 1234 , POP");
+    count = Str_splitPtr(tempStr, ',', strsPtr, sizeof(strsPtr) / sizeof(strsPtr[0]), 0);
+    assert(Num, count, 3);
+    assert(Word, &tempStr[0], strsPtr[0]);
+    assert(Word, &tempStr[3], strsPtr[1]);
+    assert(Word, &tempStr[10], strsPtr[2]);
+
+    Str_copy(tempStr, " 0x13, 555, 44, 5578, off, on, ooo");
+    count = Str_splitPtr(tempStr, ',', strsPtr, sizeof(strs) / sizeof(strs[0]), 1);
+    assert(Num, count, 6);
+    assert(Str, &tempStr[0], strsPtr[0]);
+    assert(Str, &tempStr[6], strsPtr[1]);
+    assert(Str, &tempStr[11], strsPtr[2]);
+    assert(Str, &tempStr[15], strsPtr[3]);
+    assert(Str, &tempStr[21], strsPtr[4]);
+    assert(Str, &tempStr[26], strsPtr[5]);
+
+	Str_copy(tempStr, "Ali,123,Hard,Soft");
+	tmpPtr = NULL;
+	token = Str_splitToken(tempStr, ',', &tmpPtr, 0);
+	assert(Word, &tempStr[0], token);
+	token = Str_splitToken(tempStr, ',', &tmpPtr, 0);
+    assert(Word, &tempStr[4], token);
+    token = Str_splitToken(tempStr, ',', &tmpPtr, 0);
+    assert(Word, &tempStr[8], token);
+	token = Str_splitToken(tempStr, ',', &tmpPtr, 0);
+    assert(Word, &tempStr[13], token);
+	token = Str_splitToken(tempStr, ',', &tmpPtr, 0);
+	assert(Word, &tempStr[17], token);
+
+	Str_copy(tempStr, "XX, 1234 , POP");
+	tmpPtr = NULL;
+	token = Str_splitToken(tempStr, ',', &tmpPtr, 0);
+	assert(Word, &tempStr[0], token);
+	token = Str_splitToken(tempStr, ',', &tmpPtr, 0);
+    assert(Word, &tempStr[3], token);
+	token = Str_splitToken(tempStr, ',', &tmpPtr, 0);
+    assert(Word, &tempStr[10], token);
+	token = Str_splitToken(tempStr, ',', &tmpPtr, 0);
+	assert(Word, &tempStr[14], token);
+
+	Str_copy(tempStr, " 0x13, 555, 44, 5578, off, on, ooo");
+	tmpPtr = NULL;
+	token = Str_splitToken(tempStr, ',', &tmpPtr, 1);
+	assert(Str, &tempStr[0], token);
+	token = Str_splitToken(tempStr, ',', &tmpPtr, 1);
+    assert(Str, &tempStr[6], token);
+	token = Str_splitToken(tempStr, ',', &tmpPtr, 1);
+    assert(Str, &tempStr[11], token);
+	token = Str_splitToken(tempStr, ',', &tmpPtr, 1);
+    assert(Str, &tempStr[15], token);
+	token = Str_splitToken(tempStr, ',', &tmpPtr, 1);
+    assert(Str, &tempStr[21], token);
+	token = Str_splitToken(tempStr, ',', &tmpPtr, 1);
+    assert(Str, &tempStr[26], token);
+	token = Str_splitToken(tempStr, ',', &tmpPtr, 1);
+    assert(Str, &tempStr[30], token);
+	token = Str_splitToken(tempStr, ',', &tmpPtr, 1);
+	assert(Str, &tempStr[34], token);
+
+    return (uint32_t) Str_Ok;
+}
+// -------------------------------------------------------------------------------
 uint32_t Assert_Str(const char* str1, const char* str2, uint32_t line) {
 	if (Str_compare(str1, str2)) {
 		PRINTF("\"%s\"\n", str1);
+		return Str_Error | line << 1;
+	}
+	return (uint32_t) Str_Ok;
+}
+uint32_t Assert_Word(const char* str, const char* word, uint32_t line) {
+	if (Str_compareWord(str, word)) {
+		PRINTF("\"%s\"\n", word);
 		return Str_Error | line << 1;
 	}
 	return (uint32_t) Str_Ok;
