@@ -2078,7 +2078,7 @@ Mem_LenType Mem_binarySearch(const void* items, Mem_LenType len, Mem_LenType ite
     return -1;
 }
 
-#ifndef STR_USE_STRING_LIBRARY
+#if !STR_USE_STRING_LIBRARY
 
 void* Mem_copy(void* dest, const void* src, Mem_LenType len) {
     unsigned char* pDest = (unsigned char*) dest;
