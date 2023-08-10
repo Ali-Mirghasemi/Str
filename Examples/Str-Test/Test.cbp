@@ -35,7 +35,6 @@
 		<Unit filename="../../Src/Str.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../Str.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
