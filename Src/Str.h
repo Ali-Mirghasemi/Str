@@ -38,10 +38,10 @@ extern "C" {
 
 #define STR_USE_CONST_VARIABLES                             0
 
-#define STR_USE_STRING_LIBRARY                              1
+#define STR_USE_STRING_LIBRARY                              0
 
-typedef int Mem_CmpResult;
-typedef short Str_CmpResult;
+typedef int16_t Mem_CmpResult;
+typedef int16_t Str_CmpResult;
 
 typedef int32_t  Str_Num;
 typedef uint32_t Str_UNum;
@@ -77,22 +77,21 @@ typedef int16_t Mem_LenType;
 #else
 
 void*       Mem_copy(void* dest, const void* src, Mem_LenType len);
-char        Mem_compare(const void* arr1, const void* arr2, Mem_LenType len);
 void*       Mem_move(void* dest, const void* src, Mem_LenType len);
 void*       Mem_indexOf(const void* arr, unsigned char value, Mem_LenType len);
 void*       Mem_set(void* arr, unsigned char value, Mem_LenType len);
-
+Mem_CmpResult Mem_compare(const void* arr1, const void* arr2, Mem_LenType len);
 
 
 char*       Str_copy(char* dest, const char* str);
 char*       Str_copyFix(char* dest, const char* str, Str_LenType len);
-char        Str_compare(const char* str1, const char* str2);
-char        Str_compareFix(const char* str1, const char* str2, Str_LenType len);
 Str_LenType Str_len(const char* str);
 char*       Str_indexOf(char* str, char c);
 char*       Str_lastIndexOf(char* str, char c);
 char*       Str_indexOfStr(char* str, char* sub);
 char*       Str_append(char* str, char* sub);
+Str_CmpResult Str_compare(const char* str1, const char* str2);
+Str_CmpResult Str_compareFix(const char* str1, const char* str2, Str_LenType len);
 
 #endif // STR_USE_STRING_LIBRARY
 

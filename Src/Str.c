@@ -2150,16 +2150,17 @@ void* Mem_copy(void* dest, const void* src, Mem_LenType len) {
     }
     return dest;
 }
-char Mem_compare(const void* arr1, const void* arr2, Mem_LenType len) {
+Mem_CmpResult Mem_compare(const void* arr1, const void* arr2, Mem_LenType len) {
     const unsigned char* pArr1 = (const unsigned char*) arr1;
     const unsigned char* pArr2 = (const unsigned char*) arr2;
-    char result;
     while (len-- > 0) {
-        if((result = *pArr1++ - *pArr2++)) {
-            break;
+        if(*pArr1 != *pArr2) {
+            return *pArr1 > *pArr2 ? 1 : -1;
         }
+        pArr1++;
+        pArr2++;
     }
-    return result;
+    return 0;
 }
 void* Mem_move(void* dest, const void* src, Mem_LenType len) {
     unsigned char* pDest = (unsigned char*) dest;
@@ -2214,17 +2215,16 @@ char* Str_copy(char* dest, const char* src) {
 char* Str_copyFix(char* dest, const char* src, Str_LenType len) {
     return Mem_copy(dest, src, len);
 }
-char Str_compare(const char* str1, const char* str2) {
-    char result;
-    while (*str1 != __Str_Null) {
-        if ((result = *str1++ - *str2++)) {
-            break;
+Str_CmpResult Str_compare(const char* str1, const char* str2) {
+    do {
+        if (*str1 != *str2) {
+            return *str1 > *str2 ? 1 : -1;
         }
-    }
-    return result;
+    } while (*str1++ != __Str_Null && *str2++ != __Str_Null);
+    return 0;
 }
-char Str_compareFix(const char* str1, const char* str2, Str_LenType len) {
-    return Mem_compare(str1, str2, len);
+Str_CmpResult Str_compareFix(const char* str1, const char* str2, Str_LenType len) {
+    return (Str_CmpResult) Mem_compare(str1, str2, len);
 }
 Str_LenType Str_len(const char* str) {
     char* pStr = str;
@@ -2258,6 +2258,7 @@ char* Str_indexOfStr(char* str, char* sub) {
         if (Str_compareWord(str, sub) == 0) {
             return str;
         }
+        str++;
     }
     return NULL;
 }
