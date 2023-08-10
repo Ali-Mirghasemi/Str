@@ -17,7 +17,7 @@ extern "C" {
 
 #define STR_VER_MAJOR       0
 #define STR_VER_MINOR       5
-#define STR_VER_FIX         0
+#define STR_VER_FIX         1
 
 #include <stdint.h>
 
@@ -38,7 +38,7 @@ extern "C" {
 
 #define STR_USE_CONST_VARIABLES                             0
 
-#define STR_USE_STRING_LIBRARY                              0
+#define STR_USE_STRING_LIBRARY                              1
 
 typedef int16_t Mem_CmpResult;
 typedef int16_t Str_CmpResult;
