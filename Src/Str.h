@@ -17,7 +17,7 @@ extern "C" {
 
 #define STR_VER_MAJOR       0
 #define STR_VER_MINOR       5
-#define STR_VER_FIX         1
+#define STR_VER_FIX         2
 
 #include <stdint.h>
 
@@ -139,6 +139,14 @@ typedef struct {
     char*           Text;
     Str_LenType     Len;
 } Str;
+/**
+ * @brief string buffer holder
+ */
+typedef struct {
+    char*           Text;
+    Str_LenType     Size;
+    Str_LenType     Len;
+} StrBuf;
 /**
  * @brief const string holder
  */
