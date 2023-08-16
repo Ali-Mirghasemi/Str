@@ -206,7 +206,7 @@ Str_LenType Str_indexesOfUntil(const char* str, char c, char const** indexes, ch
 char*       Str_indexOfAt(const char* str, char c, Str_LenType num);
 char*       Str_indexOfAtUntil(const char* str, char c, Str_LenType num, char end);
 char*       Str_indexOfAtFix(const char* str, char c, Str_LenType num, Str_LenType len);
-char*       Str_indexOfStrAt(char* str, char* sub, Str_LenType num);
+char*       Str_indexOfPatternAt(char* str, char* sub, Str_LenType num);
 
 char*       Str_reverse(char* str);
 

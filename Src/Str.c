@@ -371,7 +371,7 @@ char* Str_indexOfAtFix(const char* str, char c, Str_LenType num, Str_LenType len
  * @return Address of the first character of the n-th occurrence of the substring,
  *         or NULL if no such occurrence is found.
  */
-char* Str_indexOfStrAt(char* str, char* sub, Str_LenType num) {
+char* Str_indexOfPatternAt(char* str, char* sub, Str_LenType num) {
     
     while ((str = Str_indexOfStr(str, sub)) != NULL) {
         if (num-- == 0) {
