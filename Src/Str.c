@@ -359,7 +359,29 @@ char* Str_indexOfAtFix(const char* str, char c, Str_LenType num, Str_LenType len
     }
     return temp;
 }
-
+/**
+ * @brief Finds the address of the n-th occurrence of a substring within a string.
+ *
+ * This function searches for the n-th occurrence of the substring sub within the
+ * given string str and returns the address of the first character of that occurrence.
+ *
+ * @param str The input string to search within.
+ * @param sub The substring to search for.
+ * @param num The occurrence number (zero-based) to find.
+ * @return Address of the first character of the n-th occurrence of the substring,
+ *         or NULL if no such occurrence is found.
+ */
+char* Str_indexOfStrAt(char* str, char* sub, Str_LenType num) {
+    
+    while ((str = Str_indexOfStr(str, sub)) != NULL) {
+        if (num-- == 0) {
+            return str;
+        }
+        str++;  // Move to the next character to avoid infinite loop
+    }
+    
+    return NULL;
+}
 char* Str_reverseIndexOf(const char* str, char c, const char* startOfStr) {
     while (startOfStr <= str) {
         if (*str == c) {
