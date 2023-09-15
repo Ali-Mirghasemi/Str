@@ -1195,7 +1195,7 @@ Str_Result Str_convertUNumRadix(const char* str, Str_UNum* num, Str_Radix base) 
 Str_Result Str_convertUNumRadixFix(const char* str, Str_UNum* num, Str_Radix base, Str_LenType len) {
     Str_UNum temp;
 	*num = 0;
-	while (*str != __Str_Null && --len > 0){
+	while (*str != __Str_Null && len-- > 0){
 		if (*str >= __Str_0 && *str <= __Str_9){
 			temp = *str - __Str_0;
 		}
@@ -1266,7 +1266,7 @@ Str_Result Str_convertNumRadix(const char* str, Str_Num* num, Str_Radix base) {
 Str_Result Str_convertNumDecimalFix(const char* str, Str_Num* num, Str_LenType len) {
     if (*str == '-'){
 		Str_Result res;
-		res = Str_convertUNumDecimalFix(++str, (Str_UNum*) num, len);
+		res = Str_convertUNumDecimalFix(++str, (Str_UNum*) num, --len);
 		*num *= -1;
 		return res;
 	}
@@ -1286,7 +1286,7 @@ Str_Result Str_convertNumDecimalFix(const char* str, Str_Num* num, Str_LenType l
 Str_Result Str_convertNumRadixFix(const char* str, Str_Num* num, Str_Radix base, Str_LenType len) {
     if (*str == '-'){
 		Str_Result res;
-		res = Str_convertUNumRadixFix(++str, (Str_UNum*) num, base, len);
+		res = Str_convertUNumRadixFix(++str, (Str_UNum*) num, base, --len);
 		*num *= -1;
 		return res;
 	}
@@ -1325,7 +1325,7 @@ Str_Result Str_convertUNumDecimal(const char* str, Str_UNum* num) {
 Str_Result Str_convertUNumDecimalFix(const char* str, Str_UNum* num, Str_LenType len) {
     Str_UNum temp;
 	*num = 0;
-	while (*str != __Str_Null && --len > 0){
+	while (*str != __Str_Null && len-- > 0){
         temp = *str - __Str_0;
 		if (temp >= Str_Decimal){
 			return Str_Error;
@@ -1366,7 +1366,7 @@ Str_Result Str_convertUNumBinary(const char* str, Str_UNum* num) {
 Str_Result Str_convertUNumBinaryFix(const char* str, Str_UNum* num, Str_LenType len) {
     Str_UNum temp;
 	*num = 0;
-	while (*str != __Str_Null && --len > 0){
+	while (*str != __Str_Null && len-- > 0){
         temp = *str - __Str_0;
 		if (temp >= Str_Binary){
 			return Str_Error;
@@ -1418,7 +1418,7 @@ Str_Result Str_convertUNumHex(const char* str, Str_UNum* num) {
 Str_Result Str_convertUNumHexFix(const char* str, Str_UNum* num, Str_LenType len) {
     Str_UNum temp;
 	*num = 0;
-	while (*str != __Str_Null && --len > 0){
+	while (*str != __Str_Null && len-- > 0){
 		if (*str >= __Str_0 && *str <= __Str_9){
 			temp = *str - __Str_0;
 		}
@@ -1470,7 +1470,7 @@ Str_Result Str_convertUNumOctal(const char* str, Str_UNum* num) {
 Str_Result Str_convertUNumOctalFix(const char* str, Str_UNum* num, Str_LenType len) {
     Str_UNum temp;
 	*num = 0;
-	while (*str != __Str_Null && --len > 0){
+	while (*str != __Str_Null && len-- > 0){
         temp = *str - __Str_0;
 		if (temp >= Str_Octal){
 			return Str_Error;
@@ -1690,7 +1690,7 @@ Str_Result Str_convertFloatFix(const char* str, float* num, Str_LenType len) {
 		*num = numInt;
 		if (*pDot != __Str_Null){
 			len -= strLen + 1;
-			if (Str_convertNumFix(++pDot, &numInt, Str_Decimal, len) != Str_Ok){
+			if (Str_convertUNumFix(++pDot, &numInt, Str_Decimal, len) != Str_Ok){
 				return Str_Error;
 			}
 			temp = numInt;
