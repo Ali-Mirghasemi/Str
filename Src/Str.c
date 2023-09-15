@@ -1072,7 +1072,18 @@ Str_LenType Str_parseUNum(Str_UNum num, Str_Radix base, Str_LenType minLen, char
  * @return Str_Result result of convert
  */
 Str_Result Str_convertNum(const char* str, Str_Num* num, Str_Radix base) {
-    return Str_convertNumFix(str, num, base, __Str_MaxLength);
+    switch (base) {
+        case Str_Binary:
+            return Str_convertNumBinary(str, num);
+        case Str_Octal:
+            return Str_convertNumOctal(str, num);
+        case Str_Decimal:
+            return Str_convertNumDecimal(str, num);
+        case Str_Hex:
+            return Str_convertNumHex(str, num);
+        default:
+            return Str_convertNumRadix(str, num, base);
+    }
 }
 /**
  * @brief convert a string into unsigned number
@@ -1083,7 +1094,18 @@ Str_Result Str_convertNum(const char* str, Str_Num* num, Str_Radix base) {
  * @return Str_Result result of convert
  */
 Str_Result Str_convertUNum(const char* str, Str_UNum* num, Str_Radix base) {
-    return Str_convertUNumFix(str, num, base, __Str_MaxLength);
+    switch (base) {
+        case Str_Binary:
+            return Str_convertUNumBinary(str, num);
+        case Str_Octal:
+            return Str_convertUNumOctal(str, num);
+        case Str_Decimal:
+            return Str_convertUNumDecimal(str, num);
+        case Str_Hex:
+            return Str_convertUNumHex(str, num);
+        default:
+            return Str_convertUNumRadix(str, num, base);
+    }
 }
 /**
  * @brief convert a string into number with fixed length
@@ -1094,15 +1116,18 @@ Str_Result Str_convertUNum(const char* str, Str_UNum* num, Str_Radix base) {
  * @return Str_Result result of convert
  */
 Str_Result Str_convertNumFix(const char* str, Str_Num* num, Str_Radix base, Str_LenType len) {
-    if (*str == '-'){
-		Str_Result res;
-		res = Str_convertUNumFix(++str, (Str_UNum*) num, base, --len);
-		*num *= -1;
-		return res;
-	}
-	else {
-		return Str_convertUNumFix(str, (Str_UNum*) num, base, len);
-	}
+    switch (base) {
+        case Str_Binary:
+            return Str_convertNumBinaryFix(str, num, len);
+        case Str_Octal:
+            return Str_convertNumOctalFix(str, num, len);
+        case Str_Decimal:
+            return Str_convertNumDecimalFix(str, num, len);
+        case Str_Hex:
+            return Str_convertNumHexFix(str, num, len);
+        default:
+            return Str_convertNumRadixFix(str, num, base, len);
+    }
 }
 /**
  * @brief convert a string into unsigned number with fixed length
@@ -1113,9 +1138,31 @@ Str_Result Str_convertNumFix(const char* str, Str_Num* num, Str_Radix base, Str_
  * @return Str_Result result of convert
  */
 Str_Result Str_convertUNumFix(const char* str, Str_UNum* num, Str_Radix base, Str_LenType len) {
+    switch (base) {
+        case Str_Binary:
+            return Str_convertUNumBinaryFix(str, num, len);
+        case Str_Octal:
+            return Str_convertUNumOctalFix(str, num, len);
+        case Str_Decimal:
+            return Str_convertUNumDecimalFix(str, num, len);
+        case Str_Hex:
+            return Str_convertUNumHexFix(str, num, len);
+        default:
+            return Str_convertUNumRadixFix(str, num, base, len);
+    }
+}
+/**
+ * @brief Convert a string into number with given radix
+ * 
+ * @param str 
+ * @param num 
+ * @param base 
+ * @return Str_Result 
+ */
+Str_Result Str_convertUNumRadix(const char* str, Str_UNum* num, Str_Radix base) {
     Str_UNum temp;
 	*num = 0;
-	while (*str != __Str_Null && len-- > 0){
+	while (*str != __Str_Null){
 		if (*str >= __Str_0 && *str <= __Str_9){
 			temp = *str - __Str_0;
 		}
@@ -1132,6 +1179,303 @@ Str_Result Str_convertUNumFix(const char* str, Str_UNum* num, Str_Radix base, St
 			return Str_Error;
 		}
 		*num = *num * base + temp;
+		str++;
+	}
+	return Str_Ok;
+}
+/**
+ * @brief Convert a string into number with given radix
+ * 
+ * @param str 
+ * @param num 
+ * @param base 
+ * @param len
+ * @return Str_Result 
+ */
+Str_Result Str_convertUNumRadixFix(const char* str, Str_UNum* num, Str_Radix base, Str_LenType len) {
+    Str_UNum temp;
+	*num = 0;
+	while (*str != __Str_Null && --len > 0){
+		if (*str >= __Str_0 && *str <= __Str_9){
+			temp = *str - __Str_0;
+		}
+		else if (*str >= 'A' && *str <= 'Z'){
+			temp = *str - 0x37;
+		}
+		else if (*str >= 'a' && *str <= 'z'){
+			temp = *str - 0x57;
+		}
+		else {
+			return Str_Error;
+		}
+		if (temp >= base){
+			return Str_Error;
+		}
+		*num = *num * base + temp;
+		str++;
+	}
+	return Str_Ok;
+}
+/**
+ * @brief Convert a string into number, string must be a string of decimal integers
+ * 
+ * @param str 
+ * @param num 
+ * @return Str_Result 
+ */
+Str_Result Str_convertNumDecimal(const char* str, Str_Num* num) {
+    if (*str == '-'){
+		Str_Result res;
+		res = Str_convertUNumDecimal(++str, (Str_UNum*) num);
+		*num *= -1;
+		return res;
+	}
+	else {
+		return Str_convertUNumDecimal(str, (Str_UNum*) num);
+	}
+}
+/**
+ * @brief Convert a string into number with given radix
+ * 
+ * @param str 
+ * @param num 
+ * @param base 
+ * @param len
+ * @return Str_Result 
+ */
+Str_Result Str_convertNumRadix(const char* str, Str_Num* num, Str_Radix base) {
+    if (*str == '-'){
+		Str_Result res;
+		res = Str_convertUNumRadix(++str, (Str_UNum*) num, base);
+		*num *= -1;
+		return res;
+	}
+	else {
+		return Str_convertUNumRadix(str, (Str_UNum*) num, base);
+	}
+}
+/**
+ * @brief Convert a string into number, string must be a string of decimal integers
+ * with a fixed length
+ * 
+ * @param str 
+ * @param num 
+ * @param len
+ * @return Str_Result 
+ */
+Str_Result Str_convertNumDecimalFix(const char* str, Str_Num* num, Str_LenType len) {
+    if (*str == '-'){
+		Str_Result res;
+		res = Str_convertUNumDecimalFix(++str, (Str_UNum*) num, len);
+		*num *= -1;
+		return res;
+	}
+	else {
+		return Str_convertUNumDecimalFix(str, (Str_UNum*) num, len);
+	}
+}
+/**
+ * @brief Convert a string into number with given radix
+ * 
+ * @param str 
+ * @param num 
+ * @param base 
+ * @param len
+ * @return Str_Result 
+ */
+Str_Result Str_convertNumRadixFix(const char* str, Str_Num* num, Str_Radix base, Str_LenType len) {
+    if (*str == '-'){
+		Str_Result res;
+		res = Str_convertUNumRadixFix(++str, (Str_UNum*) num, base, len);
+		*num *= -1;
+		return res;
+	}
+	else {
+		return Str_convertUNumRadixFix(str, (Str_UNum*) num, base, len);
+	}
+}
+/**
+ * @brief Convert a string into number, string must be a string of decimal integers
+ * 
+ * @param str 
+ * @param num 
+ * @return Str_Result 
+ */
+Str_Result Str_convertUNumDecimal(const char* str, Str_UNum* num) {
+    Str_UNum temp;
+	*num = 0;
+	while (*str != __Str_Null){
+        temp = *str - __Str_0;
+		if (temp >= Str_Decimal){
+			return Str_Error;
+		}
+		*num = *num * Str_Decimal + temp;
+		str++;
+	}
+	return Str_Ok;
+}
+/**
+ * @brief Convert a string into number, string must be a string of decimal integers
+ * 
+ * @param str 
+ * @param num 
+ * @param len
+ * @return Str_Result 
+ */
+Str_Result Str_convertUNumDecimalFix(const char* str, Str_UNum* num, Str_LenType len) {
+    Str_UNum temp;
+	*num = 0;
+	while (*str != __Str_Null && --len > 0){
+        temp = *str - __Str_0;
+		if (temp >= Str_Decimal){
+			return Str_Error;
+		}
+		*num = *num * Str_Decimal + temp;
+		str++;
+	}
+	return Str_Ok;
+}
+/**
+ * @brief Convert a string into number, string must be a string of binary integers
+ * 
+ * @param str 
+ * @param num 
+ * @return Str_Result 
+ */
+Str_Result Str_convertUNumBinary(const char* str, Str_UNum* num) {
+    Str_UNum temp;
+	*num = 0;
+	while (*str != __Str_Null){
+        temp = *str - __Str_0;
+		if (temp >= Str_Binary){
+			return Str_Error;
+		}
+		*num = (*num << 1) | temp;
+		str++;
+	}
+	return Str_Ok;
+}
+/**
+ * @brief Convert a string into number, string must be a string of binary integers
+ * 
+ * @param str 
+ * @param num 
+ * @param len
+ * @return Str_Result 
+ */
+Str_Result Str_convertUNumBinaryFix(const char* str, Str_UNum* num, Str_LenType len) {
+    Str_UNum temp;
+	*num = 0;
+	while (*str != __Str_Null && --len > 0){
+        temp = *str - __Str_0;
+		if (temp >= Str_Binary){
+			return Str_Error;
+		}
+		*num = (*num << 1) | temp;
+		str++;
+	}
+	return Str_Ok;
+}
+/**
+ * @brief Convert a string into number, string must be a string of hex integers
+ * 
+ * @param str 
+ * @param num 
+ * @return Str_Result 
+ */
+Str_Result Str_convertUNumHex(const char* str, Str_UNum* num) {
+    Str_UNum temp;
+	*num = 0;
+	while (*str != __Str_Null){
+		if (*str >= __Str_0 && *str <= __Str_9){
+			temp = *str - __Str_0;
+		}
+		else if (*str >= 'A' && *str <= 'F'){
+			temp = *str - 0x37;
+		}
+		else if (*str >= 'a' && *str <= 'f'){
+			temp = *str - 0x57;
+		}
+		else {
+			return Str_Error;
+		}
+		if (temp >= Str_Hex){
+			return Str_Error;
+		}
+		*num = (*num << 4) | temp;
+		str++;
+	}
+	return Str_Ok;
+}
+/**
+ * @brief Convert a string into number, string must be a string of hex integers
+ * 
+ * @param str 
+ * @param num 
+ * @param len
+ * @return Str_Result 
+ */
+Str_Result Str_convertUNumHexFix(const char* str, Str_UNum* num, Str_LenType len) {
+    Str_UNum temp;
+	*num = 0;
+	while (*str != __Str_Null && --len > 0){
+		if (*str >= __Str_0 && *str <= __Str_9){
+			temp = *str - __Str_0;
+		}
+		else if (*str >= 'A' && *str <= 'F'){
+			temp = *str - 0x37;
+		}
+		else if (*str >= 'a' && *str <= 'f'){
+			temp = *str - 0x57;
+		}
+		else {
+			return Str_Error;
+		}
+		if (temp >= Str_Hex){
+			return Str_Error;
+		}
+		*num = (*num << 4) | temp;
+		str++;
+	}
+	return Str_Ok;
+}
+/**
+ * @brief Convert a string into number, string must be a string of octal integers
+ * 
+ * @param str 
+ * @param num 
+ * @return Str_Result 
+ */
+Str_Result Str_convertUNumOctal(const char* str, Str_UNum* num) {
+    Str_UNum temp;
+	*num = 0;
+	while (*str != __Str_Null){
+        temp = *str - __Str_0;
+		if (temp >= Str_Octal){
+			return Str_Error;
+		}
+		*num = (*num << 3) | temp;
+		str++;
+	}
+	return Str_Ok;
+}
+/**
+ * @brief Convert a string into number, string must be a string of octal integers
+ * 
+ * @param str 
+ * @param num 
+ * @param
+ * @return Str_Result 
+ */
+Str_Result Str_convertUNumOctalFix(const char* str, Str_UNum* num, Str_LenType len) {
+    Str_UNum temp;
+	*num = 0;
+	while (*str != __Str_Null && --len > 0){
+        temp = *str - __Str_0;
+		if (temp >= Str_Octal){
+			return Str_Error;
+		}
+		*num = (*num << 3) | temp;
 		str++;
 	}
 	return Str_Ok;

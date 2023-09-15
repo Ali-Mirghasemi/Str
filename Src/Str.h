@@ -16,8 +16,8 @@ extern "C" {
 #endif /* __cplusplus */
 
 #define STR_VER_MAJOR       0
-#define STR_VER_MINOR       5
-#define STR_VER_FIX         2
+#define STR_VER_MINOR       6
+#define STR_VER_FIX         0
 
 #include <stdint.h>
 
@@ -248,13 +248,38 @@ const char* Str_findStrsSorted(const char* src, const char** strs, Str_LenType l
 
 const char* Str_findStrsFix(const char* src, const char** strs, Str_LenType len, Str_MultiResult* result, Str_LenType srcLen);
 const char* Str_findStrsSortedFix(const char* src, const char** strs, Str_LenType len, Str_MultiResult* result, Str_LenType srcLen);
-
+// ------------------------------ Parse APIs ------------------------------------
 Str_LenType Str_parseNum(Str_Num num, Str_Radix base, Str_LenType minLen, char* str);
 Str_LenType Str_parseUNum(Str_UNum num, Str_Radix base, Str_LenType minLen, char* str);
 
 Str_LenType Str_parseString(const char* string, char* str);
 Str_LenType Str_fromString(char* str);
-
+// ---------------------------- Convert APIs ------------------------------------
+// Unsigned convert
+Str_Result Str_convertUNumDecimal(const char* str, Str_UNum* num);
+Str_Result Str_convertUNumBinary(const char* str, Str_UNum* num);
+Str_Result Str_convertUNumHex(const char* str, Str_UNum* num);
+Str_Result Str_convertUNumOctal(const char* str, Str_UNum* num);
+Str_Result Str_convertUNumRadix(const char* str, Str_UNum* num, Str_Radix base);
+// Unsigned convert with fixed length
+Str_Result Str_convertUNumDecimalFix(const char* str, Str_UNum* num, Str_LenType len);
+Str_Result Str_convertUNumBinaryFix(const char* str, Str_UNum* num, Str_LenType len);
+Str_Result Str_convertUNumHexFix(const char* str, Str_UNum* num, Str_LenType len);
+Str_Result Str_convertUNumOctalFix(const char* str, Str_UNum* num, Str_LenType len);
+Str_Result Str_convertUNumRadixFix(const char* str, Str_UNum* num, Str_Radix base, Str_LenType len);
+// Signed convert
+Str_Result Str_convertNumDecimal(const char* str, Str_Num* num);
+#define    Str_convertNumBinary                 Str_convertUNumBinary
+#define    Str_convertNumHex                    Str_convertUNumHex
+#define    Str_convertNumOctal                  Str_convertUNumOctal
+Str_Result Str_convertNumRadix(const char* str, Str_Num* num, Str_Radix base);
+// Signed convert with fixed length
+Str_Result Str_convertNumDecimalFix(const char* str, Str_Num* num, Str_LenType len);
+#define    Str_convertNumBinaryFix              Str_convertUNumBinaryFix
+#define    Str_convertNumHexFix                 Str_convertUNumHexFix
+#define    Str_convertNumOctalFix               Str_convertUNumOctalFix
+Str_Result Str_convertNumRadixFix(const char* str, Str_Num* num, Str_Radix base, Str_LenType len);
+// General Convert string to integer
 Str_Result Str_convertNum(const char* str, Str_Num* num, Str_Radix base);
 Str_Result Str_convertUNum(const char* str, Str_UNum* num, Str_Radix base);
 Str_Result Str_convertNumFix(const char* str, Str_Num* num, Str_Radix base, Str_LenType len);
