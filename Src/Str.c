@@ -1700,7 +1700,6 @@ Str_Result Str_convertFloatFix(const char* str, float* num, Str_LenType len) {
             }
             *num = *num < 0 ? *num - temp : *num + temp;
 		}
-		return Str_Ok;
 	}
 	return result;
 }
@@ -2096,7 +2095,6 @@ Str_Result Str_convertDoubleFix(const char* str, double* num, Str_LenType len) {
             }
             *num = *num < 0 ? *num - temp : *num + temp;
 		}
-		return Str_Ok;
 	}
 	return result;
 }
