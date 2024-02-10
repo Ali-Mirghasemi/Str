@@ -17,7 +17,7 @@ extern "C" {
 
 #define STR_VER_MAJOR       0
 #define STR_VER_MINOR       6
-#define STR_VER_FIX         0
+#define STR_VER_FIX         1
 
 #include <stdint.h>
 
@@ -100,8 +100,15 @@ Str_CmpResult Str_compareFix(const char* str1, const char* str2, Str_LenType len
  * @brief result type for str functions
  */
 typedef enum {
-    Str_Ok      = 0,
-    Str_Error   = 1,
+    Str_Ok                      = 0,
+    Str_Error                   = 1,
+    Str_InvalidCharset          = 2,
+    Str_InvalidRadix            = 3,
+    Str_NullError               = 4,
+    Str_RadixNotDecimal         = 5,
+    Str_RadixNotBinary          = 6,
+    Str_RadixNotHex             = 7,
+    Str_RadixNotOctal           = 8,
 } Str_Result;
 /**
  * @brief hold result of multi str find

@@ -1173,10 +1173,10 @@ Str_Result Str_convertUNumRadix(const char* str, Str_UNum* num, Str_Radix base) 
 			temp = *str - 0x57;
 		}
 		else {
-			return Str_Error;
+			return Str_InvalidCharset;
 		}
 		if (temp >= base){
-			return Str_Error;
+			return Str_InvalidRadix;
 		}
 		*num = *num * base + temp;
 		str++;
@@ -1206,10 +1206,10 @@ Str_Result Str_convertUNumRadixFix(const char* str, Str_UNum* num, Str_Radix bas
 			temp = *str - 0x57;
 		}
 		else {
-			return Str_Error;
+			return Str_InvalidCharset;
 		}
 		if (temp >= base){
-			return Str_Error;
+			return Str_InvalidRadix;
 		}
 		*num = *num * base + temp;
 		str++;
@@ -1307,7 +1307,7 @@ Str_Result Str_convertUNumDecimal(const char* str, Str_UNum* num) {
 	while (*str != __Str_Null){
         temp = *str - __Str_0;
 		if (temp >= Str_Decimal){
-			return Str_Error;
+			return Str_RadixNotDecimal;
 		}
 		*num = *num * Str_Decimal + temp;
 		str++;
@@ -1328,7 +1328,7 @@ Str_Result Str_convertUNumDecimalFix(const char* str, Str_UNum* num, Str_LenType
 	while (*str != __Str_Null && len-- > 0){
         temp = *str - __Str_0;
 		if (temp >= Str_Decimal){
-			return Str_Error;
+			return Str_RadixNotDecimal;
 		}
 		*num = *num * Str_Decimal + temp;
 		str++;
@@ -1348,7 +1348,7 @@ Str_Result Str_convertUNumBinary(const char* str, Str_UNum* num) {
 	while (*str != __Str_Null){
         temp = *str - __Str_0;
 		if (temp >= Str_Binary){
-			return Str_Error;
+			return Str_RadixNotBinary;
 		}
 		*num = (*num << 1) | temp;
 		str++;
@@ -1369,7 +1369,7 @@ Str_Result Str_convertUNumBinaryFix(const char* str, Str_UNum* num, Str_LenType 
 	while (*str != __Str_Null && len-- > 0){
         temp = *str - __Str_0;
 		if (temp >= Str_Binary){
-			return Str_Error;
+			return Str_RadixNotBinary;
 		}
 		*num = (*num << 1) | temp;
 		str++;
@@ -1397,10 +1397,10 @@ Str_Result Str_convertUNumHex(const char* str, Str_UNum* num) {
 			temp = *str - 0x57;
 		}
 		else {
-			return Str_Error;
+			return Str_InvalidCharset;
 		}
 		if (temp >= Str_Hex){
-			return Str_Error;
+			return Str_RadixNotHex;
 		}
 		*num = (*num << 4) | temp;
 		str++;
@@ -1429,10 +1429,10 @@ Str_Result Str_convertUNumHexFix(const char* str, Str_UNum* num, Str_LenType len
 			temp = *str - 0x57;
 		}
 		else {
-			return Str_Error;
+			return Str_InvalidCharset;
 		}
 		if (temp >= Str_Hex){
-			return Str_Error;
+			return Str_RadixNotHex;
 		}
 		*num = (*num << 4) | temp;
 		str++;
@@ -1452,7 +1452,7 @@ Str_Result Str_convertUNumOctal(const char* str, Str_UNum* num) {
 	while (*str != __Str_Null){
         temp = *str - __Str_0;
 		if (temp >= Str_Octal){
-			return Str_Error;
+			return Str_RadixNotOctal;
 		}
 		*num = (*num << 3) | temp;
 		str++;
@@ -1473,7 +1473,7 @@ Str_Result Str_convertUNumOctalFix(const char* str, Str_UNum* num, Str_LenType l
 	while (*str != __Str_Null && len-- > 0){
         temp = *str - __Str_0;
 		if (temp >= Str_Octal){
-			return Str_Error;
+			return Str_RadixNotOctal;
 		}
 		*num = (*num << 3) | temp;
 		str++;
@@ -1587,10 +1587,10 @@ Str_Result Str_convertULongFix(const char* str, Str_ULong* num, Str_Radix base, 
 			temp = *str - 0x57;
 		}
 		else {
-			return Str_Error;
+			return Str_InvalidCharset;
 		}
 		if (temp >= base){
-			return Str_Error;
+			return Str_InvalidRadix;
 		}
 		*num = *num * base + temp;
 		str++;
@@ -1675,6 +1675,7 @@ Str_Result Str_convertFloat(const char* str, float* num) {
  * @return Str_Result result of convert
  */
 Str_Result Str_convertFloatFix(const char* str, float* num, Str_LenType len) {
+    Str_Result result;
     const char* pDot = Str_indexOf(str, '.');
 	float temp;
 	int numInt;
@@ -1686,12 +1687,12 @@ Str_Result Str_convertFloatFix(const char* str, float* num, Str_LenType len) {
 	if (strLen > len){
 		strLen = len;
 	}
-	if (Str_convertNumFix(str, &numInt, __Str_Decimal, strLen) == Str_Ok){
+	if ((result = Str_convertNumFix(str, &numInt, __Str_Decimal, strLen)) == Str_Ok){
 		*num = numInt;
 		if (*pDot != __Str_Null){
 			len -= strLen + 1;
-			if (Str_convertUNumFix(++pDot, &numInt, Str_Decimal, len) != Str_Ok){
-				return Str_Error;
+			if ((result = Str_convertUNumFix(++pDot, &numInt, Str_Decimal, len)) != Str_Ok){
+				return result;
 			}
 			temp = numInt;
             while (len-- > 0) {
@@ -1701,7 +1702,7 @@ Str_Result Str_convertFloatFix(const char* str, float* num, Str_LenType len) {
 		}
 		return Str_Ok;
 	}
-	return Str_Error;
+	return result;
 }
 /**
  * @brief ignore all characters below than space character (' ' = 0x20)
@@ -2070,6 +2071,7 @@ Str_Result Str_convertDouble(const char* str, double* num) {
  * @return Str_Result result of convert
  */
 Str_Result Str_convertDoubleFix(const char* str, double* num, Str_LenType len) {
+    Str_Result result;
     const char* pDot = Str_indexOf(str, '.');
 	double temp;
 	int numInt;
@@ -2081,12 +2083,12 @@ Str_Result Str_convertDoubleFix(const char* str, double* num, Str_LenType len) {
 	if (strLen > len){
 		strLen = len;
 	}
-	if (Str_convertNumFix(str, &numInt, __Str_Decimal, strLen) == Str_Ok){
+	if (( result = Str_convertNumFix(str, &numInt, __Str_Decimal, strLen)) == Str_Ok){
 		*num = numInt;
 		if (*pDot != __Str_Null){
 			len -= strLen + 1;
-			if (Str_convertNumFix(++pDot, &numInt, __Str_Decimal, len) != Str_Ok){
-				return Str_Error;
+			if ((result = Str_convertNumFix(++pDot, &numInt, __Str_Decimal, len)) != Str_Ok){
+				return result;
 			}
 			temp = numInt;
             while (len-- > 0) {
@@ -2096,7 +2098,7 @@ Str_Result Str_convertDoubleFix(const char* str, double* num, Str_LenType len) {
 		}
 		return Str_Ok;
 	}
-	return Str_Error;
+	return result;
 }
 
 #endif // STR_ENABLE_DOUBLE
@@ -2109,6 +2111,7 @@ Str_Result Str_convertDoubleFix(const char* str, double* num, Str_LenType len) {
  * @return Str_Result result of searching for number
  */
 Str_Result Str_getNum(const char* str, int* num, const char** numPos) {
+    Str_Result result = Str_NullError;
     const char* baseStr = str;
 	str = Str_findDigit(str);
 	if (str != NULL){
@@ -2116,11 +2119,9 @@ Str_Result Str_getNum(const char* str, int* num, const char** numPos) {
 			str--;
 		}
 		*numPos = str;
-		if (Str_convertNumFix(str, num, __Str_Decimal, (Str_LenType) (Str_findLastDigit(str) - str + 1)) == Str_Ok){
-			return Str_Ok;
-		}
+        result = Str_convertNumFix(str, num, __Str_Decimal, (Str_LenType) (Str_findLastDigit(str) - str + 1));
 	}
-	return Str_Error;
+	return result;
 }
 /**
  * @brief get first unsigned number that found in string
@@ -2131,14 +2132,13 @@ Str_Result Str_getNum(const char* str, int* num, const char** numPos) {
  * @return Str_Result result of searching for number
  */
 Str_Result Str_getUNum(const char* str, unsigned int* num, const char** numPos) {
-	str = Str_findDigit(str);
+	Str_Result result = Str_NullError;
+    str = Str_findDigit(str);
 	if (str != 0){
 		*numPos = str;
-		if (Str_convertUNumFix(str, num, __Str_Decimal, (Str_LenType) (Str_findLastDigit(str) - str + 1)) == Str_Ok){
-			return Str_Ok;
-		}
+        result = Str_convertUNumFix(str, num, __Str_Decimal, (Str_LenType) (Str_findLastDigit(str) - str + 1));
 	}
-	return Str_Error;
+	return result;
 }
 /**
  * @brief get first float number that found in string
@@ -2149,7 +2149,8 @@ Str_Result Str_getUNum(const char* str, unsigned int* num, const char** numPos) 
  * @return Str_Result result of searching for number
  */
 Str_Result Str_getFloat(const char* str, float* num, const char** numPos) {
-	const char* pDot = str;
+	Str_Result result = Str_NullError;
+    const char* pDot = str;
 	str = Str_findDigit(str);
 	if (str != NULL){
 		if (pDot < str && *(str - 1) == '-'){
@@ -2161,11 +2162,9 @@ Str_Result Str_getFloat(const char* str, float* num, const char** numPos) {
             pDot = pDot == NULL ? Str_indexOfEnd(str) : pDot + 1;
 		}
 		*numPos = str;
-		if (Str_convertFloatFix(str, num, pDot - str) == Str_Ok){
-			return Str_Ok;
-		}
+        result = Str_convertFloatFix(str, num, pDot - str);
 	}
-	return Str_Error;
+	return result;
 }
 /**
  * @brief get token from an string
