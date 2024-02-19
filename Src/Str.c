@@ -1074,13 +1074,13 @@ Str_LenType Str_parseUNum(Str_UNum num, Str_Radix base, Str_LenType minLen, char
 Str_Result Str_convertNum(const char* str, Str_Num* num, Str_Radix base) {
     switch (base) {
         case Str_Binary:
-            return Str_convertNumBinary(str, num);
+            return Str_convertNumBinary(str, (Str_UNum*) num);
         case Str_Octal:
-            return Str_convertNumOctal(str, num);
+            return Str_convertNumOctal(str, (Str_UNum*) num);
         case Str_Decimal:
             return Str_convertNumDecimal(str, num);
         case Str_Hex:
-            return Str_convertNumHex(str, num);
+            return Str_convertNumHex(str, (Str_UNum*) num);
         default:
             return Str_convertNumRadix(str, num, base);
     }
@@ -1118,13 +1118,13 @@ Str_Result Str_convertUNum(const char* str, Str_UNum* num, Str_Radix base) {
 Str_Result Str_convertNumFix(const char* str, Str_Num* num, Str_Radix base, Str_LenType len) {
     switch (base) {
         case Str_Binary:
-            return Str_convertNumBinaryFix(str, num, len);
+            return Str_convertNumBinaryFix(str, (Str_UNum*) num, len);
         case Str_Octal:
-            return Str_convertNumOctalFix(str, num, len);
+            return Str_convertNumOctalFix(str, (Str_UNum*) num, len);
         case Str_Decimal:
             return Str_convertNumDecimalFix(str, num, len);
         case Str_Hex:
-            return Str_convertNumHexFix(str, num, len);
+            return Str_convertNumHexFix(str, (Str_UNum*) num, len);
         default:
             return Str_convertNumRadixFix(str, num, base, len);
     }
@@ -1678,7 +1678,7 @@ Str_Result Str_convertFloatFix(const char* str, float* num, Str_LenType len) {
     Str_Result result;
     const char* pDot = Str_indexOf(str, '.');
 	float temp;
-	int numInt;
+	Str_Num numInt;
 	Str_LenType strLen;
 	if (pDot == NULL){
 		pDot = Mem_indexOf(str, __Str_Null, __Str_MaxLength);
@@ -1691,7 +1691,7 @@ Str_Result Str_convertFloatFix(const char* str, float* num, Str_LenType len) {
 		*num = numInt;
 		if (*pDot != __Str_Null){
 			len -= strLen + 1;
-			if ((result = Str_convertUNumFix(++pDot, &numInt, Str_Decimal, len)) != Str_Ok){
+			if ((result = Str_convertUNumFix(++pDot, (Str_UNum*) &numInt, Str_Decimal, len)) != Str_Ok){
 				return result;
 			}
 			temp = numInt;
