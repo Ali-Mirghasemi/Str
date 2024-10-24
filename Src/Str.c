@@ -1153,11 +1153,11 @@ Str_Result Str_convertUNumFix(const char* str, Str_UNum* num, Str_Radix base, St
 }
 /**
  * @brief Convert a string into number with given radix
- * 
- * @param str 
- * @param num 
- * @param base 
- * @return Str_Result 
+ *
+ * @param str
+ * @param num
+ * @param base
+ * @return Str_Result
  */
 Str_Result Str_convertUNumRadix(const char* str, Str_UNum* num, Str_Radix base) {
     Str_UNum temp;
@@ -1185,12 +1185,12 @@ Str_Result Str_convertUNumRadix(const char* str, Str_UNum* num, Str_Radix base) 
 }
 /**
  * @brief Convert a string into number with given radix
- * 
- * @param str 
- * @param num 
- * @param base 
+ *
+ * @param str
+ * @param num
+ * @param base
  * @param len
- * @return Str_Result 
+ * @return Str_Result
  */
 Str_Result Str_convertUNumRadixFix(const char* str, Str_UNum* num, Str_Radix base, Str_LenType len) {
     Str_UNum temp;
@@ -1218,10 +1218,10 @@ Str_Result Str_convertUNumRadixFix(const char* str, Str_UNum* num, Str_Radix bas
 }
 /**
  * @brief Convert a string into number, string must be a string of decimal integers
- * 
- * @param str 
- * @param num 
- * @return Str_Result 
+ *
+ * @param str
+ * @param num
+ * @return Str_Result
  */
 Str_Result Str_convertNumDecimal(const char* str, Str_Num* num) {
     if (*str == '-'){
@@ -1236,12 +1236,12 @@ Str_Result Str_convertNumDecimal(const char* str, Str_Num* num) {
 }
 /**
  * @brief Convert a string into number with given radix
- * 
- * @param str 
- * @param num 
- * @param base 
+ *
+ * @param str
+ * @param num
+ * @param base
  * @param len
- * @return Str_Result 
+ * @return Str_Result
  */
 Str_Result Str_convertNumRadix(const char* str, Str_Num* num, Str_Radix base) {
     if (*str == '-'){
@@ -1257,11 +1257,11 @@ Str_Result Str_convertNumRadix(const char* str, Str_Num* num, Str_Radix base) {
 /**
  * @brief Convert a string into number, string must be a string of decimal integers
  * with a fixed length
- * 
- * @param str 
- * @param num 
+ *
+ * @param str
+ * @param num
  * @param len
- * @return Str_Result 
+ * @return Str_Result
  */
 Str_Result Str_convertNumDecimalFix(const char* str, Str_Num* num, Str_LenType len) {
     if (*str == '-'){
@@ -1276,12 +1276,12 @@ Str_Result Str_convertNumDecimalFix(const char* str, Str_Num* num, Str_LenType l
 }
 /**
  * @brief Convert a string into number with given radix
- * 
- * @param str 
- * @param num 
- * @param base 
+ *
+ * @param str
+ * @param num
+ * @param base
  * @param len
- * @return Str_Result 
+ * @return Str_Result
  */
 Str_Result Str_convertNumRadixFix(const char* str, Str_Num* num, Str_Radix base, Str_LenType len) {
     if (*str == '-'){
@@ -1296,10 +1296,10 @@ Str_Result Str_convertNumRadixFix(const char* str, Str_Num* num, Str_Radix base,
 }
 /**
  * @brief Convert a string into number, string must be a string of decimal integers
- * 
- * @param str 
- * @param num 
- * @return Str_Result 
+ *
+ * @param str
+ * @param num
+ * @return Str_Result
  */
 Str_Result Str_convertUNumDecimal(const char* str, Str_UNum* num) {
     Str_UNum temp;
@@ -1316,11 +1316,11 @@ Str_Result Str_convertUNumDecimal(const char* str, Str_UNum* num) {
 }
 /**
  * @brief Convert a string into number, string must be a string of decimal integers
- * 
- * @param str 
- * @param num 
+ *
+ * @param str
+ * @param num
  * @param len
- * @return Str_Result 
+ * @return Str_Result
  */
 Str_Result Str_convertUNumDecimalFix(const char* str, Str_UNum* num, Str_LenType len) {
     Str_UNum temp;
@@ -1337,10 +1337,10 @@ Str_Result Str_convertUNumDecimalFix(const char* str, Str_UNum* num, Str_LenType
 }
 /**
  * @brief Convert a string into number, string must be a string of binary integers
- * 
- * @param str 
- * @param num 
- * @return Str_Result 
+ *
+ * @param str
+ * @param num
+ * @return Str_Result
  */
 Str_Result Str_convertUNumBinary(const char* str, Str_UNum* num) {
     Str_UNum temp;
@@ -1357,11 +1357,11 @@ Str_Result Str_convertUNumBinary(const char* str, Str_UNum* num) {
 }
 /**
  * @brief Convert a string into number, string must be a string of binary integers
- * 
- * @param str 
- * @param num 
+ *
+ * @param str
+ * @param num
  * @param len
- * @return Str_Result 
+ * @return Str_Result
  */
 Str_Result Str_convertUNumBinaryFix(const char* str, Str_UNum* num, Str_LenType len) {
     Str_UNum temp;
@@ -1378,10 +1378,10 @@ Str_Result Str_convertUNumBinaryFix(const char* str, Str_UNum* num, Str_LenType 
 }
 /**
  * @brief Convert a string into number, string must be a string of hex integers
- * 
- * @param str 
- * @param num 
- * @return Str_Result 
+ *
+ * @param str
+ * @param num
+ * @return Str_Result
  */
 Str_Result Str_convertUNumHex(const char* str, Str_UNum* num) {
     Str_UNum temp;
@@ -1409,11 +1409,11 @@ Str_Result Str_convertUNumHex(const char* str, Str_UNum* num) {
 }
 /**
  * @brief Convert a string into number, string must be a string of hex integers
- * 
- * @param str 
- * @param num 
+ *
+ * @param str
+ * @param num
  * @param len
- * @return Str_Result 
+ * @return Str_Result
  */
 Str_Result Str_convertUNumHexFix(const char* str, Str_UNum* num, Str_LenType len) {
     Str_UNum temp;
@@ -1441,10 +1441,10 @@ Str_Result Str_convertUNumHexFix(const char* str, Str_UNum* num, Str_LenType len
 }
 /**
  * @brief Convert a string into number, string must be a string of octal integers
- * 
- * @param str 
- * @param num 
- * @return Str_Result 
+ *
+ * @param str
+ * @param num
+ * @return Str_Result
  */
 Str_Result Str_convertUNumOctal(const char* str, Str_UNum* num) {
     Str_UNum temp;
@@ -1461,11 +1461,11 @@ Str_Result Str_convertUNumOctal(const char* str, Str_UNum* num) {
 }
 /**
  * @brief Convert a string into number, string must be a string of octal integers
- * 
- * @param str 
- * @param num 
+ *
+ * @param str
+ * @param num
  * @param
- * @return Str_Result 
+ * @return Str_Result
  */
 Str_Result Str_convertUNumOctalFix(const char* str, Str_UNum* num, Str_LenType len) {
     Str_UNum temp;
@@ -2456,7 +2456,7 @@ Mem_LenType Mem_binarySearch(const void* items, Mem_LenType len, Mem_LenType ite
     unsigned char* pItems = (unsigned char*) items;
     Mem_LenType left = 0;
     Mem_LenType mid;
-    char result;
+    Mem_CmpResult result;
 
     len--;
 
