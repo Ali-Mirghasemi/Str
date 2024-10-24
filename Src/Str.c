@@ -2319,7 +2319,7 @@ Str_LenType Str_linearSearch(const char** strs, Str_LenType len, const char* str
 Str_LenType Str_binarySearch(const char** strs, Str_LenType len, const char* str, Str_CompareFn cmp) {
     Str_LenType left = 0;
     Str_LenType mid;
-    char result;
+    Str_CmpResult result;
 
     len--;
 
@@ -2501,7 +2501,7 @@ Mem_CmpResult Mem_compare(const void* arr1, const void* arr2, Mem_LenType len) {
         pArr1++;
         pArr2++;
     }
-    return 0;
+    return (Mem_CmpResult) 0;
 }
 void* Mem_move(void* dest, const void* src, Mem_LenType len) {
     unsigned char* pDest = (unsigned char*) dest;
@@ -2559,10 +2559,10 @@ char* Str_copyFix(char* dest, const char* src, Str_LenType len) {
 Str_CmpResult Str_compare(const char* str1, const char* str2) {
     do {
         if (*str1 != *str2) {
-            return *str1 > *str2 ? 1 : -1;
+            return (Str_CmpResult) (*str1 > *str2 ? 1 : -1);
         }
     } while (*str1++ != __Str_Null && *str2++ != __Str_Null);
-    return 0;
+    return (Str_CmpResult) 0;
 }
 Str_CmpResult Str_compareFix(const char* str1, const char* str2, Str_LenType len) {
     return (Str_CmpResult) Mem_compare(str1, str2, len);
