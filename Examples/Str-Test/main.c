@@ -223,6 +223,14 @@ uint32_t Test_parse(void) {
 	Str_fromString(tempStr);
 	assert(Str, tempStr, "");
 
+	Str_copy(tempStr, "\"G:\\Path\\To\\File.txt\"");
+	Str_fromString(tempStr);
+	assert(Str, tempStr, "G:\\Path\\To\\File.txt");
+
+	Str_copy(tempStr, "\"G:\\\\Path\\\\To\\\\File.txt\"");
+	Str_fromString(tempStr);
+	assert(Str, tempStr, "G:\\Path\\To\\File.txt");
+
 	return Str_Ok;
 }
 // -------------------------------------------------------------------------------
