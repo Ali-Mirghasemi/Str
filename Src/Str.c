@@ -877,8 +877,9 @@ Str_LenType Str_parseString(const char* string, char* str) {
                         return -1;
                     }
                     break;
-                default: // not support
-                    return -1;
+                default: // ignore
+                    string--;
+                    break;
             }
         }
         else {
