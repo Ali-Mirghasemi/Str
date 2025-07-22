@@ -755,6 +755,9 @@ const char* Str_findStrs(const char* src, const char** strs, Str_LenType len, St
 const char* Str_findStrsSorted(const char* src, const char** strs, Str_LenType len, Str_MultiResult* result) {
     Str_LenType index;
     Str_LenType pos;
+    // Clear Result
+    result->IndexOf = (const char*) 0;
+    result->Position = -1;
 
     while (*src != __Str_Null) {
         for (index = 0; index < len; index++) {
