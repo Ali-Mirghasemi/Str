@@ -106,7 +106,7 @@ char* Str_indexOfNull(const char* str) {
  *      str1 == str2 -> result == 0
  *      str1 < str2 -> result > 0
  */
-char        Str_compareInverse(const char* str1, const char* str2) {
+Str_CmpResult Str_compareInverse(const char* str1, const char* str2) {
     return Str_compare(str2, str1);
 }
 /**
@@ -119,8 +119,8 @@ char        Str_compareInverse(const char* str1, const char* str2) {
  *      str == word -> result == 0
  *      str < word -> result < 0
  */
-char        Str_compareWord(const char* str, const char* word) {
-    char res;
+Str_CmpResult Str_compareWord(const char* str, const char* word) {
+    Str_CmpResult res = 0;
 	while (*word != __Str_Null){
 		res = *str++ - *word++;
 		if (res != 0){
