@@ -881,6 +881,7 @@ Str_LenType Str_parseString(const char* string, char* str) {
                     }
                     break;
                 default: // ignore
+                    *str = '\\';
                     string--;
                     break;
             }
