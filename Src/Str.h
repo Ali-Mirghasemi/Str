@@ -17,7 +17,7 @@ extern "C" {
 
 #define STR_VER_MAJOR       0
 #define STR_VER_MINOR       6
-#define STR_VER_FIX         2
+#define STR_VER_FIX         3
 
 #include <stdint.h>
 
@@ -177,6 +177,8 @@ char*       Str_indexOfNull(const char* str);
 
 Str_CmpResult Str_compareInverse(const char* str1, const char* str2);
 Str_CmpResult Str_compareWord(const char* str, const char* word);
+#define       Str_startsWith                                            Str_compareWord
+Str_CmpResult Str_endsWith(const char* str, const char* word);
 
 char*       Str_findDigit(const char* str);
 char*       Str_findDigitUntil(const char* str, char endChar);

@@ -98,6 +98,7 @@ uint32_t Test_basic(void) {
     const char temp3[] = "StrLine\n Test2";
     char temp[32] = "";
     char* pChar;
+    Str_CmpResult cmpResult;
 
     PRINTLN("Basic:");
 
@@ -113,6 +114,18 @@ uint32_t Test_basic(void) {
     Str_copy(temp, "ABC");
     pChar = Str_indexOfEnd(temp);
     assert(Ptr, pChar, &temp[2]);
+
+    Str_copy(temp, "ABC");
+    cmpResult = Str_endsWith(temp, "C");
+    assert(Num, cmpResult, 0);
+
+    Str_copy(temp, "12u");
+    cmpResult = Str_endsWith(temp, "u");
+    assert(Num, cmpResult, 0);
+
+    Str_copy(temp, "125u64");
+    cmpResult = Str_endsWith(temp, "u64");
+    assert(Num, cmpResult, 0);
 
     Str_copy(temp, "");
     pChar = Str_indexOfEnd(temp);

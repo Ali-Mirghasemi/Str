@@ -114,7 +114,7 @@ Str_CmpResult Str_compareInverse(const char* str1, const char* str2) {
  *
  * @param str address of base string
  * @param word address of word that we want compare with str
- * @return char result of compare,
+ * @return Str_CmpResult result of compare,
  *      str > word -> result > 0
  *      str == word -> result == 0
  *      str < word -> result < 0
@@ -128,6 +128,19 @@ Str_CmpResult Str_compareWord(const char* str, const char* word) {
 		}
 	}
 	return res;
+}
+/**
+ * @brief Comapre end of str with word
+ * 
+ * @param str address of base string
+ * @param word ddress of word that we want compare with str
+ * @return Str_CmpResult result of compare,
+ *      str > word -> result > 0
+ *      str == word -> result == 0
+ *      str < word -> result < 0
+ */
+Str_CmpResult Str_endsWith(const char* str, const char* word) {
+    return Str_compare(&str[Str_len(str) - Str_len(word)], word);
 }
 /**
  * @brief find first digit in string and return address of digit
