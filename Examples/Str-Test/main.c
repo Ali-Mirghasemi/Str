@@ -14,19 +14,19 @@ typedef struct {
 
 uint32_t Assert_Str(const char* str1, const char* str2, uint32_t line);
 uint32_t Assert_Word(const char* str, const char* word, uint32_t line);
-uint32_t Assert_Num(int num1, int num2, uint32_t line);
+uint32_t Assert_Num(Str_Num num1, Str_Num num2, uint32_t line);
 uint32_t Assert_Float(float num1, float num2, uint32_t line);
-uint32_t Assert_Strs(const char** strs1, const char** strs2, int len, uint32_t line);
+uint32_t Assert_Strs(const char** strs1, const char** strs2, Str_LenType len, uint32_t line);
 uint32_t Assert_Ptr(const void* ptr1, const void* ptr2, uint32_t line);
-uint32_t Assert_ItemUsers(const ItemUser* items1, const ItemUser* items2, int len, uint32_t line);
+uint32_t Assert_ItemUsers(const ItemUser* items1, const ItemUser* items2, Str_LenType len, uint32_t line);
 
 uint32_t assertResult = 0;
 #define assert(TYPE, ...)			if((assertResult = Assert_ ##TYPE (__VA_ARGS__, __LINE__)) != Str_Ok) return assertResult
 
 #define ARRAY_LEN(ARR)			(sizeof(ARR) / sizeof(ARR[0]))
 
-void printStrs(const char** strs, int len);
-void printItemUsers(const ItemUser* items, int len);
+void printStrs(const char** strs, Str_LenType len);
+void printItemUsers(const ItemUser* items, Str_LenType len);
 
 typedef uint32_t (*TestFunc)(void);
 
@@ -71,11 +71,11 @@ const TestFunc Tests[] = {
 	Test_caseChange,
 	Test_split,
 };
-const int Tests_Length = ARRAY_LEN(Tests);
+const Str_LenType Tests_Length = ARRAY_LEN(Tests);
 
 int main(void) {
-	int testIndex;
-	int countTestError = 0;
+	uint32_t testIndex;
+	uint32_t countTestError = 0;
 	Str_Result res;
 
 	for (testIndex = 0; testIndex < Tests_Length; testIndex++) {
@@ -85,7 +85,7 @@ int main(void) {
 		if (res & 1) {
 			PRINTF("Error in Line: %d\r\n", res >> 1);
 		}
-		countTestError += (int) res & 1;
+		countTestError += (uint32_t) res & 1;
 		PRINTF("---------------------------------------------- \r\n");
 	}
 	PRINTLN("Test Done\r\n");
@@ -248,7 +248,7 @@ uint32_t Test_parse(void) {
 }
 // -------------------------------------------------------------------------------
 uint32_t Test_convert(void) {
-	int tempNum;
+	Str_Num tempNum;
 	float tempFloat;
 	char tempStr[64];
 	PRINTLN("Convert:");
@@ -302,7 +302,7 @@ uint32_t Test_convert(void) {
 }
 // -------------------------------------------------------------------------------
 uint32_t Test_get(void) {
-	int tempNum;
+	Str_Num tempNum;
 	float tempFloat;
 	const char* numPos;
 	char token[32];
@@ -385,7 +385,7 @@ uint32_t Test_sort(void) {
 		"9876",
 		"-w-",
 	};
-	const int tempStrs_Length = ARRAY_LEN(tempStrs);
+	const Str_LenType tempStrs_Length = ARRAY_LEN(tempStrs);
 
 	const char* tempStrs2[] = {
 		"",
@@ -394,7 +394,7 @@ uint32_t Test_sort(void) {
 		"=?",
 		":",
 	};
-	const int tempStrs2_Length = ARRAY_LEN(tempStrs);
+	const Str_LenType tempStrs2_Length = ARRAY_LEN(tempStrs);
 
 	const char* sortedStrs[] = {
 		"-w-",
@@ -432,7 +432,7 @@ uint32_t Test_quickSort(void) {
 		"your",
 		"Here"
 	};
-	const int tempStrs_Length = ARRAY_LEN(tempStrs);
+	const Str_LenType tempStrs_Length = ARRAY_LEN(tempStrs);
 
 	const char* sortedStrs[] = {
 		"Here",
@@ -594,7 +594,7 @@ Mem_CmpResult ItemUser_compareName(const void* itemA, const void* itemB, Mem_Len
 }
 
 Mem_CmpResult ItemUser_compareAge(const void* itemA, const void* itemB, Mem_LenType itemLen) {
-	return Mem_compare(&Mem_castItem(ItemUser, itemA)->Age, &Mem_castItem(ItemUser, itemB)->Age, sizeof(int));
+	return Mem_compare(&Mem_castItem(ItemUser, itemA)->Age, &Mem_castItem(ItemUser, itemB)->Age, sizeof(Mem_castItem(ItemUser, itemB)->Age));
 }
 
 uint32_t Test_memSort(void) {
@@ -610,7 +610,7 @@ uint32_t Test_memSort(void) {
 		ItemUser_init("Jack", 25, 165),
 		ItemUser_init("Zzz", 26, 165),
 	};
-	int usersLen = ARRAY_LEN(users);
+	Str_LenType usersLen = ARRAY_LEN(users);
 
 	ItemUser usersSortedByName[10] = {
 		ItemUser_init("Ali", 10, 190),
@@ -624,7 +624,7 @@ uint32_t Test_memSort(void) {
 		ItemUser_init("yellow", 24, 145),
 		ItemUser_init("your", 16, 199),
 	};
-	int usersSortedByNameLen = ARRAY_LEN(usersSortedByName);
+	Str_LenType usersSortedByNameLen = ARRAY_LEN(usersSortedByName);
 
 	ItemUser usersSortedByAge[10] = {
 		ItemUser_init("blue", 5, 200),
@@ -638,12 +638,12 @@ uint32_t Test_memSort(void) {
 		ItemUser_init("Zzz", 26, 165),
 		ItemUser_init("Here", 30, 175),
 	};
-	int usersSortedByAgeLen = ARRAY_LEN(usersSortedByAge);
+	Str_LenType usersSortedByAgeLen = ARRAY_LEN(usersSortedByAge);
 
 	PRINTLN("Mem Sort:");
 
-	//Mem_sort(users, usersLen, sizeof(ItemUser), ItemUser_compareName, ItemUser_swap);
-    //assert(ItemUsers, users, usersSortedByName, usersLen);
+	Mem_sort(users, usersLen, sizeof(ItemUser), ItemUser_compareName, ItemUser_swap);
+    assert(ItemUsers, users, usersSortedByName, usersLen);
 
     Mem_sort(users, usersLen, sizeof(ItemUser), ItemUser_compareAge, ItemUser_swap);
     assert(ItemUsers, users, usersSortedByAge, usersLen);
@@ -664,7 +664,7 @@ uint32_t Test_memQuickSort(void) {
 		ItemUser_init("Jack", 25, 165),
 		ItemUser_init("Zzz", 26, 165),
 	};
-	int usersLen = ARRAY_LEN(users);
+	Str_LenType usersLen = ARRAY_LEN(users);
 
 	ItemUser usersSortedByName[10] = {
 		ItemUser_init("Ali", 10, 190),
@@ -678,7 +678,7 @@ uint32_t Test_memQuickSort(void) {
 		ItemUser_init("yellow", 24, 145),
 		ItemUser_init("your", 16, 199),
 	};
-	int usersSortedByNameLen = ARRAY_LEN(usersSortedByName);
+	Str_LenType usersSortedByNameLen = ARRAY_LEN(usersSortedByName);
 
 	ItemUser usersSortedByAge[10] = {
 		ItemUser_init("blue", 5, 200),
@@ -692,7 +692,7 @@ uint32_t Test_memQuickSort(void) {
 		ItemUser_init("Zzz", 26, 165),
 		ItemUser_init("Here", 30, 175),
 	};
-	int usersSortedByAgeLen = ARRAY_LEN(usersSortedByAge);
+	Str_LenType usersSortedByAgeLen = ARRAY_LEN(usersSortedByAge);
 
 	PRINTLN("Mem Quick Sort:");
 
@@ -726,7 +726,7 @@ uint32_t Test_memLinearSearch(void) {
 		ItemUser_init("yellow", 24, 145),
 		ItemUser_init("your", 16, 199),
 	};
-	int usersSortedByNameLen = ARRAY_LEN(usersSortedByName);
+	Str_LenType usersSortedByNameLen = ARRAY_LEN(usersSortedByName);
 
 	ItemUser usersSortedByAge[10] = {
 		ItemUser_init("blue", 5, 200),
@@ -740,7 +740,7 @@ uint32_t Test_memLinearSearch(void) {
 		ItemUser_init("Zzz", 26, 165),
 		ItemUser_init("Here", 30, 175),
 	};
-	int usersSortedByAgeLen = ARRAY_LEN(usersSortedByAge);
+	Str_LenType usersSortedByAgeLen = ARRAY_LEN(usersSortedByAge);
 
 	int age;
 	Mem_LenType index;
@@ -787,7 +787,7 @@ uint32_t Test_memBinarySearch(void) {
 		ItemUser_init("yellow", 24, 145),
 		ItemUser_init("your", 16, 199),
 	};
-	int usersSortedByNameLen = ARRAY_LEN(usersSortedByName);
+	Str_LenType usersSortedByNameLen = ARRAY_LEN(usersSortedByName);
 
 	ItemUser usersSortedByAge[10] = {
 		ItemUser_init("blue", 5, 200),
@@ -801,7 +801,7 @@ uint32_t Test_memBinarySearch(void) {
 		ItemUser_init("Zzz", 26, 165),
 		ItemUser_init("Here", 30, 175),
 	};
-	int usersSortedByAgeLen = ARRAY_LEN(usersSortedByAge);
+	Str_LenType usersSortedByAgeLen = ARRAY_LEN(usersSortedByAge);
 
 	int age;
 	Mem_LenType index;
@@ -1052,7 +1052,7 @@ uint32_t Assert_Word(const char* str, const char* word, uint32_t line) {
 	}
 	return (uint32_t) Str_Ok;
 }
-uint32_t Assert_Num(int num1, int num2, uint32_t line) {
+uint32_t Assert_Num(Str_Num num1, Str_Num num2, uint32_t line) {
 	if (num1 != num2) {
 		PRINTF("%d\r\n", (num1));
 		return Str_Error | line << 1;
@@ -1067,8 +1067,8 @@ uint32_t Assert_Float(float num1, float num2, uint32_t line) {
 	return (uint32_t) Str_Ok;
 }
 
-uint32_t Assert_Strs(const char** strs1, const char** strs2, int len, uint32_t line) {
-	int tempLen = len;
+uint32_t Assert_Strs(const char** strs1, const char** strs2, Str_LenType len, uint32_t line) {
+	Str_LenType tempLen = len;
 	const char** tempStrs = strs1;
 	while (len--) {
 		if (Str_compare(*strs1++, *strs2++)) {
@@ -1087,8 +1087,8 @@ uint32_t Assert_Ptr(const void* ptr1, const void* ptr2, uint32_t line) {
     return (uint32_t) Str_Ok;
 }
 
-uint32_t Assert_ItemUsers(const ItemUser* items1, const ItemUser* items2, int len, uint32_t line) {
-	int tempLen = len;
+uint32_t Assert_ItemUsers(const ItemUser* items1, const ItemUser* items2, Str_LenType len, uint32_t line) {
+	Str_LenType tempLen = len;
 	const ItemUser* tempStrs = items1;
 	while (len--) {
 		if (Mem_compare(items1++, items2++, sizeof(ItemUser))) {
@@ -1099,12 +1099,12 @@ uint32_t Assert_ItemUsers(const ItemUser* items1, const ItemUser* items2, int le
 	return (uint32_t) Str_Ok;
 }
 
-void printStrs(const char** strs, int len) {
+void printStrs(const char** strs, Str_LenType len) {
 	while (len--) {
 		PRINTLN(*strs++);
 	}
 }
-void printItemUsers(const ItemUser* items, int len) {
+void printItemUsers(const ItemUser* items, Str_LenType len) {
 	while (len--) {
 		PRINTF("{\"%s\", %d, %d}\n", items->Name, items->Age, items->Height);
 		items++;
