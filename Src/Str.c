@@ -383,7 +383,7 @@ char* Str_reverseIndexOf(const char* str, char c, const char* startOfStr) {
     return NULL;
 }
 
-char* Str_reverseIndexOfFix(const char* str, char c, int length) {
+char* Str_reverseIndexOfFix(const char* str, char c, Str_LenType length) {
     while (length-- > 0) {
         if (*str == c) {
             return (char*) str;
@@ -470,7 +470,7 @@ char*       Str_replace(char* str, const char* word, const char* replacement) {
         Str_LenType repLen = Str_len(replacement);
         if (wordLen != repLen) {
             char* pEndOfWord = pWord + wordLen;
-            int len = (Str_LenType) ((char*) Mem_indexOf(pEndOfWord, __Str_Null, __Str_MaxLength) - pEndOfWord) + 1;
+            Str_LenType len = (Str_LenType) ((char*) Mem_indexOf(pEndOfWord, __Str_Null, __Str_MaxLength) - pEndOfWord) + 1;
             Mem_move(pEndOfWord + (repLen - wordLen), pEndOfWord, len);
         }
         Str_copyFix(pWord, replacement, repLen);
@@ -484,11 +484,11 @@ char*       Str_replace(char* str, const char* word, const char* replacement) {
  * @param str address of string
  * @param word addres of word
  * @param replacement address of replacement
- * @return char* return address of str if word found otherwise return null
+ * @return number of replacement words
  */
-int       Str_replaceAll(char* str, const char* word, const char* replacement) {
-    int count = 0;
-    int replacementLen = Str_len(replacement);
+Str_LenType Str_replaceAll(char* str, const char* word, const char* replacement) {
+    Str_LenType count = 0;
+    Str_LenType replacementLen = Str_len(replacement);
     while ((str = Str_replace(str, word, replacement)) != NULL) {
         str = str + replacementLen;
         count++;
@@ -845,14 +845,14 @@ const char* Str_findStrsSortedFix(const char* src, const char** strs, Str_LenTyp
  * @return Str_LenType
  */
 Str_LenType Str_parseString(const char* string, char* str) {
-    unsigned int unicodeChar;
+    Str_UNum unicodeChar;
     char* pSrc = str;
     // check start double quote
     if (*string++ != '"') {
         return -1;
     }
     // parse string
-    while (*string != '\0' && *string != '"') {
+    while (*string != __Str_Null && *string != '"') {
         if (*string == '\\') {
             string++;
             switch (*string) {
@@ -1624,7 +1624,7 @@ Str_Result Str_convertULongFix(const char* str, Str_ULong* num, Str_Radix base, 
  * @return Str_LenType
  */
 Str_LenType Str_parseFloat(float num, char* str) {
-	int numInt = (int) num;
+	Str_Num numInt = (Str_Num) num;
 	Str_LenType len;
 	len = Str_parseNum(numInt, __Str_Decimal, STR_NORMAL_LEN, str);
     str = str + len;
@@ -1635,10 +1635,10 @@ Str_LenType Str_parseFloat(float num, char* str) {
         if (num < 0){
             num *= -1;
         }
-        numInt = (int) num;
+        numInt = (Str_Num) num;
         while (num != 0) {
             num *= __Str_Decimal;
-            numInt = (int) num;
+            numInt = (Str_Num) num;
             *str++ = numInt + __Str_0;
             len++;
             num -= numInt;
@@ -1656,8 +1656,8 @@ Str_LenType Str_parseFloat(float num, char* str) {
  * @return Str_LenType
  */
 Str_LenType Str_parseFloatFix(float num, char* str, Str_LenType decimalLen) {
-    int pow = decimalLen;
-	int numInt = (int) num;
+    Str_Num pow = decimalLen;
+	Str_Num numInt = (Str_Num) num;
 	Str_LenType len;
 	len = Str_parseNum(numInt, __Str_Decimal, STR_NORMAL_LEN, str);
     if (decimalLen != 0) {
@@ -1670,7 +1670,7 @@ Str_LenType Str_parseFloatFix(float num, char* str, Str_LenType decimalLen) {
         while (pow-- != 0){
             num *= __Str_Decimal;
         }
-	    len += Str_parseNum((int) num, __Str_Decimal, STR_NORMAL_LEN, str) + 1;
+	    len += Str_parseNum((Str_Num) num, __Str_Decimal, STR_NORMAL_LEN, str) + 1;
     }
 	return len;
 }
@@ -2019,7 +2019,7 @@ Str_LenType Str_removeBackspaceFix(char* str, Str_LenType len) {
  * @return Str_LenType
  */
 Str_LenType Str_parseDouble(double num, char* str) {
-	int numInt = (int) num;
+	Str_Num numInt = (Str_Num) num;
 	Str_LenType len;
 	len = Str_parseNum(numInt, __Str_Decimal, STR_NORMAL_LEN, str);
     str = str + len;
@@ -2030,10 +2030,10 @@ Str_LenType Str_parseDouble(double num, char* str) {
         if (num < 0){
             num *= -1;
         }
-        numInt = (int) num;
+        numInt = (Str_Num) num;
         while (num != 0) {
             num *= __Str_Decimal;
-            numInt = (int) num;
+            numInt = (Str_Num) num;
             *str++ = numInt + __Str_0;
             len++;
             num -= numInt;
@@ -2051,8 +2051,8 @@ Str_LenType Str_parseDouble(double num, char* str) {
  * @return Str_LenType
  */
 Str_LenType Str_parseDoubleFix(double num, char* str, Str_LenType decimalLen) {
-    int pow = decimalLen;
-	int numInt = (int) num;
+    Str_Long pow = decimalLen;
+	Str_Long numInt = (Str_Long) num;
 	Str_LenType len;
 	len = Str_parseNum(numInt, __Str_Decimal, STR_NORMAL_LEN, str);
     if (decimalLen != 0) {
@@ -2065,7 +2065,7 @@ Str_LenType Str_parseDoubleFix(double num, char* str, Str_LenType decimalLen) {
         while (pow-- != 0){
             num *= __Str_Decimal;
         }
-	    len += Str_parseNum((int) num, __Str_Decimal, STR_NORMAL_LEN, str) + 1;
+	    len += Str_parseNum((Str_Long) num, __Str_Decimal, STR_NORMAL_LEN, str) + 1;
     }
 	return len;
 }
@@ -2091,7 +2091,7 @@ Str_Result Str_convertDoubleFix(const char* str, double* num, Str_LenType len) {
     Str_Result result;
     const char* pDot = Str_indexOf(str, '.');
 	double temp;
-	int numInt;
+	Str_Num numInt;
 	Str_LenType strLen;
 	if (pDot == NULL){
 		pDot = Mem_indexOf(str, __Str_Null, __Str_MaxLength);
@@ -2126,7 +2126,7 @@ Str_Result Str_convertDoubleFix(const char* str, double* num, Str_LenType len) {
  * @param numPos index of number that found
  * @return Str_Result result of searching for number
  */
-Str_Result Str_getNum(const char* str, int* num, const char** numPos) {
+Str_Result Str_getNum(const char* str, Str_Num* num, const char** numPos) {
     Str_Result result = Str_NullError;
     const char* baseStr = str;
 	str = Str_findDigit(str);
@@ -2147,7 +2147,7 @@ Str_Result Str_getNum(const char* str, int* num, const char** numPos) {
  * @param numPos index of number that found
  * @return Str_Result result of searching for number
  */
-Str_Result Str_getUNum(const char* str, unsigned int* num, const char** numPos) {
+Str_Result Str_getUNum(const char* str, Str_UNum* num, const char** numPos) {
 	Str_Result result = Str_NullError;
     str = Str_findDigit(str);
 	if (str != 0){
@@ -2602,7 +2602,7 @@ char* Str_indexOf(char* str, char c) {
     return NULL;
 }
 char* Str_lastIndexOf(char* str, char c) {
-    char* pStr = (char*) Mem_indexOf(str, '\'0', __Str_MaxLength) - 1;
+    char* pStr = (char*) Mem_indexOf(str, __Str_Null, __Str_MaxLength) - 1;
     while (pStr >= str) {
         if (*pStr == c) {
             return pStr;
@@ -2622,7 +2622,7 @@ char* Str_indexOfStr(char* str, char* sub) {
     return NULL;
 }
 char* Str_append(char* str, char* sub) {
-    char* pStr = (char*) Mem_indexOf(str, '\'0', __Str_MaxLength);
+    char* pStr = (char*) Mem_indexOf(str, __Str_Null, __Str_MaxLength);
     Str_copy(pStr, sub);
     return str;
 }

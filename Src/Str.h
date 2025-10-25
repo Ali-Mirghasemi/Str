@@ -17,7 +17,7 @@ extern "C" {
 
 #define STR_VER_MAJOR       0
 #define STR_VER_MINOR       6
-#define STR_VER_FIX         3
+#define STR_VER_FIX         4
 
 #include <stdint.h>
 
@@ -51,8 +51,8 @@ typedef uint32_t Str_UNum;
     typedef uint64_t Str_ULong;
 #endif
 
-typedef int16_t Str_LenType;
-typedef int16_t Mem_LenType;
+typedef int32_t Str_LenType;
+typedef int32_t Mem_LenType;
 /********************************************************************************************/
 
 #if STR_USE_STRING_LIBRARY
@@ -170,7 +170,7 @@ char*       Str_copyUntil(char* dest, const char* src, char endChar);
 char*       Str_copyLine(char* dest, const char* src);
 
 char*       Str_reverseIndexOf(const char* str, char c, const char* startOfStr);
-char*       Str_reverseIndexOfFix(const char* str, char c, int length);
+char*       Str_reverseIndexOfFix(const char* str, char c, Str_LenType length);
 
 char*       Str_indexOfEnd(const char* str);
 char*       Str_indexOfNull(const char* str);
@@ -233,7 +233,7 @@ char*       Str_substrFix(char* dest, const char* str, Str_LenType start, Str_Le
 char*       Str_substrUntil(char* dest, const char* str, Str_LenType start, char endChar);
 
 char*       Str_replace(char* str, const char* word, const char* replacement);
-int         Str_replaceAll(char* str, const char* word, const char* replacement);
+Str_LenType Str_replaceAll(char* str, const char* word, const char* replacement);
 
 const char** Str_sort(const char** strs, Str_LenType len);
 const char** Str_quickSort(const char** strs, Str_LenType len);
@@ -325,8 +325,8 @@ Str_Result Str_convertDoubleFix(const char* str, double* num, Str_LenType len);
 
 #endif // STR_ENABLE_DOUBLE
 
-Str_Result Str_getNum(const char* str, int* num, const char** numPos);
-Str_Result Str_getUNum(const char* str, unsigned int* num, const char** numPos);
+Str_Result Str_getNum(const char* str, Str_Num* num, const char** numPos);
+Str_Result Str_getUNum(const char* str, Str_UNum* num, const char** numPos);
 Str_Result Str_getFloat(const char* str, float* num, const char** numPos);
 
 Str_Result Str_getToken(const char* str, char separator, Str_LenType index, char* token);
