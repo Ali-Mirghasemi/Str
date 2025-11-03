@@ -16,44 +16,10 @@ extern "C" {
 #endif /* __cplusplus */
 
 #define STR_VER_MAJOR       0
-#define STR_VER_MINOR       6
-#define STR_VER_FIX         4
+#define STR_VER_MINOR       7
+#define STR_VER_FIX         0
 
-#include <stdint.h>
-
-/********************************************************************************************/
-/*                                     Configuration                                        */
-/********************************************************************************************/
-#define STR_ENABLE_PARSE                                    1
-
-#define STR_ENABLE_CONVERT_STR                              1
-
-#define MEM_MAX_LENGTH                                      1024
-
-#define STR_MAX_LENGTH                                      1024
-
-#define STR_ENABLE_LONG_NUMBER                              1
-
-#define STR_ENABLE_DOUBLE                                   1
-
-#define STR_USE_CONST_VARIABLES                             0
-
-#define STR_USE_STRING_LIBRARY                              1
-
-typedef int16_t Mem_CmpResult;
-typedef int16_t Str_CmpResult;
-
-typedef int32_t  Str_Num;
-typedef uint32_t Str_UNum;
-
-#if STR_ENABLE_LONG_NUMBER
-    typedef int64_t  Str_Long;
-    typedef uint64_t Str_ULong;
-#endif
-
-typedef int32_t Str_LenType;
-typedef int32_t Mem_LenType;
-/********************************************************************************************/
+#include "StrConfig.h"
 
 #if STR_USE_STRING_LIBRARY
 #include <string.h>
