@@ -1,5 +1,5 @@
 /**
- * @file StrConfigUserTemplate.h
+ * @file StrUserConfigTemplate.h
  * @author Ali Mirghasemi (ali.mirghasemi1376@gmail.com)
  * @brief This is template configuration for Str library
  * @version 0.1
@@ -8,8 +8,8 @@
  * @copyright Copyright (c) 2025
  * 
  */
-#ifndef _STR_CONFIG_USER_H_
-#define _STR_CONFIG_USER_H_
+#ifndef _STR_USER_CONFIG_H_
+#define _STR_USER_CONFIG_H_
 
 //#define STR_ENABLE_PARSE                                    1
 
@@ -49,4 +49,4 @@
 //#define MEM_LEN_TYPE
 //typedef int32_t Mem_LenType;
 
-#endif // _STR_CONFIG_USER_H_
+#endif // _STR_USER_CONFIG_H_

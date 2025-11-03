@@ -18,8 +18,8 @@
     #define __has_include(X)    0
 #endif
 
-#if defined(STR_USER_CONFIG) || __has_include("StrConfigUser.h")
-    #include "StrConfigUser.h"
+#if defined(STR_USER_CONFIG) || __has_include("StrUserConfig.h")
+    #include "StrUserConfig.h"
 #endif
 
 /********************************************************************************************/
