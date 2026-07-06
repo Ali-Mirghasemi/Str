@@ -54,38 +54,46 @@
 #endif
 
 #ifndef MEM_CMP_RESULT
+    #define MEM_CMP_RESULT                                      Int16
     typedef int16_t Mem_CmpResult;
 #endif
 
 #ifndef STR_CMP_RESULT
+    #define STR_CMP_RESULT                                      Int16
     typedef int16_t Str_CmpResult;
 #endif
 
 #ifndef STR_NUM
+    #define STR_NUM                                             Int32
     typedef int32_t  Str_Num;
 #endif
 
 #ifndef STR_UNUM
+    #define STR_UNUM                                            UInt32
     typedef uint32_t Str_UNum;
 #endif
 
 #if STR_ENABLE_LONG_NUMBER
 
 #ifndef STR_LONG
+    #define STR_LONG                                            Int64
     typedef int64_t  Str_Long;
 #endif
 
 #ifndef STR_ULONG
+    #define STR_ULONG                                           UInt64
     typedef uint64_t Str_ULong;
 #endif
 
 #endif
 
 #ifndef STR_LEN_TYPE
+    #define STR_LEN_TYPE                                        Int32
     typedef int32_t Str_LenType;
 #endif
 
 #ifndef MEM_LEN_TYPE
+    #define MEM_LEN_TYPE                                        Int32
     typedef int32_t Mem_LenType;
 #endif
 
