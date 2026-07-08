@@ -74,7 +74,7 @@ void*       Mem_reverse(void* arr, Mem_LenType len) {
  */
 char* Str_indexOfEnd(const char* str) {
     Str_LenType len = Str_len(str);
-    if (len) {
+    if (len > 0) {
         return (char*) &str[len - 1];
     }
     else {
