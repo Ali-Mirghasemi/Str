@@ -937,7 +937,7 @@ char* Str_convertString(const char* str, char* string) {
     *string++ = '"';
     // convert str
     while (*str != __Str_Null) {
-        if (*str < ' ' || *str == '\\' || *str == '/' || *str == '"') {
+        if (*str < ' ' || *str == '\\' || *str == '"') {
             *string++ = '\\';
             switch (*str) {
                 case '"':
@@ -954,9 +954,6 @@ char* Str_convertString(const char* str, char* string) {
                     break;
                 case '\\':
                     *string = '\\';
-                    break;
-                case '/':
-                    *string = '/';
                     break;
                 case '\b':
                     *string = 'b';
